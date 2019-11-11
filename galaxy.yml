@@ -1,0 +1,16 @@
+authors:
+  - Asif Shaikh
+dependencies: {}
+description: A collection of roles and modules to manage Perforce Helix
+documentation: ''
+homepage: ''
+issues: ''
+license: []
+name: helix
+namespace: ripclawffb
+readme: README.md
+repository: https://github.com/ripclawffb/ansible-collection-helix
+tags:
+  - helix
+  - perforce
+version: 1.0.0

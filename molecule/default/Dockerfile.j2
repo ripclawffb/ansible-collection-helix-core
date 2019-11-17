@@ -17,7 +17,7 @@ RUN chmod +x /usr/local/bin/p4*
 WORKDIR $PERFORCE_DATA_DIR
 
 # Download and extract sample depot
-RUN curl -sSL ftp://ftp.perforce.com/perforce/tools/sampledepot.tar.gz > sampledepot.tar.gz && tar xvf sampledepot.tar.gz
+RUN curl -sSL $PERFORCE_DEPOT > sampledepot.tar.gz && tar xvf sampledepot.tar.gz
 
 # Restore journal & upgrade db(s)
 WORKDIR $PERFORCE_DATA_DIR/PerforceSample

@@ -43,6 +43,16 @@ Then you can use the modules from the collection in your playbooks:
         user: bruno
         charset: auto
         password: ''
+
+    - name: Create new user
+      helix_user:
+        state: present
+        name: new_user
+        email: new_user@perforce.com
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
 ```
 
 ## Author

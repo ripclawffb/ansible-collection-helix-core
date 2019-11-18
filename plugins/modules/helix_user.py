@@ -15,21 +15,21 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-module: helix_client
+module: helix_use
 
-short_description: This module will allow you to manage client/workspace on Perforce Helix Core
+short_description: This module will allow you to manage users on Perforce Helix Core
 
 description:
-    - "A client/workspace specification defines the portion of the depot that can be accessed from that workspace and specifies where local copies of files in the depot are stored."
+    - "Create or edit Helix server user specifications and preferences"
     - "This module supports check mode."
 
 requirements:
     - "P4Python pip module is required. Tested with 2018.2.1743033"
 
 seealso:
-    - name: Helix Core Client
-      description: "Create or edit a client workspace specification and its view"
-      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_client.html
+    - name: Helix Core User
+      description: "Create, edit, or delete Helix server user specifications and preferences"
+      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_user.html
     - name: P4Python Pip Module
       description: "Python module to interact with Helix Core"
       link: https://pypi.org/project/p4python/
@@ -42,34 +42,30 @@ options:
             - absent
         default: present
         description:
-            - Determines if the client is present or deleted
+            - Determines if the user is present or deleted
         type: str
     name:
         description:
-            - The name of the client that needs to be managed
+            - The name of the user that needs to be managed
         required: true
         type: str
-    description:
-        default: Created by user.
+    authmethod:
+        choices:
+            - perforce
+            - ldap
         description:
-            - A textual description of the workspace
+            - One of the following: perforce or ldap
+        default: perforce
         type: str
-    host:
-        default: hostname
+    email:
+        default: user@hostname
         description:
-            - The name of the workstation on which this workspace resides
+            - The user’s email address
         type: str
-    root:
+    fullname:
         description:
-            - The directory (on the local host) relative to which all the files in the View: are specified
-        required: true
+            - The user’s full name
         type: str
-    view:
-        description:
-            -  Specifies the mappings between files in the depot and files in the workspace
-        required: true
-        elements: str
-        type: list
     server:
         description:
             - The hostname/ip and port of the server (perforce:1666)
@@ -80,7 +76,7 @@ options:
             - p4port
     user:
         description:
-            - A user with access to create clients/workspaces
+            - A user with access to create users
             - Can also use 'P4USER' environment variable
         required: true
         type: str
@@ -109,25 +105,21 @@ author:
 '''
 
 EXAMPLES = '''
-# Create a client
-- name: Create a new client
-  helix_client:
+# Create a user
+- name: Create a new user
+  helix_user:
     state: present
-    name: bruno_new_client
-    description: 'New client for Bruno'
-    host: workstation01
-    root: /tmp/bruno_new_client
-    view:
-      - //depot/... //bruno_new_client/depot/...
+    name: new_user
+    email: new_user@perforce.com
     server: '1666'
     user: bruno
     charset: none
     password: ''
-# Delete a client
-- name: Delete a client
-  helix_client:
+# Delete a user
+- name: Delete a user
+  helix_user:
     state: absent
-    name: bruno_new_client
+    name: new_user
     server: '1666'
     user: bruno
     charset: none
@@ -139,7 +131,6 @@ RETURN = r''' # '''
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible_collections.ripclawffb.helix.plugins.module_utils.connection import helix_connect, helix_disconnect
-from os import getcwd
 from socket import gethostname
 
 
@@ -148,10 +139,9 @@ def run_module():
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True),
-        description=dict(type='str'),
-        host=dict(type='str'),
-        root=dict(type='str'),
-        view=dict(type='list', elements='str', required=True),
+        authmethod=dict(type='str', default='perforce', choices=['perforce', 'ldap']),
+        email=dict(type='str'),
+        fullname=dict(type='str'),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -172,58 +162,51 @@ def run_module():
     p4 = helix_connect(module, 'ansible')
 
     try:
-        # get existing client definition
-        p4_client_spec = p4.fetch_client(module.params['name'])
+        # get existing user definition
+        p4_user_spec = p4.fetch_user(module.params['name'])
 
-        # if description is not given, set a default
-        if module.params['description'] is None:
-            module.params['description'] = "Created by {0}.".format(module.params['user'])
+        # if full name is not given, set a default
+        if module.params['fullname'] is None:
+            module.params['fullname'] = module.params['name']
 
-        # if host is not given, set a default
-        if module.params['host'] is None:
-            module.params['host'] = gethostname()
-
-        # if root is not given, set a default
-        if module.params['root'] is None:
-            module.params['root'] = getcwd()
+        # if email is not given, set a default
+        if module.params['email'] is None:
+            module.params['email'] = "{0}@{1}".format(module.params['name'], gethostname())
 
         if module.params['state'] == 'present':
-            if 'Access' in p4_client_spec:
+            if 'Access' in p4_user_spec:
                 # check to see if changes are detected in any of the fields
-                if(p4_client_spec["Root"] == module.params['root'] and
-                   p4_client_spec["Host"] == module.params['host'] and
-                   p4_client_spec["Description"].rstrip() == module.params['description'] and
-                   p4_client_spec["View"] == module.params['view']):
+                if(p4_user_spec["AuthMethod"] == module.params['authmethod'] and
+                   p4_user_spec["Email"] == module.params['email'] and
+                   p4_user_spec["FullName"] == module.params['fullname']):
 
                     result['changed'] = False
 
-                # update client with new values
+                # update user with new values
                 else:
                     if not module.check_mode:
-                        p4_client_spec["Root"] = module.params['root']
-                        p4_client_spec["Host"] = module.params['host']
-                        p4_client_spec["Description"] = module.params['description']
-                        p4_client_spec["View"] = module.params['view']
-                        p4.save_client(p4_client_spec)
+                        p4_user_spec["AuthMethod"] = module.params['authmethod']
+                        p4_user_spec["Email"] = module.params['email']
+                        p4_user_spec["FullName"]= module.params['fullname']
+                        p4.save_user(p4_user_spec, "-f")
 
                     result['changed'] = True
 
-            # create new client with specified values
+            # create new user with specified values
             else:
                 if not module.check_mode:
-                    p4_client_spec["Root"] = module.params['root']
-                    p4_client_spec["Host"] = module.params['host']
-                    p4_client_spec["Description"] = module.params['description']
-                    p4_client_spec["View"] = module.params['view']
-                    p4.save_client(p4_client_spec)
+                    p4_user_spec["AuthMethod"] = module.params['authmethod']
+                    p4_user_spec["Email"] = module.params['email']
+                    p4_user_spec["FullName"]= module.params['fullname']
+                    p4.save_user(p4_user_spec, "-f")
 
                 result['changed'] = True
 
         elif module.params['state'] == 'absent':
-            # delete client
-            if 'Access' in p4_client_spec:
+            # delete user
+            if 'Access' in p4_user_spec:
                 if not module.check_mode:
-                    p4.delete_client('-f', module.params['name'])
+                    p4.delete_user('-f', module.params['name'])
 
                 result['changed'] = True
             else:

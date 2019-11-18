@@ -57,6 +57,7 @@
   helix_client:
     state: absent
     name: bruno_new_client
+    view: []
     server: '1666'
     user: bruno
     charset: auto
@@ -74,6 +75,7 @@
   helix_client:
     state: absent
     name: bruno_new_client
+    view: []
     server: '1666'
     user: bruno
     charset: auto
@@ -136,6 +138,7 @@
   helix_client:
     state: absent
     name: bruno_new_client
+    view: []
     server: '1666'
     user: bruno
     charset: auto
@@ -154,6 +157,7 @@
   helix_client:
     state: absent
     name: bruno_new_client
+    view: []
     server: '1666'
     user: bruno
     charset: auto

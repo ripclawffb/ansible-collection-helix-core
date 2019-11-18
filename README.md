@@ -1,6 +1,6 @@
-# Ansible Collection - Perforce Helix
+# Ansible Collection - Perforce Helix Core
 
-[![Build Status](https://travis-ci.org/ripclawffb/ansible-collection-helix.svg?branch=master)](https://travis-ci.org/ripclawffb/ansible-collection-helix)
+[![Build Status](https://travis-ci.org/ripclawffb/ansible-collection-helix-core.svg?branch=master)](https://travis-ci.org/ripclawffb/ansible-collection-helix-core)
 
 This collection contains modules to install and configure Perforce Helix Core.
 
@@ -8,7 +8,7 @@ This collection contains modules to install and configure Perforce Helix Core.
 
 Install the collection:
 
-    ansible-galaxy collection install ripclawffb.helix -p ./collections
+    ansible-galaxy collection install ripclawffb.helix_core -p ./collections
 
 Then you can use the modules from the collection in your playbooks:
 
@@ -21,7 +21,7 @@ Then you can use the modules from the collection in your playbooks:
 
     tasks:
     - name: Set auth.id for any server id
-      helix_configurable:
+      helix_core_configurable:
         state: present
         name: auth.id
         value: master.1
@@ -31,7 +31,7 @@ Then you can use the modules from the collection in your playbooks:
         p4charset: auto
 
     - name: Create new client
-      helix_client:
+      helix_core_client:
         state: present
         name: bruno_new_client
         description: 'New client for Bruno'
@@ -45,7 +45,7 @@ Then you can use the modules from the collection in your playbooks:
         password: ''
 
     - name: Create new user
-      helix_user:
+      helix_core_user:
         state: present
         name: new_user
         email: new_user@perforce.com

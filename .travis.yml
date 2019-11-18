@@ -5,7 +5,7 @@ services: docker
 env:
   global:
     - COLLECTION_NAMESPACE: ripclawffb
-    - COLLECTION_NAME: helix
+    - COLLECTION_NAME: helix_core
   matrix:
     - MOLECULE_DISTRO: default
 
@@ -17,7 +17,7 @@ before_script:
   # Move the collection into the required path.
   - cd ../
   - mkdir -p ansible_collections/$COLLECTION_NAMESPACE
-  - mv ansible-collection-$COLLECTION_NAME ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+  - mv ansible-collection-${COLLECTION_NAME/_/-} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
   - cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
 
 script:

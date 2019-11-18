@@ -10,7 +10,7 @@
     executable: pip3
 
 - name: Set auth.id for any server id
-  helix_configurable:
+  helix_core_configurable:
     state: present
     name: auth.id
     value: master.1
@@ -28,7 +28,7 @@
       - auth_set_configurable is changed
 
 - name: Set auth.id for any server id (idempotent)
-  helix_configurable:
+  helix_core_configurable:
     state: present
     name: auth.id
     value: master.1
@@ -46,7 +46,7 @@
       - auth_set_configurable_idempotent is not changed
 
 - name: Unset auth.id for any server id
-  helix_configurable:
+  helix_core_configurable:
     state: absent
     name: auth.id
     value: master.1
@@ -64,7 +64,7 @@
       - auth_set_configurable is changed
 
 - name: Set auth.id for specific server (check mode)
-  helix_configurable:
+  helix_core_configurable:
     state: present
     name: auth.id
     value: master.1
@@ -84,7 +84,7 @@
       - auth_set_serverid_configurable is changed
 
 - name: Set auth.id for specific server
-  helix_configurable:
+  helix_core_configurable:
     state: present
     name: auth.id
     value: master.1
@@ -103,7 +103,7 @@
       - auth_set_serverid_configurable is changed
 
 - name: Unset auth.id for specific server id
-  helix_configurable:
+  helix_core_configurable:
     state: absent
     name: auth.id
     value: master.1
@@ -122,7 +122,7 @@
       - auth_unset_serverid_configurable is changed
 
 - name: Fail when using invalid login
-  helix_configurable:
+  helix_core_configurable:
     state: present
     name: auth.id
     value: master.1
@@ -141,7 +141,7 @@
       - auth_set_invalid_login.failed | bool
 
 - name: Fail when using invalid port
-  helix_configurable:
+  helix_core_configurable:
     state: present
     name: auth.id
     value: master.1

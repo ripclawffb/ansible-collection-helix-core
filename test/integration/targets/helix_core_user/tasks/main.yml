@@ -10,7 +10,7 @@
     executable: pip3
 
 - name: Create new user
-  helix_user:
+  helix_core_user:
     state: present
     name: new_user
     email: new_user@perforce.com
@@ -28,7 +28,7 @@
       - create_user is changed
 
 - name: Create new user (idempotent)
-  helix_user:
+  helix_core_user:
     state: present
     name: new_user
     email: new_user@perforce.com
@@ -46,7 +46,7 @@
       - create_user_idempotent is not changed
 
 - name: Delete a user
-  helix_user:
+  helix_core_user:
     state: absent
     name: new_user
     server: '1666'
@@ -63,7 +63,7 @@
       - delete_user is changed
 
 - name: Delete a user (idempotent)
-  helix_user:
+  helix_core_user:
     state: absent
     name: new_user
     server: '1666'
@@ -80,7 +80,7 @@
       - delete_user_idempotent is not changed
 
 - name: Create new user (check mode)
-  helix_user:
+  helix_core_user:
     state: present
     name: new_user
     email: new_user@perforce.com
@@ -99,7 +99,7 @@
       - create_user_check_mode is changed
 
 - name: Create new user (confirm check mode)
-  helix_user:
+  helix_core_user:
     state: present
     name: new_user
     email: new_user@perforce.com
@@ -117,7 +117,7 @@
       - create_user_check_mode_confirm is changed
 
 - name: Delete user (check mode)
-  helix_user:
+  helix_core_user:
     state: absent
     name: new_user
     email: new_user@perforce.com
@@ -136,7 +136,7 @@
       - delete_user_check_mode is changed
 
 - name: Delete user (confirm check mode)
-  helix_user:
+  helix_core_user:
     state: absent
     name: new_user
     email: new_user@perforce.com
@@ -154,7 +154,7 @@
       - delete_user_check_mode_confirm is changed
 
 - name: Fail when using invalid login
-  helix_user:
+  helix_core_user:
     state: present
     name: new_user
     email: new_user@perforce.com
@@ -173,7 +173,7 @@
       - create_user_invalid_login.failed | bool
 
 - name: Fail when using invalid port
-  helix_user:
+  helix_core_user:
     state: present
     name: new_user
     email: new_user@perforce.com

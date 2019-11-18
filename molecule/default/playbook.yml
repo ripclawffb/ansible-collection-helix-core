@@ -6,11 +6,11 @@
   - ripclawffb.helix
 
   tasks:
-    - name: import helix_configurable tasks
-      import_tasks: ../../test/integration/targets/helix_configurable/tasks/main.yml
+    - name: import helix_core_configurable tasks
+      import_tasks: ../../test/integration/targets/helix_core_configurable/tasks/main.yml
 
-    - name: import helix_client tasks
-      import_tasks: ../../test/integration/targets/helix_client/tasks/main.yml
+    - name: import helix_core_client tasks
+      import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
 
-    - name: import helix_user tasks
-      import_tasks: ../../test/integration/targets/helix_user/tasks/main.yml
+    - name: import helix_core_user tasks
+      import_tasks: ../../test/integration/targets/helix_core_user/tasks/main.yml

@@ -16,7 +16,7 @@ except ImportError:
 from ansible.module_utils.basic import env_fallback, missing_required_lib
 
 
-def helix_connect(module, script_name):
+def helix_core_connect(module, script_name):
     """
     Pass this function a user, p4port, password to connect to a Helix Core server
     """
@@ -40,7 +40,7 @@ def helix_connect(module, script_name):
         module.fail_json(msg="There was a problem connecting to Helix: {0}".format(e))
 
 
-def helix_disconnect(module, connection):
+def helix_core_disconnect(module, connection):
     """
     Pass this function a connection object to disconnect the Helix Core
     session

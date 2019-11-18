@@ -15,7 +15,7 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-module: helix_client
+module: helix_core_client
 
 short_description: This module will allow you to manage client/workspace on Perforce Helix Core
 
@@ -111,7 +111,7 @@ author:
 EXAMPLES = '''
 # Create a client
 - name: Create a new client
-  helix_client:
+  helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'
@@ -125,7 +125,7 @@ EXAMPLES = '''
     password: ''
 # Delete a client
 - name: Delete a client
-  helix_client:
+  helix_core_client:
     state: absent
     name: bruno_new_client
     server: '1666'
@@ -138,7 +138,7 @@ RETURN = r''' # '''
 
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback
-from ansible_collections.ripclawffb.helix.plugins.module_utils.connection import helix_connect, helix_disconnect
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
 from os import getcwd
 from socket import gethostname
 
@@ -169,7 +169,7 @@ def run_module():
     )
 
     # connect to helix
-    p4 = helix_connect(module, 'ansible')
+    p4 = helix_core_connect(module, 'ansible')
 
     try:
         # get existing client definition
@@ -232,7 +232,7 @@ def run_module():
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)
 
-    helix_disconnect(module, p4)
+    helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

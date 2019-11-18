@@ -15,21 +15,21 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-module: helix_use
+module: helix_core_configurable
 
-short_description: This module will allow you to manage users on Perforce Helix Core
+short_description: This module will allow you to set config options on Perforce Helix Core
 
 description:
-    - "Create or edit Helix server user specifications and preferences"
+    - "Configurables allow you to customize a Perforce service. Configurable settings might affect the server, the client, or a proxy."
     - "This module supports check mode."
 
 requirements:
     - "P4Python pip module is required. Tested with 2018.2.1743033"
 
 seealso:
-    - name: Helix Core User
-      description: "Create, edit, or delete Helix server user specifications and preferences"
-      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_user.html
+    - name: Helix Core Configurables
+      description: "List of supported configurables"
+      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/appendix.configurables.html
     - name: P4Python Pip Module
       description: "Python module to interact with Helix Core"
       link: https://pypi.org/project/p4python/
@@ -42,29 +42,17 @@ options:
             - absent
         default: present
         description:
-            - Determines if the user is present or deleted
+            - Determines if the configurable is set or removed
         type: str
     name:
         description:
-            - The name of the user that needs to be managed
+            - The name of the configurable that needs to be set
         required: true
         type: str
-    authmethod:
-        choices:
-            - perforce
-            - ldap
+    value:
         description:
-            - One of the following: perforce or ldap
-        default: perforce
-        type: str
-    email:
-        default: user@hostname
-        description:
-            - The user’s email address
-        type: str
-    fullname:
-        description:
-            - The user’s full name
+            - The value of named configurable
+        required: true
         type: str
     server:
         description:
@@ -76,7 +64,7 @@ options:
             - p4port
     user:
         description:
-            - A user with access to create users
+            - A user with super user access
             - Can also use 'P4USER' environment variable
         required: true
         type: str
@@ -84,7 +72,7 @@ options:
             - p4user
     password:
         description:
-            - The user password
+            - The super user password
             - Can also use 'P4PASSWD' environment variable
         required: true
         type: str
@@ -99,39 +87,46 @@ options:
         type: str
         aliases:
             - p4charset
+    serverid:
+        default: any
+        description:
+            - The server ID of the helix server
+        required: false
+        type: str
 
 author:
     - Asif Shaikh (@ripclawffb)
 '''
 
 EXAMPLES = '''
-# Create a user
-- name: Create a new user
-  helix_user:
+# Set auth.id configurable for any server
+- name: Set auth.id
+  helix_core_configurable:
     state: present
-    name: new_user
-    email: new_user@perforce.com
+    name: auth.id
+    value: master.1
     server: '1666'
     user: bruno
     charset: none
     password: ''
-# Delete a user
-- name: Delete a user
-  helix_user:
+# Unset auth.id configurable for specific server
+- name: Unset auth.id
+  helix_core_configurable:
     state: absent
-    name: new_user
+    name: auth.id
+    value: master.1
+    serverid: master.1
     server: '1666'
     user: bruno
-    charset: none
     password: ''
+    charset: auto
 '''
 
 RETURN = r''' # '''
 
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback
-from ansible_collections.ripclawffb.helix.plugins.module_utils.connection import helix_connect, helix_disconnect
-from socket import gethostname
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
 
 
 def run_module():
@@ -139,9 +134,7 @@ def run_module():
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True),
-        authmethod=dict(type='str', default='perforce', choices=['perforce', 'ldap']),
-        email=dict(type='str'),
-        fullname=dict(type='str'),
+        value=dict(type='str', required=True),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -159,63 +152,40 @@ def run_module():
     )
 
     # connect to helix
-    p4 = helix_connect(module, 'ansible')
+    p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing user definition
-        p4_user_spec = p4.fetch_user(module.params['name'])
+        # get existing config values
+        p4_current_configs = p4.run('configure', 'show', 'allservers')
 
-        # if full name is not given, set a default
-        if module.params['fullname'] is None:
-            module.params['fullname'] = module.params['name']
+        p4_current_values = []
 
-        # if email is not given, set a default
-        if module.params['email'] is None:
-            module.params['email'] = "{0}@{1}".format(module.params['name'], gethostname())
+        # search for all config values specific to this server id and add to list
+        for config in p4_current_configs:
+            if config["ServerName"] == module.params['serverid']:
+                p4_current_values.append(config)
+
+        # get the current value of our specific configurable
+        p4_current_value = next((item for item in p4_current_values if item["Name"] == module.params['name']), None)
 
         if module.params['state'] == 'present':
-            if 'Access' in p4_user_spec:
-                # check to see if changes are detected in any of the fields
-                if(p4_user_spec["AuthMethod"] == module.params['authmethod'] and
-                   p4_user_spec["Email"] == module.params['email'] and
-                   p4_user_spec["FullName"] == module.params['fullname']):
-
-                    result['changed'] = False
-
-                # update user with new values
-                else:
-                    if not module.check_mode:
-                        p4_user_spec["AuthMethod"] = module.params['authmethod']
-                        p4_user_spec["Email"] = module.params['email']
-                        p4_user_spec["FullName"]= module.params['fullname']
-                        p4.save_user(p4_user_spec, "-f")
-
-                    result['changed'] = True
-
-            # create new user with specified values
-            else:
+            if p4_current_value is None or module.params['value'] != p4_current_value['Value']:
                 if not module.check_mode:
-                    p4_user_spec["AuthMethod"] = module.params['authmethod']
-                    p4_user_spec["Email"] = module.params['email']
-                    p4_user_spec["FullName"]= module.params['fullname']
-                    p4.save_user(p4_user_spec, "-f")
-
+                    p4.run('configure', 'set', "{0}#{1}={2}".format(
+                        module.params['serverid'], module.params['name'], module.params['value'])
+                    )
                 result['changed'] = True
-
         elif module.params['state'] == 'absent':
-            # delete user
-            if 'Access' in p4_user_spec:
+            if p4_current_value is not None:
                 if not module.check_mode:
-                    p4.delete_user('-f', module.params['name'])
-
+                    p4.run('configure', 'unset', "{0}#{1}".format(
+                        module.params['serverid'], module.params['name'])
+                    )
                 result['changed'] = True
-            else:
-                result['changed'] = False
-
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)
 
-    helix_disconnect(module, p4)
+    helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

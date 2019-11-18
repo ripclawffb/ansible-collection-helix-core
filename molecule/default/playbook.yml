@@ -7,4 +7,7 @@
 
   tasks:
     - name: import helix_configurable tasks
-      import_tasks: ../../test/integration/targets/helix_configurable/helix_configurable/tasks/main.yml
+      import_tasks: ../../test/integration/targets/helix_configurable/tasks/main.yml
+
+    - name: import helix_client tasks
+      import_tasks: ../../test/integration/targets/helix_client/tasks/main.yml

@@ -21,7 +21,7 @@ Then you can use the modules from the collection in your playbooks:
 
     tasks:
     - name: Set auth.id for any server id
-        helix_configurable:
+      helix_configurable:
         state: present
         name: auth.id
         value: master.1
@@ -29,8 +29,20 @@ Then you can use the modules from the collection in your playbooks:
         p4user: 'p4admin'
         p4passwd: 'changeme'
         p4charset: auto
-        register: auth_set_configurable
-        delegate_to: localhost
+
+    - name: Create new client
+      helix_client:
+        state: present
+        name: bruno_new_client
+        description: 'New client for Bruno'
+        host: workstation01
+        root: /tmp/bruno_new_client
+        view:
+          - //depot/... //bruno_new_client/depot/...
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
 ```
 
 ## Author

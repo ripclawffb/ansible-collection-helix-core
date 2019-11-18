@@ -15,21 +15,21 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-module: helix_configurable
+module: helix_client
 
-short_description: This module will allow you to set config options on Perforce Helix Core
+short_description: This module will allow you to manage client/workspace on Perforce Helix Core
 
 description:
-    - "Configurables allow you to customize a Perforce service. Configurable settings might affect the server, the client, or a proxy."
+    - "A client/workspace specification defines the portion of the depot that can be accessed from that workspace and specifies where local copies of files in the depot are stored."
     - "This module supports check mode."
 
 requirements:
     - "P4Python pip module is required. Tested with 2018.2.1743033"
 
 seealso:
-    - name: Helix Core Configurables
-      description: "List of supported configurables"
-      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/appendix.configurables.html
+    - name: Helix Core Client
+      description: "Create or edit a client workspace specification and its view"
+      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_client.html
     - name: P4Python Pip Module
       description: "Python module to interact with Helix Core"
       link: https://pypi.org/project/p4python/
@@ -42,18 +42,32 @@ options:
             - absent
         default: present
         description:
-            - Determines if the configurable is set or removed
+            - Determines if the client is present or deleted
         type: str
     name:
         description:
-            - The name of the configurable that needs to be set
+            - The name of the client that needs to be managed
         required: true
         type: str
-    value:
+    description:
         description:
-            - The value of named configurable
+            - A textual description of the workspace
+        type: str
+    host:
+        description:
+            - The name of the workstation on which this workspace resides
+        type: str
+    root:
+        description:
+            - The directory (on the local host) relative to which all the files in the View: are specified
         required: true
         type: str
+    view:
+        description:
+            -  Specifies the mappings between files in the depot and files in the workspace
+        required: true
+        elements: str
+        type: list
     server:
         description:
             - The hostname/ip and port of the server (perforce:1666)
@@ -64,7 +78,7 @@ options:
             - p4port
     user:
         description:
-            - A user with super user access
+            - A user with access to create clients/workspaces
             - Can also use 'P4USER' environment variable
         required: true
         type: str
@@ -72,7 +86,7 @@ options:
             - p4user
     password:
         description:
-            - The super user password
+            - The user password
             - Can also use 'P4PASSWD' environment variable
         required: true
         type: str
@@ -87,39 +101,35 @@ options:
         type: str
         aliases:
             - p4charset
-    serverid:
-        default: any
-        description:
-            - The server ID of the helix server
-        required: false
-        type: str
 
 author:
     - Asif Shaikh (@ripclawffb)
 '''
 
 EXAMPLES = '''
-# Set auth.id configurable for any server
-- name: Set auth.id
-  helix_configurable:
+# Create a client
+- name: Create a new client
+  helix_client:
     state: present
-    name: auth.id
-    value: master.1
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
     server: '1666'
     user: bruno
     charset: none
     password: ''
-# Unset auth.id configurable for specific server
-- name: Unset auth.id
-  helix_configurable:
+# Delete a client
+- name: Delete a client
+  helix_client:
     state: absent
-    name: auth.id
-    value: master.1
-    serverid: master.1
+    name: bruno_new_client
     server: '1666'
     user: bruno
+    charset: none
     password: ''
-    charset: auto
 '''
 
 RETURN = r''' # '''
@@ -134,7 +144,10 @@ def run_module():
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True),
-        value=dict(type='str', required=True),
+        description=dict(type='str'),
+        host=dict(type='str'),
+        root=dict(type='str'),
+        view=dict(type='list', elements='str'),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -155,33 +168,51 @@ def run_module():
     p4 = helix_connect(module, 'ansible')
 
     try:
-        # get existing config values
-        p4_current_configs = p4.run('configure', 'show', 'allservers')
-
-        p4_current_values = []
-
-        # search for all config values specific to this server id and add to list
-        for config in p4_current_configs:
-            if config["ServerName"] == module.params['serverid']:
-                p4_current_values.append(config)
-
-        # get the current value of our specific configurable
-        p4_current_value = next((item for item in p4_current_values if item["Name"] == module.params['name']), None)
+        # get existing client definition
+        p4_client_spec = p4.fetch_client(module.params['name'])
 
         if module.params['state'] == 'present':
-            if p4_current_value is None or module.params['value'] != p4_current_value['Value']:
+            if 'Access' in p4_client_spec:
+                # check to see if changes are detected in any of the fields
+                if(p4_client_spec["Root"] == module.params['root'] and
+                    p4_client_spec["Host"] == module.params['host'] and
+                    p4_client_spec["Description"].rstrip() == module.params['description']  and
+                    p4_client_spec["View"] == module.params['view']
+                ):
+                    result['changed'] = False
+
+                # update client with new values
+                else:
+                    if not module.check_mode:
+                        p4_client_spec["Root"] = module.params['root']
+                        p4_client_spec["Host"] = module.params['host']
+                        p4_client_spec["Description"] = module.params['description']
+                        p4_client_spec["View"] = module.params['view']
+                        p4.save_client(p4_client_spec)
+
+                    result['changed'] = True
+
+            # create new client with specified values
+            else:
                 if not module.check_mode:
-                    p4.run('configure', 'set', "{0}#{1}={2}".format(
-                        module.params['serverid'], module.params['name'], module.params['value'])
-                    )
+                    p4_client_spec["Root"] = module.params['root']
+                    p4_client_spec["Host"] = module.params['host']
+                    p4_client_spec["Description"] = module.params['description']
+                    p4_client_spec["View"] = module.params['view']
+                    p4.save_client(p4_client_spec)
+
                 result['changed'] = True
+
         elif module.params['state'] == 'absent':
-            if p4_current_value is not None:
+            # delete client
+            if 'Access' in p4_client_spec:
                 if not module.check_mode:
-                    p4.run('configure', 'unset', "{0}#{1}".format(
-                        module.params['serverid'], module.params['name'])
-                    )
+                    p4.delete_client('-f', module.params['name'])
+
                 result['changed'] = True
+            else:
+                result['changed'] = False
+
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)
 

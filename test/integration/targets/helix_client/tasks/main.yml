@@ -1,0 +1,214 @@
+# Test code for the Helix configurable module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2019, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Install required lib
+  pip:
+    name: p4python
+    executable: pip3
+
+- name: Create new client
+  helix_client:
+    state: present
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client
+
+- debug:
+    var: create_client
+
+- assert:
+    that:
+      - create_client is changed
+
+- name: Create new client (idempotent)
+  helix_client:
+    state: present
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_idempotent
+
+- debug:
+    var: create_client_idempotent
+
+- assert:
+    that:
+      - create_client_idempotent is not changed
+
+- name: Delete a client
+  helix_client:
+    state: absent
+    name: bruno_new_client
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_client
+
+- debug:
+    var: delete_client
+
+- assert:
+    that:
+      - delete_client is changed
+
+- name: Delete a client (idempotent)
+  helix_client:
+    state: absent
+    name: bruno_new_client
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_client_idempotent
+
+- debug:
+    var: delete_client_idempotent
+
+- assert:
+    that:
+      - delete_client_idempotent is not changed
+
+- name: Create new client (check mode)
+  helix_client:
+    state: present
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_check_mode
+  check_mode: true
+
+- debug:
+    var: create_client_check_mode
+
+- assert:
+    that:
+      - create_client_check_mode is changed
+
+- name: Create new client (confirm check mode)
+  helix_client:
+    state: present
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_check_mode_confirm
+
+- debug:
+    var: create_client_check_mode_confirm
+
+- assert:
+    that:
+      - create_client_check_mode_confirm is changed
+
+- name: Delete client (check mode)
+  helix_client:
+    state: absent
+    name: bruno_new_client
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_client_check_mode
+  check_mode: true
+
+- debug:
+    var: delete_client_check_mode
+
+- assert:
+    that:
+      - delete_client_check_mode is changed
+
+- name: Delete client (confirm check mode)
+  helix_client:
+    state: absent
+    name: bruno_new_client
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_client_check_mode_confirm
+
+- debug:
+    var: delete_client_check_mode_confirm
+
+- assert:
+    that:
+      - delete_client_check_mode_confirm is changed
+
+- name: Fail when using invalid login
+  helix_client:
+    state: present
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+  register: create_client_invalid_login
+  ignore_errors: true
+
+- debug:
+    var: create_client_invalid_login
+
+- assert:
+    that:
+      - create_client_invalid_login.failed | bool
+
+- name: Fail when using invalid port
+  helix_client:
+    state: present
+    name: bruno_new_client
+    description: 'New client for Bruno'
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_invalid_port
+  ignore_errors: true
+
+- debug:
+    var: create_client_invalid_port
+
+- assert:
+    that:
+      - create_client_invalid_port.failed | bool

@@ -3,7 +3,7 @@
   hosts: all
 
   collections:
-  - ripclawffb.helix
+    - ripclawffb.helix_core
 
   tasks:
     - name: import helix_core_configurable tasks

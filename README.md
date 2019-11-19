@@ -16,10 +16,10 @@ Then you can use the modules from the collection in your playbooks:
 ---
 - hosts: all
 
-    collections:
+  collections:
     - ripclawffb.helix
 
-    tasks:
+  tasks:
     - name: Set auth.id for any server id
       helix_core_configurable:
         state: present

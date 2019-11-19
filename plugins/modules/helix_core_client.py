@@ -64,12 +64,29 @@ options:
             - The directory (on the local host) relative to which all the files in the View: are specified
         required: true
         type: str
+    altroots:
+        default: None
+        description:
+            - Up to two optional alternate client workspace roots
+        elements: str
+        type: list
     view:
         description:
             -  Specifies the mappings between files in the depot and files in the workspace
         required: true
         elements: str
         type: list
+    lineend:
+        choices:
+            - local
+            - unix
+            - mac
+            - win
+            - share
+        default: local
+        description:
+            - Configure carriage-return/linefeed (CR/LF) conversion
+        type: str
     server:
         description:
             - The hostname/ip and port of the server (perforce:1666)
@@ -151,7 +168,9 @@ def run_module():
         description=dict(type='str'),
         host=dict(type='str'),
         root=dict(type='str'),
+        altroots=dict(type='list', elements='str', default=None),
         view=dict(type='list', elements='str', required=True),
+        lineend=dict(type='str', default='local', choices=['local', 'unix', 'mac', 'win', 'share']),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -189,11 +208,21 @@ def run_module():
 
         if module.params['state'] == 'present':
             if 'Access' in p4_client_spec:
+
+                p4_client_changes = []
+                p4_client_changes.append(p4_client_spec["Description"].rstrip() == module.params['description'])
+                p4_client_changes.append(p4_client_spec["Host"] == module.params['host'])
+                p4_client_changes.append(p4_client_spec["Root"] == module.params['root'])
+                p4_client_changes.append(p4_client_spec["View"] == module.params['view'])
+                p4_client_changes.append(p4_client_spec["LineEnd"] == module.params['lineend'])
+
+                if module.params['altroots'] is not None:
+                    p4_client_changes.append(p4_client_spec["AltRoots"] == module.params['altroots'])
+                elif 'AltRoots' in p4_client_spec:
+                    p4_client_changes.append(False)
+
                 # check to see if changes are detected in any of the fields
-                if(p4_client_spec["Root"] == module.params['root'] and
-                   p4_client_spec["Host"] == module.params['host'] and
-                   p4_client_spec["Description"].rstrip() == module.params['description'] and
-                   p4_client_spec["View"] == module.params['view']):
+                if(all(p4_client_changes)):
 
                     result['changed'] = False
 
@@ -204,6 +233,13 @@ def run_module():
                         p4_client_spec["Host"] = module.params['host']
                         p4_client_spec["Description"] = module.params['description']
                         p4_client_spec["View"] = module.params['view']
+                        p4_client_spec["LineEnd"] = module.params['lineend']
+
+                        if module.params['altroots'] is not None:
+                            p4_client_spec["AltRoots"] = module.params['altroots']
+                        elif 'AltRoots' in p4_client_spec:
+                            del p4_client_spec["AltRoots"]
+
                         p4.save_client(p4_client_spec)
 
                     result['changed'] = True
@@ -215,6 +251,11 @@ def run_module():
                     p4_client_spec["Host"] = module.params['host']
                     p4_client_spec["Description"] = module.params['description']
                     p4_client_spec["View"] = module.params['view']
+                    p4_client_spec["LineEnd"] = module.params['lineend']
+
+                    if module.params['altroots'] is not None:
+                        p4_client_spec["AltRoots"] = module.params['altroots']
+
                     p4.save_client(p4_client_spec)
 
                 result['changed'] = True

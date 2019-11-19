@@ -53,6 +53,48 @@
     that:
       - create_client_idempotent is not changed
 
+- name: Update client
+  helix_core_client:
+    state: present
+    name: bruno_new_client
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_client
+
+- debug:
+    var: update_client
+
+- assert:
+    that:
+      - update_client is changed
+
+- name: Update client (idempotent)
+  helix_core_client:
+    state: present
+    name: bruno_new_client
+    host: workstation01
+    root: /tmp/bruno_new_client
+    view:
+      - //depot/... //bruno_new_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_client_idempotent
+
+- debug:
+    var: update_client_idempotent
+
+- assert:
+    that:
+      - update_client_idempotent is not changed
+
 - name: Delete a client
   helix_core_client:
     state: absent

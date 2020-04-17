@@ -18,9 +18,13 @@ env:
 install:
   # Install test dependencies.
   #- python3 -m pip install molecule ansible-lint docker
-  - wget -O /tmp/p4api-glibc2.12-openssl1.0.2.tgz https://cdist2.perforce.com/perforce/r19.1/bin.linux26x86_64/p4api-glibc2.12-openssl1.0.2.tgz
-  - tar -xvzf /tmp/p4api-glibc2.12-openssl1.0.2.tgz -C /tmp
-  - python3 -m pip install p4python --install-option="--apidir=/tmp/p4api-2019.1.1927394"
+  # - wget -O /tmp/p4api-glibc2.12-openssl1.0.2.tgz https://cdist2.perforce.com/perforce/r19.1/bin.linux26x86_64/p4api-glibc2.12-openssl1.0.2.tgz
+  # - tar -xvzf /tmp/p4api-glibc2.12-openssl1.0.2.tgz -C /tmp
+  # - python3 -m pip install p4python --install-option="--apidir=/tmp/p4api-2019.1.1927394"
+  - deb http://package.perforce.com/apt/ubuntu/ bionic release
+  - wget -qO - https://package.perforce.com/perforce.pubkey | sudo apt-key add -
+  - sudo apt-get update
+  - sudo apt install perforce-p4python.x86_64
   - python3 -m pip install pipenv
   - pipenv install
 

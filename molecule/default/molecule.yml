@@ -15,9 +15,11 @@ provisioner:
     host_vars:
       instance:
         ansible_python_interpreter: "/usr/bin/python3"
+# lint: |
+#   yamllint .
+#   ansible-lint
+#   flake8
 lint: |
-  yamllint .
-  ansible-lint
   flake8
 verifier:
   name: testinfra

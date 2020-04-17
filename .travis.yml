@@ -11,7 +11,7 @@ env:
 
 install:
   # Install test dependencies.
-  - pip install ansible molecule docker yamllint
+  - pip install ansible molecule docker
 
 before_script:
   # Move the collection into the required path.

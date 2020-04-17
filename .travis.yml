@@ -18,8 +18,11 @@ env:
 install:
   # Install test dependencies.
   #- python3 -m pip install molecule ansible-lint docker
+  - wget -O /tmp/p4api-glibc2.12-openssl1.0.2.tgz https://cdist2.perforce.com/perforce/r19.1/bin.linux26x86_64/p4api-glibc2.12-openssl1.0.2.tgz
+  - tar -xvzf /tmp/p4api-glibc2.12-openssl1.0.2.tgz /tmp/p4api-glibc2.12-openssl1.0.2 -C /tmp
+  - python3 -m pip install p4python --apidir /tmp/p4api-2019.1.1927394
   - python3 -m pip install pipenv
-  - pipenv install --dev
+  - pipenv install
 
 before_script:
   # Move the collection into the required path.
@@ -30,4 +33,4 @@ before_script:
 
 script:
   # Test helix modules
-  - pipenv run molecule test
+  - molecule test

@@ -26,7 +26,7 @@ install:
   # - sudo echo "deb http://package.perforce.com/apt/ubuntu/ xenial release" > /etc/apt/sources.list.d/perforce.list
   # - wget -qO - https://package.perforce.com/perforce.pubkey | sudo apt-key add -
   - sudo apt-get update
-  - sudo apt install perforce-p4python3.x86_64
+  - sudo apt install perforce-p4python3
   - python3 -m pip install pipenv
   - pipenv install
 

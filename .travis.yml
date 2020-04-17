@@ -18,7 +18,7 @@ env:
 install:
   # Install test dependencies.
   # - pip install ansible molecule docker
-  - python3 -m pip install molecule flake8
+  - python3 -m pip install molecule
 
 before_script:
   # Move the collection into the required path.

@@ -15,22 +15,14 @@ provisioner:
     host_vars:
       instance:
         ansible_python_interpreter: "/usr/bin/python3"
-# lint: |
-#   yamllint .
-#   ansible-lint
-verifier:
-  name: testinfra
 scenario:
   name: default
   test_sequence:
-    - lint
     - destroy
     - dependency
     - syntax
     - create
     - prepare
     - converge
-    # - idempotence
     - side_effect
-    # - verify
     - destroy

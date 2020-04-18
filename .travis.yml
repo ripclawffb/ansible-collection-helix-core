@@ -17,7 +17,6 @@ env:
 
 install:
   # Install test dependencies.
-  # - pip install ansible molecule docker
   - python3 -m pip install molecule ansible-lint docker
 
 before_script:

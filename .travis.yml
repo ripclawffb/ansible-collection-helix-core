@@ -18,10 +18,10 @@ env:
 install:
   # Install test dependencies.
   #- python3 -m pip install molecule ansible-lint docker
-  - wget -O p4api-glibc2.12-openssl1.0.2.tgz https://cdist2.perforce.com/perforce/r19.1/bin.linux26x86_64/p4api-glibc2.12-openssl1.0.2.tgz
-  - tar -xvzf p4api-glibc2.12-openssl1.0.2.tgz
-  - ls -al p4api-2019.1.1927394/*
-  - python3 -m pip install p4python --global-option=build --global-option="--apidir='p4api-2019.1.1927394'"
+  - wget -O /tmp/p4api-glibc2.12-openssl1.0.2.tgz https://cdist2.perforce.com/perforce/r19.1/bin.linux26x86_64/p4api-glibc2.12-openssl1.0.2.tgz
+  - tar -xvzf /tmp/p4api-glibc2.12-openssl1.0.2.tgz -C /tmp
+  - ls -al /tmp/p4api-2019.1.1927394/*
+  - python3 -m pip install p4python --global-option=build --global-option="--apidir='/tmp/p4api-2019.1.1927394'"
   # - curl https://package.perforce.com/perforce.pubkey | sudo apt-key add -
   # - echo "deb http://package.perforce.com/apt/ubuntu/ xenial release" | sudo tee -a /etc/apt/sources.list
   # - sudo echo "deb http://package.perforce.com/apt/ubuntu/ xenial release" > /etc/apt/sources.list.d/perforce.list

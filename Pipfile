@@ -5,7 +5,6 @@ verify_ssl = true
 
 [packages]
 ansible = "==2.9.7"
-p4python = "==2019.1.1858212"
 docker = "==4.2.0"
 molecule = "==3.0.3"
 

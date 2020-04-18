@@ -17,7 +17,8 @@ env:
 
 install:
   # Install test dependencies.
-  - python3 -m pip install molecule ansible-lint docker
+  - python3 -m pip install pipenv
+  - pipenv install
 
 before_script:
   # Move the collection into the required path.

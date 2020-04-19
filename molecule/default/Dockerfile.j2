@@ -49,8 +49,7 @@ RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm; \
     yum update; \
     yum install -y python36u python36u-libs python36u-devel python36u-pip;
 
-# RUN pip3.6 install p4python==2017.2.1615960
-RUN pip3.6 install p4python==2019.1.1858212
+RUN pip3.6 install p4python==2017.2.1615960
 
 # Let's start Perforce
 ENTRYPOINT ["p4d"]

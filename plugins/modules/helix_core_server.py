@@ -44,15 +44,24 @@ options:
         description:
             - Determines if the server spec is present or deleted
         type: str
-    serverid:
-        description:
-            - A unique identifier for this server
-        required: true
-        type: str
     description:
         default: Created by user.
         description:
             - A textual description of the server
+        type: str
+    options:
+        default: nomandatory
+        description:
+            - Controls how metadata is replicated to replicas
+        type: str
+    replicatingfrom:
+        description:
+            - Server ID of the server from which this server is replicating or journalcopy'ing
+        type: str
+    serverid:
+        description:
+            - A unique identifier for this server
+        required: true
         type: str
     services:
         default: standard
@@ -64,6 +73,30 @@ options:
         description:
             - Server executable type
         type: str
+    server:
+        description:
+            - The hostname/ip and port of the server (perforce:1666)
+            - Can also use 'P4PORT' environment variable
+        required: true
+        type: str
+        aliases:
+            - p4port
+    user:
+        description:
+            - A user with access to create clients/workspaces
+            - Can also use 'P4USER' environment variable
+        required: true
+        type: str
+        aliases:
+            - p4user
+    password:
+        description:
+            - The user password
+            - Can also use 'P4PASSWD' environment variable
+        required: true
+        type: str
+        aliases:
+            - p4passwd
     charset:
         default: none
         description:
@@ -118,6 +151,9 @@ def run_module():
         description=dict(type='str'),
         services=dict(type='str', default='standard', choices = ['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
         type=dict(type='str', default='server'),
+        options=dict(type='str', default='nomandatory'),
+        replicatingfrom=dict(type='str', default=None),
+        name=dict(type='str', default=None),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -145,24 +181,37 @@ def run_module():
             module.params['description'] = "Created by {0}.".format(module.params['user'])
 
         if module.params['state'] == 'present':
+            # check to see if any fields have changed
             if 'ServerID' in p4_server_spec:
 
                 p4_server_changes = []
                 p4_server_changes.append(p4_server_spec["Description"].rstrip() == module.params['description'])
                 p4_server_changes.append(p4_server_spec["Services"] == module.params['services'])
                 p4_server_changes.append(p4_server_spec["Type"] == module.params['type'])
+                p4_server_changes.append(p4_server_spec["Options"] == module.params['options'])
+
+                if module.params['replicatingfrom'] is not None:
+                   p4_server_changes.append(p4_server_spec["ReplicatingFrom"] == module.params['replicatingfrom'])
+                elif 'ReplicatingFrom' in p4_server_spec:
+                    p4_server_changes.append(False)
 
                 # check to see if changes are detected in any of the fields
                 if(all(p4_server_changes)):
 
                     result['changed'] = False
 
-                # update server spec with new values
+                # if changes are detected, update server spec with new values
                 else:
                     if not module.check_mode:
                         p4_server_spec["Description"] = module.params['description']
                         p4_server_spec["Services"] = module.params['services']
                         p4_server_spec["Type"] = module.params['type']
+                        p4_server_spec["Options"] = module.params['options'])
+
+                        if module.params['replicatingfrom'] is not None:
+                            p4_server_spec["ReplicatingFrom"] = module.params['replicatingfrom']
+                        elif 'ReplicatingFrom' in p4_server_spec:
+                            del p4_server_spec["ReplicatingFrom"]
 
                         p4.save_server(p4_server_spec)
 
@@ -175,6 +224,9 @@ def run_module():
                     p4_server_spec["Description"] = module.params['description']
                     p4_server_spec["Services"] = module.params['services']
                     p4_server_spec["Type"] = module.params['type']
+
+                    if module.params['replicatingfrom'] is not None:
+                        p4_server_spec["ReplicatingFrom"] = module.params['replicatingfrom']
 
                     p4.save_server(p4_server_spec)
 

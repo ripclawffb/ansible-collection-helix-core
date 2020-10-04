@@ -17,7 +17,7 @@ Then you can use the modules from the collection in your playbooks:
 - hosts: all
 
   collections:
-    - ripclawffb.helix
+    - ripclawffb.helix_core
 
   tasks:
     - name: Set auth.id for any server id
@@ -49,6 +49,17 @@ Then you can use the modules from the collection in your playbooks:
         state: present
         name: new_user
         email: new_user@perforce.com
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
+
+    - name: Create a new server spec
+      helix_core_server:
+        state: present
+        serverid: commit
+        description: 'Commit server'
+        services: standard
         server: '1666'
         user: bruno
         charset: auto

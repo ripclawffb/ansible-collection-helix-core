@@ -27,7 +27,7 @@ requirements:
     - "P4Python pip module is required. Tested with 2018.2.1743033"
 
 seealso:
-    - name: Helix Core Client
+    - name: Helix Core Server
       description: "Create, modify, or delete a Helix server specification"
       link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_server.html
     - name: P4Python Pip Module
@@ -92,7 +92,7 @@ EXAMPLES = '''
     password: ''
 # Delete a server spec
 - name: Delete a server spec
-  helix_core_client:
+  helix_core_server:
     state: absent
     serverid: commit
     server: '1666'
@@ -116,8 +116,8 @@ def run_module():
         state=dict(type='str', default='present', choices=['present', 'absent']),
         serverid=dict(type='str', required=True),
         description=dict(type='str'),
-        services=dict(type='str', default='standard'),
-        type=dict(type='str', default='server'),,
+        services=dict(type='str', default='standard', choices = ['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
+        type=dict(type='str', default='server'),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),

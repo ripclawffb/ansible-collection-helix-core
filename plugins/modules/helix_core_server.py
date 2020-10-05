@@ -265,10 +265,11 @@ def run_module():
                 elif 'ClientDataFilter' in p4_server_spec:
                     p4_server_changes.append(False)
 
-                if module.params['distributedconfig'] is not None:
-                   p4_server_changes.append(p4_server_spec["DistributedConfig"] == module.params['distributedconfig'])
-                elif 'DistributedConfig' in p4_server_spec:
-                    p4_server_changes.append(False)
+                # ToDo - figure out how to get current configurables for this server id and compare to this if not provided
+                # if module.params['distributedconfig'] is not None:
+                #    p4_server_changes.append(p4_server_spec["DistributedConfig"] == module.params['distributedconfig'])
+                # elif 'DistributedConfig' in p4_server_spec:
+                #     p4_server_changes.append(False)
 
                 if module.params['externaladdress'] is not None:
                    p4_server_changes.append(p4_server_spec["ExternalAddress"] == module.params['externaladdress'])

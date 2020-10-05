@@ -231,13 +231,13 @@ def run_module():
             module.params['description'] = "Created by {0}.".format(module.params['user'])
 
         if module.params['state'] == 'present':
+            # get server definition
+            p4_server_spec = p4.fetch_server(module.params['serverid'])
+
             servers_dict = p4.run('servers')
 
             # check to see if any fields have changed
             if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
-
-                # get existing server definition
-                p4_server_spec = p4.fetch_server(module.params['serverid'])
 
                 p4_server_changes = []
                 p4_server_changes.append(p4_server_spec["Description"].rstrip() == module.params['description'])
@@ -310,7 +310,7 @@ def run_module():
                 else:
                     if not module.check_mode:
                         p4_server_spec["Description"] = module.params['description']
-                        p4_server_spec["Options"] = module.params['options'])
+                        p4_server_spec["Options"] = module.params['options']
                         p4_server_spec["Services"] = module.params['services']
                         p4_server_spec["Type"] = module.params['type']
 

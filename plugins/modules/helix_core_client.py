@@ -207,6 +207,7 @@ def run_module():
             module.params['root'] = getcwd()
 
         if module.params['state'] == 'present':
+            # check to see if any fields have changed
             if 'Access' in p4_client_spec:
 
                 p4_client_changes = []
@@ -226,7 +227,7 @@ def run_module():
 
                     result['changed'] = False
 
-                # update client with new values
+                # if changes are detected, update client with new values
                 else:
                     if not module.check_mode:
                         p4_client_spec["Root"] = module.params['root']

@@ -44,10 +44,41 @@ options:
         description:
             - Determines if the server spec is present or deleted
         type: str
+    address:
+        description: The P4PORT used by this server
+        type: str
+    allowedaddresses:
+        description:
+            - A list of addresses that are valid this server
+        elements: str
+        type: list
+    archivedatafilter:
+        description:
+            - For a replica server, this optional field can contain one or more patterns describing the policy for automatically scheduling the replication of file content. If this field is present, only those files described by the pattern are automatically transferred to the replica; other files are not transferred until they are referenced by a replica command that needs the file content.
+        elements: str
+        type: list
+    clientdatafilter:
+        description:
+            - For a replica server, this optional field can contain one or more patterns describing how active client workspace metadata is to be filtered. Active client workspace data includes have lists, working records, and pending resolves.
+        elements: str
+        type: list
     description:
         default: Created by user.
         description:
             - A textual description of the server
+        type: str
+    distributedconfig:
+        description:
+            - For all server types, this field shows a line for each configurable that is set to a non-default value. In this field, the admin can edit certain values, add a new line to set certain configurables to a non-default value, or delete a line to reset certain configurables to their default value.
+        elements: str
+        type: list
+    externaladdress:
+        description:
+            - This field contains the external address the commit server requires for connection to the edge server
+        type: str
+    name:
+        description:
+            - The P4NAME associated with this server. You can leave this blank or you can set it to the same value as the serverid.
         type: str
     options:
         default: nomandatory
@@ -58,6 +89,11 @@ options:
         description:
             - Server ID of the server from which this server is replicating or journalcopy'ing
         type: str
+    revisiondatafilter:
+        description:
+            - For a replica server, this optional field can contain one or more patterns describing how submitted revision metadata is to be filtered. Submitted revision data includes revision records, integration records, label contents, and the files listed in submitted changelists.
+        elements: str
+        type: list
     serverid:
         description:
             - A unique identifier for this server
@@ -68,10 +104,18 @@ options:
         description:
             - The server type server provides
         type: str
+    serviceuser:
+        descripton:
+            - The service user name used by the server (this is the user: field in server spec)
+        type: str
     type:
         default: server
         description:
             - Server executable type
+        type: str
+    updatecachedrepos:
+        description:
+            - Beginning in 2019.2, this optional field can contain a list of repos to be updated, with each repo name on a separate line
         type: str
     server:
         description:
@@ -147,13 +191,22 @@ def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
-        serverid=dict(type='str', required=True),
+        address=dict(type='str', default=None),
+        allowedaddresses=dict(type='list', elements='str', default=None),
+        archivedatafilter=dict(type='list', elements='str', default=None),
+        clientdatafilter=dict(type='list', elements='str', default=None),
         description=dict(type='str'),
-        services=dict(type='str', default='standard', choices = ['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
-        type=dict(type='str', default='server'),
+        distributedconfig=dict(type='list', elements='str', default=None),
+        externaladdress=dict(type='str', default=None),
         options=dict(type='str', default='nomandatory'),
         replicatingfrom=dict(type='str', default=None),
+        revisiondatafilter=dict(type='list', elements='str', default=None),
         name=dict(type='str', default=None),
+        serverid=dict(type='str', required=True),
+        services=dict(type='str', default='standard', choices = ['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
+        serviceuser=dict(type='str', default=None),
+        type=dict(type='str', default='server'),
+        updatedcachedrepos=dict(type='str', default=None),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -173,27 +226,80 @@ def run_module():
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing server definition
-        p4_server_spec = p4.fetch_server(module.params['serverid'])
-
         # if description is not given, set a default
         if module.params['description'] is None:
             module.params['description'] = "Created by {0}.".format(module.params['user'])
 
         if module.params['state'] == 'present':
+            servers_dict = p4.run('servers')
+
             # check to see if any fields have changed
-            if 'ServerID' in p4_server_spec:
+            if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
+
+                # get existing server definition
+                p4_server_spec = p4.fetch_server(module.params['serverid'])
 
                 p4_server_changes = []
                 p4_server_changes.append(p4_server_spec["Description"].rstrip() == module.params['description'])
+                p4_server_changes.append(p4_server_spec["Options"] == module.params['options'])
                 p4_server_changes.append(p4_server_spec["Services"] == module.params['services'])
                 p4_server_changes.append(p4_server_spec["Type"] == module.params['type'])
-                p4_server_changes.append(p4_server_spec["Options"] == module.params['options'])
+
+                if module.params['address'] is not None:
+                   p4_server_changes.append(p4_server_spec["Address"] == module.params['address'])
+                elif 'Address' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['allowedaddresses'] is not None:
+                   p4_server_changes.append(p4_server_spec["AllowedAddresses"] == module.params['allowedaddresses'])
+                elif 'AllowedAddresses' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['archivedatafilter'] is not None:
+                   p4_server_changes.append(p4_server_spec["ArchiveDataFilter"] == module.params['archivedatafilter'])
+                elif 'ArchiveDataFilter' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['clientdatafilter'] is not None:
+                   p4_server_changes.append(p4_server_spec["ClientDataFilter"] == module.params['clientdatafilter'])
+                elif 'ClientDataFilter' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['distributedconfig'] is not None:
+                   p4_server_changes.append(p4_server_spec["DistributedConfig"] == module.params['distributedconfig'])
+                elif 'DistributedConfig' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['externaladdress'] is not None:
+                   p4_server_changes.append(p4_server_spec["ExternalAddress"] == module.params['externaladdress'])
+                elif 'ExternalAddress' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['name'] is not None:
+                   p4_server_changes.append(p4_server_spec["Name"] == module.params['name'])
+                elif 'Name' in p4_server_spec:
+                    p4_server_changes.append(False)
 
                 if module.params['replicatingfrom'] is not None:
                    p4_server_changes.append(p4_server_spec["ReplicatingFrom"] == module.params['replicatingfrom'])
                 elif 'ReplicatingFrom' in p4_server_spec:
                     p4_server_changes.append(False)
+
+                if module.params['revisiondatafilter'] is not None:
+                   p4_server_changes.append(p4_server_spec["RevisionDataFilter"] == module.params['revisiondatafilter'])
+                elif 'RevisionDataFilter' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['updatedcachedrepos'] is not None:
+                   p4_server_changes.append(p4_server_spec["UpdatedCachedRepos"] == module.params['updatedcachedrepos'])
+                elif 'UpdatedCachedRepos' in p4_server_spec:
+                    p4_server_changes.append(False)
+
+                if module.params['serviceuser'] is not None:
+                   p4_server_changes.append(p4_server_spec["User"] == module.params['serviceuser'])
+                elif 'User' in p4_server_spec:
+                    p4_server_changes.append(False)
+
 
                 # check to see if changes are detected in any of the fields
                 if(all(p4_server_changes)):
@@ -204,14 +310,64 @@ def run_module():
                 else:
                     if not module.check_mode:
                         p4_server_spec["Description"] = module.params['description']
+                        p4_server_spec["Options"] = module.params['options'])
                         p4_server_spec["Services"] = module.params['services']
                         p4_server_spec["Type"] = module.params['type']
-                        p4_server_spec["Options"] = module.params['options'])
+
+                        if module.params['address'] is not None:
+                            p4_server_spec["Address"] = module.params['address']
+                        elif 'Address' in p4_server_spec:
+                            del p4_server_spec["Address"]
+
+                        if module.params['allowedaddresses'] is not None:
+                            p4_server_spec["AllowedAddresses"] = module.params['allowedaddresses']
+                        elif 'AllowedAddresses' in p4_server_spec:
+                            del p4_server_spec["AllowedAddresses"]
+
+                        if module.params['archivedatafilter'] is not None:
+                            p4_server_spec["ArchiveDataFilter"] = module.params['archivedatafilter']
+                        elif 'ArchiveDataFilter' in p4_server_spec:
+                            del p4_server_spec["ArchiveDataFilter"]
+
+                        if module.params['clientdatafilter'] is not None:
+                            p4_server_spec["ClientDataFilter"] = module.params['clientdatafilter']
+                        elif 'ClientDataFilter' in p4_server_spec:
+                            del p4_server_spec["ClientDataFilter"]
+
+                        if module.params['distributedconfig'] is not None:
+                            p4_server_spec["DistributedConfig"] = module.params['distributedconfig']
+                        elif 'DistributedConfig' in p4_server_spec:
+                            del p4_server_spec["DistributedConfig"]
+
+                        if module.params['externaladdress'] is not None:
+                            p4_server_spec["ExternalAddress"] = module.params['externaladdress']
+                        elif 'ExternalAddress' in p4_server_spec:
+                            del p4_server_spec["ExternalAddress"]
+
+                        if module.params['name'] is not None:
+                            p4_server_spec["Name"] = module.params['name']
+                        elif 'Name' in p4_server_spec:
+                            del p4_server_spec["Name"]
 
                         if module.params['replicatingfrom'] is not None:
                             p4_server_spec["ReplicatingFrom"] = module.params['replicatingfrom']
                         elif 'ReplicatingFrom' in p4_server_spec:
                             del p4_server_spec["ReplicatingFrom"]
+
+                        if module.params['revisiondatafilter'] is not None:
+                            p4_server_spec["RevisionDataFilter"] = module.params['revisiondatafilter']
+                        elif 'RevisionDataFilter' in p4_server_spec:
+                            del p4_server_spec["RevisionDataFilter"]
+
+                        if module.params['serviceuser'] is not None:
+                            p4_server_spec["User"] = module.params['serviceuser']
+                        elif 'User' in p4_server_spec:
+                            del p4_server_spec["User"]
+
+                        if module.params['updatedcachedrepos'] is not None:
+                            p4_server_spec["UpdatedCachedRepos"] = module.params['updatedcachedrepos']
+                        elif 'UpdatedCachedRepos' in p4_server_spec:
+                            del p4_server_spec["UpdatedCachedRepos"]
 
                         p4.save_server(p4_server_spec)
 
@@ -222,21 +378,54 @@ def run_module():
                 if not module.check_mode:
                     p4_server_spec["ServerID"] = module.params['serverid']
                     p4_server_spec["Description"] = module.params['description']
+                    p4_server_spec["Options"] = module.params['options']
                     p4_server_spec["Services"] = module.params['services']
                     p4_server_spec["Type"] = module.params['type']
 
+                    if module.params['address'] is not None:
+                        p4_server_spec["Address"] = module.params['address']
+
+                    if module.params['allowedaddresses'] is not None:
+                        p4_server_spec["AllowedAddresses"] = module.params['allowedaddresses']
+
+                    if module.params['archivedatafilter'] is not None:
+                        p4_server_spec["ArchiveDataFilter"] = module.params['archivedatafilter']
+
+                    if module.params['clientdatafilter'] is not None:
+                        p4_server_spec["ClientDataFilter"] = module.params['clientdatafilter']
+
+                    if module.params['distributedconfig'] is not None:
+                        p4_server_spec["DistributedConfig"] = module.params['distributedconfig']
+
+                    if module.params['externaladdress'] is not None:
+                        p4_server_spec["ExternalAddress"] = module.params['externaladdress']
+
+                    if module.params['name'] is not None:
+                        p4_server_spec["Name"] = module.params['name']
+
                     if module.params['replicatingfrom'] is not None:
                         p4_server_spec["ReplicatingFrom"] = module.params['replicatingfrom']
+
+                    if module.params['revisiondatafilter'] is not None:
+                        p4_server_spec["RevisionDataFilter"] = module.params['revisiondatafilter']
+
+                    if module.params['serviceuser'] is not None:
+                        p4_server_spec["User"] = module.params['serviceuser']
+
+                    if module.params['updatedcachedrepos'] is not None:
+                        p4_server_spec["UpdatedCachedRepos"] = module.params['updatedcachedrepos']
 
                     p4.save_server(p4_server_spec)
 
                 result['changed'] = True
 
         elif module.params['state'] == 'absent':
+            servers_dict = p4.run('servers')
+
             # delete server spec
-            if 'ServerID' in p4_server_spec:
+            if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
                 if not module.check_mode:
-                    p4.delete_server('-f', module.params['serverid'])
+                    p4.delete_server(module.params['serverid'])
 
                 result['changed'] = True
             else:

@@ -64,6 +64,25 @@ Then you can use the modules from the collection in your playbooks:
         user: bruno
         charset: auto
         password: ''
+
+    - name: Create filtered edge server
+      helix_core_server:
+        state: present
+        serverid: edge_replica
+        description: 'Created by root.'
+        archivedatafilter:
+          - //depot1/...
+          - -//depot2/...
+        clientdatafilter:
+          - -//workstation1/...
+        revisiondatafilter:
+          - //depot1/...
+          - -//depot2/...
+        services: edge-server
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
 ```
 
 ## Author

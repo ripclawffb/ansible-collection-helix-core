@@ -167,6 +167,25 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+# Create a filtered edge server spec
+- name: Create filtered edge server
+  helix_core_server:
+    state: present
+    serverid: edge_replica
+    description: 'Created by root.'
+    archivedatafilter:
+      - //depot1/...
+      - -//depot2/...
+    clientdatafilter:
+      - -//workstation1/...
+    revisiondatafilter:
+      - //depot1/...
+      - -//depot2/...
+    services: edge-server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
 # Delete a server spec
 - name: Delete a server spec
   helix_core_server:

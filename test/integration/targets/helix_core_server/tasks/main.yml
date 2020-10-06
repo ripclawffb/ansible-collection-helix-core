@@ -119,11 +119,19 @@
     that:
       - delete_server_idempotent is not changed
 
-- name: Create new server (check mode)
+- name: Create filtered edge server (check mode)
   helix_core_server:
     state: present
     serverid: edge_replica
     description: 'Created by root.'
+    archivedatafilter:
+      - //depot1/...
+      - -//depot2/...
+    clientdatafilter:
+      - -//workstation1/...
+    revisiondatafilter:
+      - //depot1/...
+      - -//depot2/...
     services: edge-server
     server: '1666'
     user: bruno
@@ -139,11 +147,19 @@
     that:
       - create_server_check_mode is changed
 
-- name: Create new server (confirm check mode)
+- name: Create filtered edge server (confirm check mode)
   helix_core_server:
     state: present
     serverid: edge_replica
     description: 'Created by root.'
+    archivedatafilter:
+      - //depot1/...
+      - -//depot2/...
+    clientdatafilter:
+      - -//workstation1/...
+    revisiondatafilter:
+      - //depot1/...
+      - -//depot2/...
     services: edge-server
     server: '1666'
     user: bruno
@@ -158,7 +174,34 @@
     that:
       - create_server_check_mode_confirm is changed
 
-- name: Delete server (check mode)
+- name: Update filtered edge server
+  helix_core_server:
+    state: present
+    serverid: edge_replica
+    description: 'Created by root.'
+    archivedatafilter:
+      - //depot2/...
+      - -//depot1/...
+    clientdatafilter:
+      - -//workstation1/...
+    revisiondatafilter:
+      - //depot1/...
+      - -//depot2/...
+    services: edge-server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_edge_archivedata
+
+- debug:
+    var: update_edge_archivedata
+
+- assert:
+    that:
+      - update_edge_archivedata is changed
+
+- name: Delete filtered edge server (check mode)
   helix_core_server:
     state: absent
     serverid: edge_replica
@@ -176,7 +219,7 @@
     that:
       - delete_server_check_mode is changed
 
-- name: Delete server (confirm check mode)
+- name: Delete filtered edge server (confirm check mode)
   helix_core_server:
     state: absent
     serverid: edge_replica

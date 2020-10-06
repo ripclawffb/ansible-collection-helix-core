@@ -17,7 +17,7 @@
     services: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: create_server_spec
 
@@ -36,7 +36,7 @@
     services: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: create_server_idempotent
 
@@ -55,7 +55,7 @@
     services: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: update_server
 
@@ -74,7 +74,7 @@
     services: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: update_server_idempotent
 
@@ -91,7 +91,7 @@
     serverid: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: delete_server_spec
 
@@ -108,7 +108,7 @@
     serverid: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: delete_server_idempotent
 
@@ -127,7 +127,7 @@
     services: edge-server
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: create_server_check_mode
   check_mode: true
@@ -147,7 +147,7 @@
     services: edge-server
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: create_server_check_mode_confirm
 
@@ -164,7 +164,7 @@
     serverid: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: delete_server_check_mode
   check_mode: true
@@ -182,7 +182,7 @@
     serverid: standard
     server: '1666'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: delete_server_check_mode_confirm
 
@@ -201,7 +201,7 @@
     services: edge-server
     server: '1666'
     user: bruno1
-    charset: none
+    charset: auto
     password: ''
   register: create_server_invalid_login
   ignore_errors: true
@@ -221,7 +221,7 @@
     services: edge-server
     server: '1667'
     user: bruno
-    charset: none
+    charset: auto
     password: ''
   register: create_server_invalid_port
   ignore_errors: true

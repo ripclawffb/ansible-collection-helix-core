@@ -139,7 +139,7 @@
     that:
       - create_server_check_mode is changed
 
-- name: Create new client (confirm check mode)
+- name: Create new server (confirm check mode)
   helix_core_server:
     state: present
     serverid: edge_replica
@@ -158,10 +158,10 @@
     that:
       - create_server_check_mode_confirm is changed
 
-- name: Delete client (check mode)
+- name: Delete server (check mode)
   helix_core_server:
     state: absent
-    serverid: standard
+    serverid: edge_replica
     server: '1666'
     user: bruno
     charset: auto
@@ -176,10 +176,10 @@
     that:
       - delete_server_check_mode is changed
 
-- name: Delete client (confirm check mode)
+- name: Delete server (confirm check mode)
   helix_core_server:
     state: absent
-    serverid: standard
+    serverid: edge_replica
     server: '1666'
     user: bruno
     charset: auto

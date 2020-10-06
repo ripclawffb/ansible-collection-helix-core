@@ -202,8 +202,6 @@ RETURN = r''' # '''
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
-from os import getcwd
-from socket import gethostname
 
 
 def run_module():
@@ -222,7 +220,7 @@ def run_module():
         revisiondatafilter=dict(type='list', elements='str', default=None),
         name=dict(type='str', default=None),
         serverid=dict(type='str', required=True),
-        services=dict(type='str', default='standard', choices = ['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
+        services=dict(type='str', default='standard', choices=['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
         serviceuser=dict(type='str', default=None),
         type=dict(type='str', default='server'),
         updatedcachedrepos=dict(type='str', default=None),
@@ -265,22 +263,22 @@ def run_module():
                 p4_server_changes.append(p4_server_spec["Type"] == module.params['type'])
 
                 if module.params['address'] is not None:
-                   p4_server_changes.append(p4_server_spec["Address"] == module.params['address'])
+                    p4_server_changes.append(p4_server_spec["Address"] == module.params['address'])
                 elif 'Address' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['allowedaddresses'] is not None:
-                   p4_server_changes.append(p4_server_spec["AllowedAddresses"] == module.params['allowedaddresses'])
+                    p4_server_changes.append(p4_server_spec["AllowedAddresses"] == module.params['allowedaddresses'])
                 elif 'AllowedAddresses' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['archivedatafilter'] is not None:
-                   p4_server_changes.append(p4_server_spec["ArchiveDataFilter"] == module.params['archivedatafilter'])
+                    p4_server_changes.append(p4_server_spec["ArchiveDataFilter"] == module.params['archivedatafilter'])
                 elif 'ArchiveDataFilter' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['clientdatafilter'] is not None:
-                   p4_server_changes.append(p4_server_spec["ClientDataFilter"] == module.params['clientdatafilter'])
+                    p4_server_changes.append(p4_server_spec["ClientDataFilter"] == module.params['clientdatafilter'])
                 elif 'ClientDataFilter' in p4_server_spec:
                     p4_server_changes.append(False)
 
@@ -291,35 +289,34 @@ def run_module():
                 #     p4_server_changes.append(False)
 
                 if module.params['externaladdress'] is not None:
-                   p4_server_changes.append(p4_server_spec["ExternalAddress"] == module.params['externaladdress'])
+                    p4_server_changes.append(p4_server_spec["ExternalAddress"] == module.params['externaladdress'])
                 elif 'ExternalAddress' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['name'] is not None:
-                   p4_server_changes.append(p4_server_spec["Name"] == module.params['name'])
+                    p4_server_changes.append(p4_server_spec["Name"] == module.params['name'])
                 elif 'Name' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['replicatingfrom'] is not None:
-                   p4_server_changes.append(p4_server_spec["ReplicatingFrom"] == module.params['replicatingfrom'])
+                    p4_server_changes.append(p4_server_spec["ReplicatingFrom"] == module.params['replicatingfrom'])
                 elif 'ReplicatingFrom' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['revisiondatafilter'] is not None:
-                   p4_server_changes.append(p4_server_spec["RevisionDataFilter"] == module.params['revisiondatafilter'])
+                    p4_server_changes.append(p4_server_spec["RevisionDataFilter"] == module.params['revisiondatafilter'])
                 elif 'RevisionDataFilter' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['updatedcachedrepos'] is not None:
-                   p4_server_changes.append(p4_server_spec["UpdatedCachedRepos"] == module.params['updatedcachedrepos'])
+                    p4_server_changes.append(p4_server_spec["UpdatedCachedRepos"] == module.params['updatedcachedrepos'])
                 elif 'UpdatedCachedRepos' in p4_server_spec:
                     p4_server_changes.append(False)
 
                 if module.params['serviceuser'] is not None:
-                   p4_server_changes.append(p4_server_spec["User"] == module.params['serviceuser'])
+                    p4_server_changes.append(p4_server_spec["User"] == module.params['serviceuser'])
                 elif 'User' in p4_server_spec:
                     p4_server_changes.append(False)
-
 
                 # check to see if changes are detected in any of the fields
                 if(all(p4_server_changes)):

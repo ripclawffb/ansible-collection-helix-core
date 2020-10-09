@@ -223,37 +223,37 @@ def run_module():
                 # check to see if any fields have changed
                 p4_group_changes = []
                 p4_group_changes.append(p4_group_spec['Group'] == module.params['name'])
-                p4_group_changes.append(p4_group_spec['MaxLockTime'] == module.params['maxlocktime'])
-                p4_group_changes.append(p4_group_spec['MaxResults'].rstrip() == module.params['maxresults'])
-                p4_group_changes.append(p4_group_spec['MaxOpenFiles'] == module.params['maxopenfiles'])
-                p4_group_changes.append(p4_group_spec['MaxScanRows'] == module.params['maxscanrows'])
-                p4_group_changes.append(p4_group_spec['PasswordTimeout'] == module.params['passwordtimeout'])
-                p4_group_changes.append(p4_group_spec['Timeout'] == module.params['timeout'])
+                # p4_group_changes.append(p4_group_spec['MaxLockTime'] == module.params['maxlocktime'])
+                # p4_group_changes.append(p4_group_spec['MaxResults'].rstrip() == module.params['maxresults'])
+                # p4_group_changes.append(p4_group_spec['MaxOpenFiles'] == module.params['maxopenfiles'])
+                # p4_group_changes.append(p4_group_spec['MaxScanRows'] == module.params['maxscanrows'])
+                # p4_group_changes.append(p4_group_spec['PasswordTimeout'] == module.params['passwordtimeout'])
+                # p4_group_changes.append(p4_group_spec['Timeout'] == module.params['timeout'])
 
-                if module.params['ldapconfig'] is not None:
-                    p4_group_changes.append(p4_group_spec['LdapConfig'] == module.params['ldapconfig'])
-                elif 'LdapConfig' in p4_group_spec:
-                    p4_group_changes.append(False)
+                # if module.params['ldapconfig'] is not None:
+                #     p4_group_changes.append(p4_group_spec['LdapConfig'] == module.params['ldapconfig'])
+                # elif 'LdapConfig' in p4_group_spec:
+                #     p4_group_changes.append(False)
 
-                if module.params['ldapsearchquery'] is not None:
-                    p4_group_changes.append(p4_group_spec['LdapSearchQuery'] == module.params['ldapsearchquery'])
-                elif 'LdapSearchQuery' in p4_group_spec:
-                    p4_group_changes.append(False)
+                # if module.params['ldapsearchquery'] is not None:
+                #     p4_group_changes.append(p4_group_spec['LdapSearchQuery'] == module.params['ldapsearchquery'])
+                # elif 'LdapSearchQuery' in p4_group_spec:
+                #     p4_group_changes.append(False)
 
-                if module.params['ldapuserattribute'] is not None:
-                    p4_group_changes.append(p4_group_spec['LdapUserAttribute'] == module.params['ldapuserattribute'])
-                elif 'LdapUserAttribute' in p4_group_spec:
-                    p4_group_changes.append(False)
+                # if module.params['ldapuserattribute'] is not None:
+                #     p4_group_changes.append(p4_group_spec['LdapUserAttribute'] == module.params['ldapuserattribute'])
+                # elif 'LdapUserAttribute' in p4_group_spec:
+                #     p4_group_changes.append(False)
 
-                if module.params['owners'] is not None:
-                    p4_group_changes.append(p4_group_spec['Owners'] == module.params['owners'])
-                elif 'Owners' in p4_group_spec:
-                    p4_group_changes.append(False)
+                # if module.params['owners'] is not None:
+                #     p4_group_changes.append(p4_group_spec['Owners'] == module.params['owners'])
+                # elif 'Owners' in p4_group_spec:
+                #     p4_group_changes.append(False)
 
-                if module.params['subgroups'] is not None:
-                    p4_group_changes.append(p4_group_spec['Subgroups'] == module.params['subgroups'])
-                elif 'Subgroups' in p4_group_spec:
-                    p4_group_changes.append(False)
+                # if module.params['subgroups'] is not None:
+                #     p4_group_changes.append(p4_group_spec['Subgroups'] == module.params['subgroups'])
+                # elif 'Subgroups' in p4_group_spec:
+                #     p4_group_changes.append(False)
 
                 if module.params['users'] is not None:
                     p4_group_changes.append(p4_group_spec['Users'] == module.params['users'])
@@ -269,37 +269,37 @@ def run_module():
                 else:
                     if not module.check_mode:
                         p4_group_spec['Group'] = module.params['name']
-                        p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
-                        p4_group_spec['MaxResults'] = module.params['maxresults']
-                        p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
-                        p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
-                        p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
-                        p4_group_spec['Timeout'] = module.params['timeout']
+                        # p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
+                        # p4_group_spec['MaxResults'] = module.params['maxresults']
+                        # p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
+                        # p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
+                        # p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
+                        # p4_group_spec['Timeout'] = module.params['timeout']
 
-                        if module.params['ldapconfig'] is not None:
-                            p4_group_spec['LdapConfig'] = module.params['ldapconfig']
-                        elif 'LdapConfig' in p4_group_spec:
-                            del p4_group_spec['LdapConfig']
+                        # if module.params['ldapconfig'] is not None:
+                        #     p4_group_spec['LdapConfig'] = module.params['ldapconfig']
+                        # elif 'LdapConfig' in p4_group_spec:
+                        #     del p4_group_spec['LdapConfig']
 
-                        if module.params['ldapsearchquery'] is not None:
-                            p4_group_spec['LdapSearchQuery'] = module.params['ldapsearchquery']
-                        elif 'LdapSearchQuery' in p4_group_spec:
-                            del p4_group_spec['LdapSearchQuery']
+                        # if module.params['ldapsearchquery'] is not None:
+                        #     p4_group_spec['LdapSearchQuery'] = module.params['ldapsearchquery']
+                        # elif 'LdapSearchQuery' in p4_group_spec:
+                        #     del p4_group_spec['LdapSearchQuery']
 
-                        if module.params['ldapuserattribute'] is not None:
-                            p4_group_spec['LdapUserAttribute'] = module.params['ldapuserattribute']
-                        elif 'LdapUserAttribute' in p4_group_spec:
-                            del p4_group_spec['LdapUserAttribute']
+                        # if module.params['ldapuserattribute'] is not None:
+                        #     p4_group_spec['LdapUserAttribute'] = module.params['ldapuserattribute']
+                        # elif 'LdapUserAttribute' in p4_group_spec:
+                        #     del p4_group_spec['LdapUserAttribute']
 
-                        if module.params['owners'] is not None:
-                            p4_group_spec['Owners'] = module.params['owners']
-                        elif 'Owners' in p4_group_spec:
-                            del p4_group_spec['Owners']
+                        # if module.params['owners'] is not None:
+                        #     p4_group_spec['Owners'] = module.params['owners']
+                        # elif 'Owners' in p4_group_spec:
+                        #     del p4_group_spec['Owners']
 
-                        if module.params['subgroups'] is not None:
-                            p4_group_spec['Subgroups'] = module.params['subgroups']
-                        elif 'Subgroups' in p4_group_spec:
-                            del p4_group_spec['Subgroups']
+                        # if module.params['subgroups'] is not None:
+                        #     p4_group_spec['Subgroups'] = module.params['subgroups']
+                        # elif 'Subgroups' in p4_group_spec:
+                        #     del p4_group_spec['Subgroups']
 
                         if module.params['users'] is not None:
                             p4_group_spec['Users'] = module.params['users']
@@ -314,27 +314,27 @@ def run_module():
             else:
                 if not module.check_mode:
                     p4_group_spec['Group'] = module.params['name']
-                    p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
-                    p4_group_spec['MaxResults'] = module.params['maxresults']
-                    p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
-                    p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
-                    p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
-                    p4_group_spec['Timeout'] = module.params['timeout']
+                    # p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
+                    # p4_group_spec['MaxResults'] = module.params['maxresults']
+                    # p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
+                    # p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
+                    # p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
+                    # p4_group_spec['Timeout'] = module.params['timeout']
 
-                    if module.params['ldapconfig'] is not None:
-                        p4_group_spec['LdapConfig'] = module.params['ldapconfig']
+                    # if module.params['ldapconfig'] is not None:
+                    #     p4_group_spec['LdapConfig'] = module.params['ldapconfig']
 
-                    if module.params['ldapsearchquery'] is not None:
-                        p4_group_spec['LdapSearchQuery'] = module.params['ldapsearchquery']
+                    # if module.params['ldapsearchquery'] is not None:
+                    #     p4_group_spec['LdapSearchQuery'] = module.params['ldapsearchquery']
 
-                    if module.params['ldapuserattribute'] is not None:
-                        p4_group_spec['LdapUserAttribute'] = module.params['ldapuserattribute']
+                    # if module.params['ldapuserattribute'] is not None:
+                    #     p4_group_spec['LdapUserAttribute'] = module.params['ldapuserattribute']
 
-                    if module.params['owners'] is not None:
-                        p4_group_spec['Owners'] = module.params['owners']
+                    # if module.params['owners'] is not None:
+                    #     p4_group_spec['Owners'] = module.params['owners']
 
-                    if module.params['subgroups'] is not None:
-                        p4_group_spec['Subgroups'] = module.params['subgroups']
+                    # if module.params['subgroups'] is not None:
+                    #     p4_group_spec['Subgroups'] = module.params['subgroups']
 
                     if module.params['users'] is not None:
                         p4_group_spec['Users'] = module.params['users']

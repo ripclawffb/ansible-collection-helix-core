@@ -182,9 +182,9 @@ def run_module():
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True, aliases=['group']),
-        ldapconfig=dict(type='str'),
-        ldapsearchquery=dict(type='str'),
-        ldapuserattribute=dict(type='str'),
+        ldapconfig=dict(type='str', default=None),
+        ldapsearchquery=dict(type='str', default=None),
+        ldapuserattribute=dict(type='str', default=None),
         maxlocktime=dict(type='str', default='unset'),
         maxopenfiles=dict(type='str', default='unset'),
         maxresults=dict(type='str', default='unset'),

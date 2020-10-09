@@ -222,6 +222,7 @@ def run_module():
 
                 # check to see if any fields have changed
                 p4_group_changes = []
+                p4_group_changes.append(p4_group_spec['Group'] == module.params['name'])
                 p4_group_changes.append(p4_group_spec['MaxLockTime'] == module.params['maxlocktime'])
                 p4_group_changes.append(p4_group_spec['MaxResults'].rstrip() == module.params['maxresults'])
                 p4_group_changes.append(p4_group_spec['MaxOpenFiles'] == module.params['maxopenfiles'])
@@ -267,6 +268,7 @@ def run_module():
                 # if changes are detected, update group with new values
                 else:
                     if not module.check_mode:
+                        p4_group_spec['Group'] = module.params['name']
                         p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
                         p4_group_spec['MaxResults'] = module.params['maxresults']
                         p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
@@ -311,6 +313,7 @@ def run_module():
             # create new user with specified values
             else:
                 if not module.check_mode:
+                    p4_group_spec['Group'] = module.params['name']
                     p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
                     p4_group_spec['MaxResults'] = module.params['maxresults']
                     p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']

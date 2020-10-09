@@ -102,7 +102,7 @@ options:
         default: 43200
         description:
             - The duration (in seconds) of the validity of a session ticket created by p4 login
-        type: int
+        type: str
     users:
         description:
             - The Helix server usernames of the group members

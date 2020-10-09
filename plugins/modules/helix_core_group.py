@@ -215,7 +215,7 @@ def run_module():
 
     try:
         # get existing group definition
-        p4_group_spec = p4.fetch_user(module.params['name'])
+        p4_group_spec = p4.fetch_group(module.params['name'])
 
         if module.params['state'] == 'present':
             if len(p4_group_spec['Users']) > 0:

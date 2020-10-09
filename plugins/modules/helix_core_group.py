@@ -274,7 +274,7 @@ def run_module():
                         p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
                         p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
                         p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
-                        p4_group_spec['PasswordTimeout'] = module.params['timeout']
+                        p4_group_spec['Timeout'] = module.params['timeout']
 
                         if module.params['ldapconfig'] is not None:
                             p4_group_spec['LdapConfig'] = module.params['ldapconfig']
@@ -319,7 +319,7 @@ def run_module():
                     p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
                     p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
                     p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
-                    p4_group_spec['PasswordTimeout'] = module.params['timeout']
+                    p4_group_spec['Timeout'] = module.params['timeout']
 
                     if module.params['ldapconfig'] is not None:
                         p4_group_spec['LdapConfig'] = module.params['ldapconfig']

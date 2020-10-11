@@ -253,9 +253,11 @@ def run_module():
 
             servers_dict = p4.run('servers')
 
-            # check to see if any fields have changed
+            # look through the list of servers specs returned and see if any match the current server id
+            # if a server spec is found with the current server id, let's look for any changes in attributes
             if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
 
+                # check to see if any fields have changed
                 p4_server_changes = []
                 p4_server_changes.append(p4_server_spec["Description"].rstrip() == module.params['description'])
                 p4_server_changes.append(p4_server_spec["Options"] == module.params['options'])

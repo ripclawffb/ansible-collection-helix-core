@@ -347,7 +347,7 @@ def run_module():
             # delete group
             if 'Users' in p4_group_spec:
                 if not module.check_mode:
-                    p4.delete_group('-f', module.params['name'])
+                    p4.delete_group(module.params['name'])
 
                 result['changed'] = True
             else:

@@ -12,6 +12,9 @@
     - name: import helix_core_client tasks
       import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
 
+    - name: import helix_core_group tasks
+      import_tasks: ../../test/integration/targets/helix_core_group/tasks/main.yml
+
     - name: import helix_core_server tasks
       import_tasks: ../../test/integration/targets/helix_core_server/tasks/main.yml
 

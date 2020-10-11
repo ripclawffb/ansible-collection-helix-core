@@ -54,6 +54,19 @@ Then you can use the modules from the collection in your playbooks:
         charset: auto
         password: ''
 
+    - name: Create new group
+      helix_core_group:
+        state: present
+        name: new_group
+        users:
+          - new_user
+        maxlocktime: '300'
+        timeout: '86400'
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
+
     - name: Create a new server spec
       helix_core_server:
         state: present
@@ -65,7 +78,7 @@ Then you can use the modules from the collection in your playbooks:
         charset: auto
         password: ''
 
-    - name: Create filtered edge server
+    - name: Create filtered edge server spec
       helix_core_server:
         state: present
         serverid: edge_replica

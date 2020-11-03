@@ -51,7 +51,7 @@ RUN yum install -y epel-release; \
 COPY perforce.repo /etc/yum.repos.d/perforce.repo
 
 RUN rpm --import https://package.perforce.com/perforce.pubkey; \
-    yum install perforce-p4python3
+    yum install -y perforce-p4python3
 
 # Pinning to this version because newer version require OpenSSL which uses ftp
 # FTP downloads are blocked on TravisCI

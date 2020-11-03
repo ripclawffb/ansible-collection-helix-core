@@ -50,7 +50,7 @@ RUN yum install -y epel-release; \
 
 # Pinning to this version because newer version require OpenSSL which uses ftp
 # FTP downloads are blocked on TravisCI
-RUN pip3 install p4python==2017.2.1615960
+RUN pip3 install p4python
 
 # Let's start Perforce
 ENTRYPOINT ["p4d"]

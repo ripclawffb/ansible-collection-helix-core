@@ -4,10 +4,10 @@
 # Copyright: (c) 2019, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
-- name: Install required lib
-  pip:
-    name: p4python
-    executable: pip3
+# - name: Install required lib
+#   pip:
+#     name: p4python
+#     executable: pip3
 
 - name: Create a new server spec
   helix_core_server:

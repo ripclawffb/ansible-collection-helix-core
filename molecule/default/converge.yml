@@ -10,6 +10,7 @@
       yum_repository:
         name: Perforce
         baseurl: http://package.perforce.com/yum/rhel/7/x86_64/
+        description: Perforce
         enabled: true
         gpgcheck: true
         gpgkey: https://package.perforce.com/perforce.pubkey

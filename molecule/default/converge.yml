@@ -7,8 +7,6 @@
 
   tasks:
     - name: add perforce yum repo
-      vars:
-        ansible_python_interpreter: /usr/bin/python
       yum_repository:
         name: Perforce
         baseurl: http://package.perforce.com/yum/rhel/7/x86_64/
@@ -18,6 +16,8 @@
         gpgkey: https://package.perforce.com/perforce.pubkey
 
     - name:
+      vars:
+        ansible_python_interpreter: /usr/bin/python
       package:
         name: perforce-p4python3
 

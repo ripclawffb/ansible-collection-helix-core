@@ -6,6 +6,21 @@
     - ripclawffb.helix_core
 
   tasks:
+    - name: add perforce yum repo
+      yum_repository:
+        name: Perforce
+        baseurl: http://package.perforce.com/yum/rhel/7/x86_64/
+        description: Perforce
+        enabled: true
+        gpgcheck: true
+        gpgkey: https://package.perforce.com/perforce.pubkey
+
+    - name:
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      package:
+        name: perforce-p4python3
+
     - name: import helix_core_configurable tasks
       import_tasks: ../../test/integration/targets/helix_core_configurable/tasks/main.yml
 

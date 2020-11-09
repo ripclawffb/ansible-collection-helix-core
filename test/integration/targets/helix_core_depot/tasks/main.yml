@@ -319,7 +319,7 @@
 
 - assert:
     that:
-      - update_depot is not changed
+      - update_depot_idempotent is not changed
 
 - name: Delete depot (idempotent)
   helix_core_depot:

@@ -1,0 +1,428 @@
+# Test code for the Helix depot module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2019, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# - name: Install required lib
+#   pip:
+#     name: p4python
+#     executable: pip3
+
+- name: Create a new depot
+  helix_core_depot:
+    state: present
+    depot: bruno
+    type: local
+    description: Bruno's depot
+    map: depot/...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_depot
+
+- debug:
+    var: create_depot
+
+- assert:
+    that:
+      - create_depot is changed
+
+- name: Create a specs depot
+  helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_spec_depot
+
+- debug:
+    var: create_spec_depot
+
+- assert:
+    that:
+      - create_spec_depot is changed
+
+- name: Create a tangent depot
+  helix_core_depot:
+    state: present
+    depot: tangent
+    type: tangent
+    description: Tangent depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_tangent_depot
+
+- debug:
+    var: create_tangent_depot
+
+- assert:
+    that:
+      - create_tangent_depot is changed
+
+- name: Create a unload depot
+  helix_core_depot:
+    state: present
+    depot: unload
+    type: unload
+    description: Unload depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_unload_depot
+
+- debug:
+    var: create_unload_depot
+
+- assert:
+    that:
+      - create_unload_depot is changed
+
+- name: Create a archive depot
+  helix_core_depot:
+    state: present
+    depot: archive
+    type: archive
+    description: Archive depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_archive_depot
+
+- debug:
+    var: create_archive_depot
+
+- assert:
+    that:
+      - create_archive_depot is changed
+
+- name: Create a remote depot
+  helix_core_depot:
+    state: present
+    depot: remote
+    address: '1666'
+    type: remote
+    description: Remote depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_remote_depot
+
+- debug:
+    var: create_remote_depot
+
+- assert:
+    that:
+      - create_remote_depot is changed
+
+- name: Create a stream depot
+  helix_core_depot:
+    state: present
+    depot: stream_depot
+    streamdepth: '//stream_depot/1/2/3'
+    type: stream
+    description: Stream depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_depot
+
+- debug:
+    var: create_stream_depot
+
+- assert:
+    that:
+      - create_stream_depot is changed
+
+- name: Create a new depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: bruno
+    type: local
+    description: Bruno's depot
+    map: depot/...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_depot_idempotent
+
+- debug:
+    var: create_depot_idempotent
+
+- assert:
+    that:
+      - create_depot_idempotent is not changed
+
+- name: Create a specs depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_spec_depot_idempotent
+
+- debug:
+    var: create_spec_depot_idempotent
+
+- assert:
+    that:
+      - create_spec_depot_idempotent is not changed
+
+- name: Create a tangent depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: tangent
+    type: tangent
+    description: Tangent depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_tangent_depot_idempotent
+
+- debug:
+    var: create_tangent_depot_idempotent
+
+- assert:
+    that:
+      - create_tangent_depot_idempotent is not changed
+
+- name: Create a unload depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: unload
+    type: unload
+    description: Unload depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_unload_depot_idempotent
+
+- debug:
+    var: create_unload_depot_idempotent
+
+- assert:
+    that:
+      - create_unload_depot_idempotent is not changed
+
+- name: Create a archive depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: archive
+    type: archive
+    description: Archive depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_archive_depot_idempotent
+
+- debug:
+    var: create_archive_depot_idempotent
+
+- assert:
+    that:
+      - create_archive_depot_idempotent is not changed
+
+- name: Create a remote depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: remote
+    address: '1666'
+    type: remote
+    description: Remote depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_remote_depot_idempotent
+
+- debug:
+    var: create_remote_depot_idempotent
+
+- assert:
+    that:
+      - create_remote_depot_idempotent is not changed
+
+- name: Create a stream depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: stream_depot
+    streamdepth: '//stream_depot/1/2/3'
+    type: stream
+    description: Stream depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_depot_idempotent
+
+- debug:
+    var: create_stream_depot_idempotent
+
+- assert:
+    that:
+      - create_stream_depot_idempotent is not changed
+
+- name: Update depot
+  helix_core_depot:
+    state: present
+    depot: bruno
+    type: local
+    description: Bruno's updated depot
+    map: depot/...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_depot
+
+- debug:
+    var: update_depot
+
+- assert:
+    that:
+      - update_depot is changed
+
+- name: Update depot (idempotent)
+  helix_core_depot:
+    state: present
+    depot: bruno
+    type: local
+    description: Bruno's updated depot
+    map: depot/...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_depot_idempotent
+
+- debug:
+    var: update_depot_idempotent
+
+- assert:
+    that:
+      - update_depot is not changed
+
+- name: Delete depot (idempotent)
+  helix_core_depot:
+    state: absent
+    depot: bruno
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_depot
+
+- debug:
+    var: delete_depot
+
+- assert:
+    that:
+      - delete_depot is changed
+
+- name: Delete a depot (idempotent)
+  helix_core_depot:
+    state: absent
+    depot: bruno
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_depot_idempotent
+
+- debug:
+    var: delete_depot_idempotent
+
+- assert:
+    that:
+      - delete_depot_idempotent is not changed
+
+- name: Create new depot (check mode)
+  helix_core_depot:
+    state: present
+    name: bruno_new_depot
+    description: 'New depot for Bruno'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_depot_check_mode
+  check_mode: true
+
+- debug:
+    var: create_depot_check_mode
+
+- assert:
+    that:
+      - create_depot_check_mode is changed
+
+- name: Create new depot (confirm check mode)
+  helix_core_depot:
+    state: present
+    name: bruno_new_depot
+    description: 'New depot for Bruno'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_depot_check_mode_confirm
+
+- debug:
+    var: create_depot_check_mode_confirm
+
+- assert:
+    that:
+      - create_depot_check_mode_confirm is changed
+
+- name: Delete depot (check mode)
+  helix_core_depot:
+    state: absent
+    depot: bruno
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_depot_check_mode      
+  check_mode: true
+
+- debug:
+    var: delete_depot_check_mode
+
+- assert:
+    that:
+      - delete_depot_check_mode is changed
+
+- name: Delete depot (confirm check mode)
+  helix_core_depot:
+    state: absent
+    depot: bruno
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_depot_check_mode_confirm      
+
+- debug:
+    var: delete_depot_check_mode_confirm
+
+- assert:
+    that:
+      - delete_depot_check_mode_confirm is changed

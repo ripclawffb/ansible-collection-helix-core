@@ -96,6 +96,18 @@ Then you can use the modules from the collection in your playbooks:
         user: bruno
         charset: auto
         password: ''
+
+    - name: Create a new depot
+      helix_core_depot:
+        state: present
+        depot: bruno
+        type: local
+        description: Bruno's depot
+        p4port: '1666'
+        p4user: 'bruno'
+        p4passwd: ''
+        p4charset: auto
+      register: create_depot
 ```
 
 ## Author

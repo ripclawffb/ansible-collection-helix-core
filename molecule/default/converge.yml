@@ -21,11 +21,14 @@
       package:
         name: perforce-p4python3
 
+    - name: import helix_core_client tasks
+      import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
+
     - name: import helix_core_configurable tasks
       import_tasks: ../../test/integration/targets/helix_core_configurable/tasks/main.yml
 
-    - name: import helix_core_client tasks
-      import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
+    - name: import helix_core_depot tasks
+      import_tasks: ../../test/integration/targets/helix_core_depot/tasks/main.yml
 
     - name: import helix_core_group tasks
       import_tasks: ../../test/integration/targets/helix_core_group/tasks/main.yml

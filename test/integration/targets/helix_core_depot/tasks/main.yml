@@ -395,7 +395,7 @@
 - name: Delete depot (check mode)
   helix_core_depot:
     state: absent
-    depot: bruno
+    depot: bruno_new_depot
     p4port: '1666'
     p4user: 'bruno'
     p4passwd: ''
@@ -413,7 +413,7 @@
 - name: Delete depot (confirm check mode)
   helix_core_depot:
     state: absent
-    depot: bruno
+    depot: bruno_new_depot
     p4port: '1666'
     p4user: 'bruno'
     p4passwd: ''

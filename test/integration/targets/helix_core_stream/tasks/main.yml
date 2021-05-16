@@ -1,0 +1,271 @@
+# Test code for the Helix stream module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2019, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Create a stream depot
+  helix_core_depot:
+    state: present
+    depot: stream1
+    streamdepth: '//stream1/1'
+    type: stream
+    description: Stream depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+
+- name: Create new mainline stream
+  helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream'
+    type: mainline
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream
+
+- debug:
+    var: create_stream
+
+- assert:
+    that:
+      - create_stream is changed
+
+- name: Create new stream (idempotent)
+  helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream'
+    type: mainline
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_idempotent
+
+- debug:
+    var: create_stream_idempotent
+
+- assert:
+    that:
+      - create_stream_idempotent is not changed
+
+- name: Update stream
+  helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream1'
+    type: mainline
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_stream
+
+- debug:
+    var: update_stream
+
+- assert:
+    that:
+      - update_stream is changed
+
+- name: Update stream (idempotent)
+  helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream1'
+    type: mainline
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_stream_idempotent
+
+- debug:
+    var: update_stream_idempotent
+
+- assert:
+    that:
+      - update_stream_idempotent is not changed
+
+- name: Delete a stream
+  helix_core_stream:
+    state: absent
+    stream: //stream1/main
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_stream
+
+- debug:
+    var: delete_stream
+
+- assert:
+    that:
+      - delete_stream is changed
+
+- name: Delete a stream (idempotent)
+  helix_core_stream:
+    state: absent
+    stream: //stream1/main
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_stream_idempotent
+
+- debug:
+    var: delete_stream_idempotent
+
+- assert:
+    that:
+      - delete_stream_idempotent is not changed
+
+- name: Create mainline stream
+  helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream1'
+    type: mainline
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+
+- name: Create new stream (check mode)
+  helix_core_stream:
+    state: present
+    stream: //stream1/dev
+    description: 'Development Stream1'
+    parent: //stream1/main
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_check_mode
+  check_mode: true
+
+- debug:
+    var: create_stream_check_mode
+
+- assert:
+    that:
+      - create_stream_check_mode is changed
+
+- name: Create new stream (confirm check mode)
+  helix_core_stream:
+    state: present
+    stream: //stream1/dev
+    description: 'Development Stream1'
+    parent: //stream1/main
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_check_mode_confirm
+
+- debug:
+    var: create_stream_check_mode_confirm
+
+- assert:
+    that:
+      - create_stream_check_mode_confirm is changed
+
+- name: Delete stream (check mode)
+  helix_core_stream:
+    state: absent
+    stream: //stream1/dev
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_stream_check_mode
+  check_mode: true
+
+- debug:
+    var: delete_stream_check_mode
+
+- assert:
+    that:
+      - delete_stream_check_mode is changed
+
+- name: Delete stream (confirm check mode)
+  helix_core_stream:
+    state: absent
+    stream: //stream1/dev
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: delete_stream_check_mode_confirm
+
+- debug:
+    var: delete_stream_check_mode_confirm
+
+- assert:
+    that:
+      - delete_stream_check_mode_confirm is changed
+
+- name: Fail when using invalid login
+  helix_core_stream:
+    state: present
+    stream: //stream1/dev2
+    description: 'Development Stream1'
+    parent: //stream1/main
+    paths:
+      - share ...
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+    p4charset: auto
+  register: create_stream_invalid_login
+  ignore_errors: true
+
+- debug:
+    var: create_stream_invalid_login
+
+- assert:
+    that:
+      - create_stream_invalid_login.failed | bool
+
+- name: Fail when using invalid port
+  helix_core_stream:
+    state: present
+    stream: //stream1/dev2
+    description: 'Development Stream1'
+    parent: //stream1/main
+    paths:
+      - share ...
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_stream_invalid_port
+  ignore_errors: true
+
+- debug:
+    var: create_stream_invalid_port
+
+- assert:
+    that:
+      - create_stream_invalid_port.failed | bool

@@ -36,5 +36,8 @@
     - name: import helix_core_server tasks
       import_tasks: ../../test/integration/targets/helix_core_server/tasks/main.yml
 
+    - name: import helix_core_stream tasks
+      import_tasks: ../../test/integration/targets/helix_core_stream/tasks/main.yml
+
     - name: import helix_core_user tasks
       import_tasks: ../../test/integration/targets/helix_core_user/tasks/main.yml

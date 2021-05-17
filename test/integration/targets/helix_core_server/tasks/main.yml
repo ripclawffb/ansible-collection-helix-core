@@ -21,10 +21,12 @@
     password: ''
   register: create_server_spec
 
-- debug:
+- name: Output create_server_spec
+  debug:
     var: create_server_spec
 
-- assert:
+- name: Verify create_server_spec is changed
+  assert:
     that:
       - create_server_spec is changed
 
@@ -40,10 +42,12 @@
     password: ''
   register: create_server_idempotent
 
-- debug:
+- name: Output create_server_idempotent
+  debug:
     var: create_server_idempotent
 
-- assert:
+- name: Verify create_server_idempotent is not changed
+  assert:
     that:
       - create_server_idempotent is not changed
 
@@ -59,10 +63,12 @@
     password: ''
   register: update_server
 
-- debug:
+- name: Output update_server
+  debug:
     var: update_server
 
-- assert:
+- name: Verify update_server is changed
+  assert:
     that:
       - update_server is changed
 
@@ -78,10 +84,12 @@
     password: ''
   register: update_server_idempotent
 
-- debug:
+- name: Output update_server_idempotent
+  debug:
     var: update_server_idempotent
 
-- assert:
+- name: Verify update_server_idempotent is not changed
+  assert:
     that:
       - update_server_idempotent is not changed
 
@@ -95,10 +103,12 @@
     password: ''
   register: delete_server_spec
 
-- debug:
+- name: Output delete_server_spec
+  debug:
     var: delete_server_spec
 
-- assert:
+- name: Verify delete_server_spec is changed
+  assert:
     that:
       - delete_server_spec is changed
 
@@ -112,10 +122,12 @@
     password: ''
   register: delete_server_idempotent
 
-- debug:
+- name: Output delete_server_idempotent
+  debug:
     var: delete_server_idempotent
 
-- assert:
+- name: Verify delete_server_idempotent is not changed
+  assert:
     that:
       - delete_server_idempotent is not changed
 
@@ -140,10 +152,12 @@
   register: create_server_check_mode
   check_mode: true
 
-- debug:
+- name: Output create_server_check_mode
+  debug:
     var: create_server_check_mode
 
-- assert:
+- name: Verify create_server_check_mode is changed
+  assert:
     that:
       - create_server_check_mode is changed
 
@@ -167,10 +181,12 @@
     password: ''
   register: create_server_check_mode_confirm
 
-- debug:
+- name: Output create_server_check_mode_confirm
+  debug:
     var: create_server_check_mode_confirm
 
-- assert:
+- name: Verify create_server_check_mode_confirm is changed
+  assert:
     that:
       - create_server_check_mode_confirm is changed
 
@@ -194,10 +210,12 @@
     password: ''
   register: update_edge_archivedata
 
-- debug:
+- name: Output update_edge_archivedata
+  debug:
     var: update_edge_archivedata
 
-- assert:
+- name: Verify update_edge_archivedata is changed
+  assert:
     that:
       - update_edge_archivedata is changed
 
@@ -212,10 +230,12 @@
   register: delete_server_check_mode
   check_mode: true
 
-- debug:
+- name: Output delete_server_check_mode
+  debug:
     var: delete_server_check_mode
 
-- assert:
+- name: Verify delete_server_check_mode is changed
+  assert:
     that:
       - delete_server_check_mode is changed
 
@@ -229,10 +249,12 @@
     password: ''
   register: delete_server_check_mode_confirm
 
-- debug:
+- name: Output delete_server_check_mode_confirm
+  debug:
     var: delete_server_check_mode_confirm
 
-- assert:
+- name: Verify delete_server_check_mode_confirm is changed
+  assert:
     that:
       - delete_server_check_mode_confirm is changed
 
@@ -249,10 +271,12 @@
   register: create_server_invalid_login
   ignore_errors: true
 
-- debug:
+- name: Output create_server_invalid_login
+  debug:
     var: create_server_invalid_login
 
-- assert:
+- name: Verify create_server_invalid_login failed
+  assert:
     that:
       - create_server_invalid_login.failed | bool
 
@@ -269,9 +293,11 @@
   register: create_server_invalid_port
   ignore_errors: true
 
-- debug:
+- name: Output create_server_invalid_port
+  debug:
     var: create_server_invalid_port
 
-- assert:
+- name: Verify create_server_invalid_port failed
+  assert:
     that:
       - create_server_invalid_port.failed | bool

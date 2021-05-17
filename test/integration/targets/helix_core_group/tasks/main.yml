@@ -21,10 +21,12 @@
     password: ''
   register: create_group
 
-- debug:
+- name: Output create_group
+  debug:
     var: create_group
 
-- assert:
+- name: Verify create_group is changed
+  assert:
     that:
       - create_group is changed
 
@@ -40,10 +42,12 @@
     password: ''
   register: create_group_idempotent
 
-- debug:
+- name: Output create_group_idempotent
+  debug:
     var: create_group_idempotent
 
-- assert:
+- name: Verify create_group_idempotent is not changed
+  assert:
     that:
       - create_group_idempotent is not changed
 
@@ -57,10 +61,12 @@
     password: ''
   register: delete_group
 
-- debug:
+- name: Output delete_group
+  debug:
     var: delete_group
 
-- assert:
+- name: Verify delete_group is changed
+  assert:
     that:
       - delete_group is changed
 
@@ -74,10 +80,12 @@
     password: ''
   register: delete_group_idempotent
 
-- debug:
+- name: Output delete_group_idempotent
+  debug:
     var: delete_group_idempotent
 
-- assert:
+- name: Verify delete_group_idempotent is not changed
+  assert:
     that:
       - delete_group_idempotent is not changed
 
@@ -94,10 +102,12 @@
   register: create_group_check_mode
   check_mode: true
 
-- debug:
+- name: Output create_group_check_mode
+  debug:
     var: create_group_check_mode
 
-- assert:
+- name: Verify create_group_check_mode is changed
+  assert:
     that:
       - create_group_check_mode is changed
 
@@ -113,10 +123,12 @@
     password: ''
   register: create_group_check_mode_confirm
 
-- debug:
+- name: Output create_group_check_mode_confirm
+  debug:
     var: create_group_check_mode_confirm
 
-- assert:
+- name: Verify create_group_check_mode_confirm is changed
+  assert:
     that:
       - create_group_check_mode_confirm is changed
 
@@ -131,10 +143,12 @@
   register: delete_group_check_mode
   check_mode: true
 
-- debug:
+- name: Output delete_group_check_mode
+  debug:
     var: delete_group_check_mode
 
-- assert:
+- name: Verify delete_group_check_mode is changed
+  assert:
     that:
       - delete_group_check_mode is changed
 
@@ -148,10 +162,12 @@
     password: ''
   register: delete_group_check_mode_confirm
 
-- debug:
+- name: Output delete_group_check_mode_confirm
+  debug:
     var: delete_group_check_mode_confirm
 
-- assert:
+- name: Verify delete_group_check_mode_confirm is changed
+  assert:
     that:
       - delete_group_check_mode_confirm is changed
 
@@ -168,10 +184,12 @@
   register: create_group_invalid_login
   ignore_errors: true
 
-- debug:
+- name: Output create_group_invalid_login
+  debug:
     var: create_group_invalid_login
 
-- assert:
+- name: Verify create_group_invalid_login failed
+  assert:
     that:
       - create_group_invalid_login.failed | bool
 
@@ -188,9 +206,11 @@
   register: create_group_invalid_port
   ignore_errors: true
 
-- debug:
+- name: Output create_group_invalid_port
+  debug:
     var: create_group_invalid_port
 
-- assert:
+- name: Verify create_group_invalid_port failed
+  assert:
     that:
       - create_group_invalid_port.failed | bool

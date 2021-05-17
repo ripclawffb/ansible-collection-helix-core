@@ -32,6 +32,7 @@ provisioner:
 scenario:
   name: default
   test_sequence:
+    - lint
     - destroy
     - dependency
     - syntax
@@ -44,4 +45,3 @@ lint: |
   set -e
   yamllint .
   ansible-lint
-  flake8

@@ -29,5 +29,5 @@ before_script:
   - cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
 
 script:
-  # Test helix modules
+  # Test helix core modules
   - molecule test

@@ -28,7 +28,7 @@
         state: present
       when: ansible_facts['os_family'] == 'Debian'
 
-    - name: install p4 python module
+    - name: install p4python module
       vars:
         ansible_python_interpreter: /usr/bin/python
       package:

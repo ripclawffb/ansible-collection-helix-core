@@ -22,10 +22,12 @@
     p4charset: auto
   register: create_depot
 
-- debug:
+- name: Output create_depot
+  debug:
     var: create_depot
 
-- assert:
+- name: Verify create_depot is changed
+  assert:
     that:
       - create_depot is changed
 
@@ -41,10 +43,12 @@
     p4charset: auto
   register: create_spec_depot
 
-- debug:
+- name: Output create_spec_depot
+  debug:
     var: create_spec_depot
 
-- assert:
+- name: Verify create_spec_depot is changed
+  assert:
     that:
       - create_spec_depot is changed
 
@@ -60,10 +64,12 @@
     p4charset: auto
   register: create_tangent_depot
 
-- debug:
+- name: Output create_tangent_depot
+  debug:
     var: create_tangent_depot
 
-- assert:
+- name: Verify create_tangent_depot is changed
+  assert:
     that:
       - create_tangent_depot is changed
 
@@ -79,10 +85,12 @@
     p4charset: auto
   register: create_unload_depot
 
-- debug:
+- name: Output create_unload_depot
+  debug:
     var: create_unload_depot
 
-- assert:
+- name: Verify create_unload_depot is changed
+  assert:
     that:
       - create_unload_depot is changed
 
@@ -98,10 +106,12 @@
     p4charset: auto
   register: create_archive_depot
 
-- debug:
+- name: Output create_archive_depot
+  debug:
     var: create_archive_depot
 
-- assert:
+- name: Verify create_archive_depot is changed
+  assert:
     that:
       - create_archive_depot is changed
 
@@ -118,10 +128,12 @@
     p4charset: auto
   register: create_remote_depot
 
-- debug:
+- name: Output create_remote_depot
+  debug:
     var: create_remote_depot
 
-- assert:
+- name: Verify create_remote_depot is changed
+  assert:
     that:
       - create_remote_depot is changed
 
@@ -138,10 +150,12 @@
     p4charset: auto
   register: create_stream_depot
 
-- debug:
+- name: Output create_stream_depot
+  debug:
     var: create_stream_depot
 
-- assert:
+- name: Verify create_stream_depot is changed
+  assert:
     that:
       - create_stream_depot is changed
 
@@ -158,10 +172,12 @@
     p4charset: auto
   register: create_depot_idempotent
 
-- debug:
+- name: Output create_depot_idempotent
+  debug:
     var: create_depot_idempotent
 
-- assert:
+- name: Verify create_depot_idempotent is not changed
+  assert:
     that:
       - create_depot_idempotent is not changed
 
@@ -177,10 +193,12 @@
     p4charset: auto
   register: create_spec_depot_idempotent
 
-- debug:
+- name: Output create_spec_depot_idempotent
+  debug:
     var: create_spec_depot_idempotent
 
-- assert:
+- name: Verify create_spec_depot_idempotent is not changed
+  assert:
     that:
       - create_spec_depot_idempotent is not changed
 
@@ -196,10 +214,12 @@
     p4charset: auto
   register: create_tangent_depot_idempotent
 
-- debug:
+- name: Output create_tangent_depot_idempotent
+  debug:
     var: create_tangent_depot_idempotent
 
-- assert:
+- name: Verify create_tangent_depot_idempotent is not changed
+  assert:
     that:
       - create_tangent_depot_idempotent is not changed
 
@@ -215,10 +235,12 @@
     p4charset: auto
   register: create_unload_depot_idempotent
 
-- debug:
+- name: Output create_unload_depot_idempotent
+  debug:
     var: create_unload_depot_idempotent
 
-- assert:
+- name: Verify create_unload_depot_idempotent is not changed
+  assert:
     that:
       - create_unload_depot_idempotent is not changed
 
@@ -234,10 +256,12 @@
     p4charset: auto
   register: create_archive_depot_idempotent
 
-- debug:
+- name: Output create_archive_depot_idempotent
+  debug:
     var: create_archive_depot_idempotent
 
-- assert:
+- name: Verify create_archive_depot_idempotent is not changed
+  assert:
     that:
       - create_archive_depot_idempotent is not changed
 
@@ -254,10 +278,12 @@
     p4charset: auto
   register: create_remote_depot_idempotent
 
-- debug:
+- name: Output create_remote_depot_idempotent
+  debug:
     var: create_remote_depot_idempotent
 
-- assert:
+- name: Verify create_remote_depot_idempotent is not changed
+  assert:
     that:
       - create_remote_depot_idempotent is not changed
 
@@ -274,10 +300,12 @@
     p4charset: auto
   register: create_stream_depot_idempotent
 
-- debug:
+- name: Output create_stream_depot_idempotent
+  debug:
     var: create_stream_depot_idempotent
 
-- assert:
+- name: Verify create_stream_depot_idempotent is not changed
+  assert:
     that:
       - create_stream_depot_idempotent is not changed
 
@@ -294,10 +322,12 @@
     p4charset: auto
   register: update_depot
 
-- debug:
+- name: Output update_depot
+  debug:
     var: update_depot
 
-- assert:
+- name: Verify update_depot is changed
+  assert:
     that:
       - update_depot is changed
 
@@ -314,10 +344,12 @@
     p4charset: auto
   register: update_depot_idempotent
 
-- debug:
+- name: Output update_depot_idempotent
+  debug:
     var: update_depot_idempotent
 
-- assert:
+- name: Verify update_depot_idempotent is not changed
+  assert:
     that:
       - update_depot_idempotent is not changed
 
@@ -331,10 +363,12 @@
     p4charset: auto
   register: delete_depot
 
-- debug:
+- name: Output delete_depot
+  debug:
     var: delete_depot
 
-- assert:
+- name: Verify delete_depot is changed
+  assert:
     that:
       - delete_depot is changed
 
@@ -348,10 +382,12 @@
     p4charset: auto
   register: delete_depot_idempotent
 
-- debug:
+- name: Output delete_depot_idempotent
+  debug:
     var: delete_depot_idempotent
 
-- assert:
+- name: Verify delete_depot_idempotent is not changed
+  assert:
     that:
       - delete_depot_idempotent is not changed
 
@@ -367,10 +403,12 @@
   register: create_depot_check_mode
   check_mode: true
 
-- debug:
+- name: Output create_depot_check_mode
+  debug:
     var: create_depot_check_mode
 
-- assert:
+- name: Verify create_depot_check_mode is changed
+  assert:
     that:
       - create_depot_check_mode is changed
 
@@ -385,10 +423,12 @@
     password: ''
   register: create_depot_check_mode_confirm
 
-- debug:
+- name: Output create_depot_check_mode_confirm
+  debug:
     var: create_depot_check_mode_confirm
 
-- assert:
+- name: Verify create_depot_check_mode_confirm is changed
+  assert:
     that:
       - create_depot_check_mode_confirm is changed
 
@@ -400,13 +440,15 @@
     p4user: 'bruno'
     p4passwd: ''
     p4charset: auto
-  register: delete_depot_check_mode      
+  register: delete_depot_check_mode
   check_mode: true
 
-- debug:
+- name: Output delete_depot_check_mode
+  debug:
     var: delete_depot_check_mode
 
-- assert:
+- name: Verify delete_depot_check_mode is changed
+  assert:
     that:
       - delete_depot_check_mode is changed
 
@@ -418,11 +460,13 @@
     p4user: 'bruno'
     p4passwd: ''
     p4charset: auto
-  register: delete_depot_check_mode_confirm      
+  register: delete_depot_check_mode_confirm
 
-- debug:
+- name: Output delete_depot_check_mode_confirm
+  debug:
     var: delete_depot_check_mode_confirm
 
-- assert:
+- name: Verify delete_depot_check_mode_confirm is changed
+  assert:
     that:
       - delete_depot_check_mode_confirm is changed

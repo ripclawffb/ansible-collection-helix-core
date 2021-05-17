@@ -4,16 +4,30 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance
+  - name: centos7
+    dockerfile: Dockerfile.centos.7.j2
     image: centos:7
+    command: '-r .'
+  - name: ubuntu1804
+    dockerfile: Dockerfile.ubuntu.18.04.j2
+    image: ubuntu:18.04
+    command: '-r .'
+  - name: ubuntu2004
+    dockerfile: Dockerfile.ubuntu.20.04.j2
+    image: ubuntu:20.04
     command: '-r .'
 provisioner:
   name: ansible
+  log: true
+  # options:
+  #   vvv: true
   env:
     ANSIBLE_COLLECTIONS_PATHS: "/home/travis/build/ripclawffb:~/.ansible/collections"
   inventory:
     host_vars:
-      instance:
+      centos7:
+        ansible_python_interpreter: "/usr/bin/python3"
+      ubuntu:
         ansible_python_interpreter: "/usr/bin/python3"
 scenario:
   name: default

@@ -14,12 +14,48 @@
         enabled: true
         gpgcheck: true
         gpgkey: https://package.perforce.com/perforce.pubkey
+      when: ansible_facts['os_family'] == 'RedHat'
 
-    - name:
+    - name: add perforce apt key
+      ansible.builtin.apt_key:
+        url: https://package.perforce.com/perforce.pubkey
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: add perforce apt repo
+      apt_repository:
+        repo: "deb http://package.perforce.com/apt/ubuntu {{ ansible_facts['distribution_release'] }} release"
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: install p4 python module
       vars:
         ansible_python_interpreter: /usr/bin/python
       package:
         name: perforce-p4python3
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: install p4 python module (python 3.6)
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      package:
+        name:
+          - python-apt
+          - perforce-p4python3-python3.6
+      when:
+        - ansible_facts['os_family'] == 'Debian'
+        - ansible_facts['distribution_release'] == 'bionic'
+
+    - name: install p4 python module (python 3.8)
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      package:
+        name:
+          - python-apt
+          - perforce-p4python3-python3.8
+      when:
+        - ansible_facts['os_family'] == 'Debian'
+        - ansible_facts['distribution_release'] == 'focal'
 
     - name: import helix_core_client tasks
       import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml

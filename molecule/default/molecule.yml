@@ -40,3 +40,8 @@ scenario:
     - converge
     - side_effect
     - destroy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8

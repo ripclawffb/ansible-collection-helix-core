@@ -24,10 +24,12 @@
     password: ''
   register: create_client
 
-- debug:
+- name: Output create_client
+  debug:
     var: create_client
 
-- assert:
+- name: Verify create_client is changed
+  assert:
     that:
       - create_client is changed
 
@@ -46,10 +48,12 @@
     password: ''
   register: create_client_idempotent
 
-- debug:
+- name: Output create_client_idempotent
+  debug:
     var: create_client_idempotent
 
-- assert:
+- name: Verify create_client_idempotent is not changed
+  assert:
     that:
       - create_client_idempotent is not changed
 
@@ -67,10 +71,12 @@
     password: ''
   register: update_client
 
-- debug:
+- name: Output update_client
+  debug:
     var: update_client
 
-- assert:
+- name: Verify update_client is changed
+  assert:
     that:
       - update_client is changed
 
@@ -88,10 +94,12 @@
     password: ''
   register: update_client_idempotent
 
-- debug:
+- name: Output update_client_idempotent
+  debug:
     var: update_client_idempotent
 
-- assert:
+- name: Verify update_client_idempotent is not changed
+  assert:
     that:
       - update_client_idempotent is not changed
 
@@ -106,10 +114,12 @@
     password: ''
   register: delete_client
 
-- debug:
+- name: Output delete_client
+  debug:
     var: delete_client
 
-- assert:
+- name: Verify delete_client is changed
+  assert:
     that:
       - delete_client is changed
 
@@ -124,10 +134,12 @@
     password: ''
   register: delete_client_idempotent
 
-- debug:
+- name: Output delete_client_idempotent
+  debug:
     var: delete_client_idempotent
 
-- assert:
+- name: Verify delete_client_idempotent is not changed
+  assert:
     that:
       - delete_client_idempotent is not changed
 
@@ -147,10 +159,12 @@
   register: create_client_check_mode
   check_mode: true
 
-- debug:
+- name: Output create_client_check_mode
+  debug:
     var: create_client_check_mode
 
-- assert:
+- name: Verify create_client_check_mode is changed
+  assert:
     that:
       - create_client_check_mode is changed
 
@@ -169,10 +183,12 @@
     password: ''
   register: create_client_check_mode_confirm
 
-- debug:
+- name: Output create_client_check_mode_confirm
+  debug:
     var: create_client_check_mode_confirm
 
-- assert:
+- name: Verify create_client_check_mode_confirm is changed
+  assert:
     that:
       - create_client_check_mode_confirm is changed
 
@@ -188,10 +204,12 @@
   register: delete_client_check_mode
   check_mode: true
 
-- debug:
+- name: Output delete_client_check_mode
+  debug:
     var: delete_client_check_mode
 
-- assert:
+- name: Verify delete_client_check_mode is changed
+  assert:
     that:
       - delete_client_check_mode is changed
 
@@ -206,10 +224,12 @@
     password: ''
   register: delete_client_check_mode_confirm
 
-- debug:
+- name: Output delete_client_check_mode_confirm
+  debug:
     var: delete_client_check_mode_confirm
 
-- assert:
+- name: Verify delete_client_check_mode_confirm is changed
+  assert:
     that:
       - delete_client_check_mode_confirm is changed
 
@@ -229,10 +249,12 @@
   register: create_client_invalid_login
   ignore_errors: true
 
-- debug:
+- name: Output create_client_invalid_login
+  debug:
     var: create_client_invalid_login
 
-- assert:
+- name: Verify create_client_invalid_login failed
+  assert:
     that:
       - create_client_invalid_login.failed | bool
 
@@ -252,9 +274,11 @@
   register: create_client_invalid_port
   ignore_errors: true
 
-- debug:
+- name: Output create_client_invalid_port
+  debug:
     var: create_client_invalid_port
 
-- assert:
+- name: Verify create_client_invalid_port failed
+  assert:
     that:
       - create_client_invalid_port.failed | bool

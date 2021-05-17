@@ -20,10 +20,12 @@
     p4charset: auto
   register: auth_set_configurable
 
-- debug:
+- name: Output auth_set_configurable
+  debug:
     var: auth_set_configurable
 
-- assert:
+- name: Verify auth_set_configurable is changed
+  assert:
     that:
       - auth_set_configurable is changed
 
@@ -38,10 +40,12 @@
     p4charset: auto
   register: auth_set_configurable_idempotent
 
-- debug:
+- name: Output auth_set_configurable_idempotent
+  debug:
     var: auth_set_configurable_idempotent
 
-- assert:
+- name: Verify auth_set_configurable_idempotent is not changed
+  assert:
     that:
       - auth_set_configurable_idempotent is not changed
 
@@ -56,10 +60,12 @@
     p4charset: auto
   register: auth_unset_configurable
 
-- debug:
+- name: Output auth_set_configurable
+  debug:
     var: auth_set_configurable
 
-- assert:
+- name: Verify auth_set_configurable is changed
+  assert:
     that:
       - auth_set_configurable is changed
 
@@ -76,10 +82,12 @@
   register: auth_set_serverid_configurable
   check_mode: true
 
-- debug:
+- name: Output auth_set_serverid_configurable
+  debug:
     var: auth_set_serverid_configurable
 
-- assert:
+- name: Verify auth_set_serverid_configurable is changed
+  assert:
     that:
       - auth_set_serverid_configurable is changed
 
@@ -95,10 +103,12 @@
     p4charset: auto
   register: auth_set_serverid_configurable
 
-- debug:
+- name: Output auth_set_serverid_configurable
+  debug:
     var: auth_set_serverid_configurable
 
-- assert:
+- name: Verify auth_set_serverid_configurable is changed
+  assert:
     that:
       - auth_set_serverid_configurable is changed
 
@@ -114,10 +124,12 @@
     p4charset: auto
   register: auth_unset_serverid_configurable
 
-- debug:
+- name: Output auth_unset_serverid_configurable
+  debug:
     var: auth_unset_serverid_configurable
 
-- assert:
+- name: Verify auth_unset_serverid_configurable is changed
+  assert:
     that:
       - auth_unset_serverid_configurable is changed
 
@@ -133,10 +145,12 @@
   register: auth_set_invalid_login
   ignore_errors: true
 
-- debug:
+- name: Output auth_set_invalid_login
+  debug:
     var: auth_set_invalid_login
 
-- assert:
+- name: Verify auth_set_invalid_login failed
+  assert:
     that:
       - auth_set_invalid_login.failed | bool
 
@@ -152,9 +166,11 @@
   register: auth_set_invalid_port
   ignore_errors: true
 
-- debug:
+- name: Output auth_set_invalid_port
+  debug:
     var: auth_set_invalid_port
 
-- assert:
+- name: Verify auth_set_invalid_port failed
+  assert:
     that:
       - auth_set_invalid_port.failed | bool

@@ -107,8 +107,22 @@ Then you can use the modules from the collection in your playbooks:
         p4user: 'bruno'
         p4passwd: ''
         p4charset: auto
-      register: create_depot
+
+    - name: Create new mainline stream
+      helix_core_stream:
+        state: present
+        stream: //stream1/main
+        description: 'Mainline Stream'
+        type: mainline
+        paths:
+          - share ...
+        p4port: '1666'
+        p4user: 'bruno'
+        p4passwd: ''
+        p4charset: auto
 ```
+
+Additional examples can be found under `test/integration/targets/`.
 
 ## Author
 

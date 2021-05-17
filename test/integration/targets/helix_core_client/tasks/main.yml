@@ -61,6 +61,7 @@
     root: /tmp/bruno_new_client
     view:
       - //depot/... //bruno_new_client/depot/...
+    options: allwrite noclobber nocompress unlocked nomodtime normdir
     server: '1666'
     user: bruno
     charset: auto
@@ -82,6 +83,7 @@
     root: /tmp/bruno_new_client
     view:
       - //depot/... //bruno_new_client/depot/...
+    options: allwrite noclobber nocompress unlocked nomodtime normdir
     server: '1666'
     user: bruno
     charset: auto

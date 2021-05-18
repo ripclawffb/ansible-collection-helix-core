@@ -7,6 +7,9 @@ verify_ssl = true
 ansible = "~=2.9.20"
 docker = "==4.2.0"
 molecule = "==3.0.3"
+ansible-lint = "*"
+yamllint = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.8"

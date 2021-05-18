@@ -20,10 +20,12 @@
     password: ''
   register: create_user
 
-- debug:
+- name: Output create_user
+  debug:
     var: create_user
 
-- assert:
+- name: Verify create_user is changed
+  assert:
     that:
       - create_user is changed
 
@@ -38,10 +40,12 @@
     password: ''
   register: create_user_idempotent
 
-- debug:
+- name: Output create_user_idempotent
+  debug:
     var: create_user_idempotent
 
-- assert:
+- name: Verify create_user_idempotent is not changed
+  assert:
     that:
       - create_user_idempotent is not changed
 
@@ -55,10 +59,12 @@
     password: ''
   register: delete_user
 
-- debug:
+- name: Output delete_user
+  debug:
     var: delete_user
 
-- assert:
+- name: Verify delete_user is changed
+  assert:
     that:
       - delete_user is changed
 
@@ -72,10 +78,12 @@
     password: ''
   register: delete_user_idempotent
 
-- debug:
+- name: Output delete_user_idempotent
+  debug:
     var: delete_user_idempotent
 
-- assert:
+- name: Verify delete_user_idempotent is not changed
+  assert:
     that:
       - delete_user_idempotent is not changed
 
@@ -91,10 +99,12 @@
   register: create_user_check_mode
   check_mode: true
 
-- debug:
+- name: Output create_user_check_mode
+  debug:
     var: create_user_check_mode
 
-- assert:
+- name: Verify create_user_check_mode is changed
+  assert:
     that:
       - create_user_check_mode is changed
 
@@ -109,10 +119,12 @@
     password: ''
   register: create_user_check_mode_confirm
 
-- debug:
+- name: Output create_user_check_mode_confirm
+  debug:
     var: create_user_check_mode_confirm
 
-- assert:
+- name: Verify create_user_check_mode_confirm is changed
+  assert:
     that:
       - create_user_check_mode_confirm is changed
 
@@ -128,10 +140,12 @@
   register: delete_user_check_mode
   check_mode: true
 
-- debug:
+- name: Output delete_user_check_mode
+  debug:
     var: delete_user_check_mode
 
-- assert:
+- name: Verify delete_user_check_mode is changed
+  assert:
     that:
       - delete_user_check_mode is changed
 
@@ -146,10 +160,12 @@
     password: ''
   register: delete_user_check_mode_confirm
 
-- debug:
+- name: Output delete_user_check_mode_confirm
+  debug:
     var: delete_user_check_mode_confirm
 
-- assert:
+- name: Verify delete_user_check_mode_confirm is changed
+  assert:
     that:
       - delete_user_check_mode_confirm is changed
 
@@ -165,10 +181,12 @@
   register: create_user_invalid_login
   ignore_errors: true
 
-- debug:
+- name: Output create_user_invalid_login
+  debug:
     var: create_user_invalid_login
 
-- assert:
+- name: Verify create_user_invalid_login failed
+  assert:
     that:
       - create_user_invalid_login.failed | bool
 
@@ -184,9 +202,11 @@
   register: create_user_invalid_port
   ignore_errors: true
 
-- debug:
+- name: Output create_user_invalid_port
+  debug:
     var: create_user_invalid_port
 
-- assert:
+- name: Verify create_user_invalid_port failed
+  assert:
     that:
       - create_user_invalid_port.failed | bool

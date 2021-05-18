@@ -30,10 +30,12 @@
     p4charset: auto
   register: create_stream
 
-- debug:
+- name: Output create_stream
+  debug:
     var: create_stream
 
-- assert:
+- name: Verify create_stream is changed
+  assert:
     that:
       - create_stream is changed
 
@@ -51,10 +53,12 @@
     p4charset: auto
   register: create_stream_idempotent
 
-- debug:
+- name: Output create_stream_idempotent
+  debug:
     var: create_stream_idempotent
 
-- assert:
+- name: Verify create_stream_idempotent is not changed
+  assert:
     that:
       - create_stream_idempotent is not changed
 
@@ -72,10 +76,12 @@
     p4charset: auto
   register: update_stream
 
-- debug:
+- name: Output update_stream
+  debug:
     var: update_stream
 
-- assert:
+- name: Verify update_stream is changed
+  assert:
     that:
       - update_stream is changed
 
@@ -93,10 +99,12 @@
     p4charset: auto
   register: update_stream_idempotent
 
-- debug:
+- name: Output update_stream_idempotent
+  debug:
     var: update_stream_idempotent
 
-- assert:
+- name: Verify update_stream_idempotent is not changed
+  assert:
     that:
       - update_stream_idempotent is not changed
 
@@ -110,10 +118,12 @@
     p4charset: auto
   register: delete_stream
 
-- debug:
+- name: Output delete_stream
+  debug:
     var: delete_stream
 
-- assert:
+- name: Verify delete_stream is changed
+  assert:
     that:
       - delete_stream is changed
 
@@ -127,10 +137,12 @@
     p4charset: auto
   register: delete_stream_idempotent
 
-- debug:
+- name: Output delete_stream_idempotent
+  debug:
     var: delete_stream_idempotent
 
-- assert:
+- name: Verify delete_stream_idempotent is not changed
+  assert:
     that:
       - delete_stream_idempotent is not changed
 
@@ -162,10 +174,12 @@
   register: create_stream_check_mode
   check_mode: true
 
-- debug:
+- name: Output create_stream_check_mode
+  debug:
     var: create_stream_check_mode
 
-- assert:
+- name: Verify create_stream_check_mode is changed
+  assert:
     that:
       - create_stream_check_mode is changed
 
@@ -183,10 +197,12 @@
     p4charset: auto
   register: create_stream_check_mode_confirm
 
-- debug:
+- name: Output create_stream_check_mode_confirm
+  debug:
     var: create_stream_check_mode_confirm
 
-- assert:
+- name: Verify create_stream_check_mode_confirm is changed
+  assert:
     that:
       - create_stream_check_mode_confirm is changed
 
@@ -201,10 +217,12 @@
   register: delete_stream_check_mode
   check_mode: true
 
-- debug:
+- name: Output delete_stream_check_mode
+  debug:
     var: delete_stream_check_mode
 
-- assert:
+- name: Verify delete_stream_check_mode is changed
+  assert:
     that:
       - delete_stream_check_mode is changed
 
@@ -218,10 +236,12 @@
     p4charset: auto
   register: delete_stream_check_mode_confirm
 
-- debug:
+- name: Output delete_stream_check_mode_confirm
+  debug:
     var: delete_stream_check_mode_confirm
 
-- assert:
+- name: Verify delete_stream_check_mode_confirm is changed
+  assert:
     that:
       - delete_stream_check_mode_confirm is changed
 
@@ -241,10 +261,12 @@
   register: create_stream_invalid_login
   ignore_errors: true
 
-- debug:
+- name: Output create_stream_invalid_login
+  debug:
     var: create_stream_invalid_login
 
-- assert:
+- name: Verify create_stream_invalid_login failed
+  assert:
     that:
       - create_stream_invalid_login.failed | bool
 
@@ -263,9 +285,11 @@
   register: create_stream_invalid_port
   ignore_errors: true
 
-- debug:
+- name: Output create_stream_invalid_port
+  debug:
     var: create_stream_invalid_port
 
-- assert:
+- name: Verify create_stream_invalid_port failed
+  assert:
     that:
       - create_stream_invalid_port.failed | bool

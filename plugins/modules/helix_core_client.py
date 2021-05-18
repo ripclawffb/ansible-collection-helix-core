@@ -20,7 +20,8 @@ module: helix_core_client
 short_description: This module will allow you to manage client/workspace on Perforce Helix Core
 
 description:
-    - "A client/workspace specification defines the portion of the depot that can be accessed from that workspace and specifies where local copies of files in the depot are stored."
+    - "A client/workspace specification defines the portion of the depot that can be accessed from that
+       workspace and specifies where local copies of files in the depot are stored."
     - "This module supports check mode."
 
 requirements:

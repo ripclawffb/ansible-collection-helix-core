@@ -7,13 +7,13 @@ import traceback
 __metaclass__ = type
 
 try:
-    from P4 import P4, P4Exception
+    from P4 import P4
     HAS_P4 = True
 except ImportError:
     P4_IMP_ERR = traceback.format_exc()
     HAS_P4 = False
 
-from ansible.module_utils.basic import env_fallback, missing_required_lib
+from ansible.module_utils.basic import missing_required_lib
 
 
 def helix_core_connect(module, script_name):

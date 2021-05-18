@@ -20,7 +20,8 @@ module: helix_core_server
 short_description: This module will allow you to manage server spec on Perforce Helix Core
 
 description:
-    - "A server specification describes the high-level configuration and intended usage of a Helix Server. For installations with only one Helix Server, the server specification is optional."
+    - "A server specification describes the high-level configuration and intended usage of a
+       Helix Server. For installations with only one Helix Server, the server specification is optional."
     - "This module supports check mode."
 
 requirements:
@@ -54,12 +55,17 @@ options:
         type: list
     archivedatafilter:
         description:
-            - For a replica server, this optional field can contain one or more patterns describing the policy for automatically scheduling the replication of file content. If this field is present, only those files described by the pattern are automatically transferred to the replica; other files are not transferred until they are referenced by a replica command that needs the file content.
+            - For a replica server, this optional field can contain one or more patterns describing the policy
+              for automatically scheduling the replication of file content. If this field is present, only those
+              files described by the pattern are automatically transferred to the replica; other files are not
+              transferred until they are referenced by a replica command that needs the file content.
         elements: str
         type: list
     clientdatafilter:
         description:
-            - For a replica server, this optional field can contain one or more patterns describing how active client workspace metadata is to be filtered. Active client workspace data includes have lists, working records, and pending resolves.
+            - For a replica server, this optional field can contain one or more patterns describing how active
+              client workspace metadata is to be filtered. Active client workspace data includes have lists,
+              working records, and pending resolves.
         elements: str
         type: list
     description:
@@ -69,7 +75,9 @@ options:
         type: str
     distributedconfig:
         description:
-            - For all server types, this field shows a line for each configurable that is set to a non-default value. In this field, the admin can edit certain values, add a new line to set certain configurables to a non-default value, or delete a line to reset certain configurables to their default value.
+            - For all server types, this field shows a line for each configurable that is set to a non-default value.
+              In this field, the admin can edit certain values, add a new line to set certain configurables to a
+              non-default value, or delete a line to reset certain configurables to their default value.
         elements: str
         type: list
     externaladdress:
@@ -91,7 +99,9 @@ options:
         type: str
     revisiondatafilter:
         description:
-            - For a replica server, this optional field can contain one or more patterns describing how submitted revision metadata is to be filtered. Submitted revision data includes revision records, integration records, label contents, and the files listed in submitted changelists.
+            - For a replica server, this optional field can contain one or more patterns describing how submitted
+              revision metadata is to be filtered. Submitted revision data includes revision records, integration
+              records, label contents, and the files listed in submitted changelists.
         elements: str
         type: list
     serverid:
@@ -220,7 +230,8 @@ def run_module():
         revisiondatafilter=dict(type='list', elements='str', default=None),
         name=dict(type='str', default=None),
         serverid=dict(type='str', required=True),
-        services=dict(type='str', default='standard', choices=['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server', 'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
+        services=dict(type='str', default='standard', choices=['standard', 'replica', 'forwarding-replica', 'commit-server', 'edge-server', 'build-server',
+                                                               'standby', 'forwarding-standby', 'local', 'P4AUTH', 'P4CHANGE']),
         serviceuser=dict(type='str', default=None),
         type=dict(type='str', default='server'),
         updatedcachedrepos=dict(type='str', default=None),

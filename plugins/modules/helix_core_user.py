@@ -177,9 +177,9 @@ def run_module():
         if module.params['state'] == 'present':
             if 'Access' in p4_user_spec:
                 # check to see if changes are detected in any of the fields
-                if(p4_user_spec["AuthMethod"] == module.params['authmethod'] and
-                   p4_user_spec["Email"] == module.params['email'] and
-                   p4_user_spec["FullName"] == module.params['fullname']):
+                if(p4_user_spec["AuthMethod"] == module.params['authmethod']
+                   and p4_user_spec["Email"] == module.params['email']
+                   and p4_user_spec["FullName"] == module.params['fullname']):
 
                     result['changed'] = False
 
@@ -188,7 +188,7 @@ def run_module():
                     if not module.check_mode:
                         p4_user_spec["AuthMethod"] = module.params['authmethod']
                         p4_user_spec["Email"] = module.params['email']
-                        p4_user_spec["FullName"]= module.params['fullname']
+                        p4_user_spec["FullName"] = module.params['fullname']
                         p4.save_user(p4_user_spec, "-f")
 
                     result['changed'] = True
@@ -198,7 +198,7 @@ def run_module():
                 if not module.check_mode:
                     p4_user_spec["AuthMethod"] = module.params['authmethod']
                     p4_user_spec["Email"] = module.params['email']
-                    p4_user_spec["FullName"]= module.params['fullname']
+                    p4_user_spec["FullName"] = module.params['fullname']
                     p4.save_user(p4_user_spec, "-f")
 
                 result['changed'] = True

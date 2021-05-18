@@ -173,8 +173,6 @@ RETURN = r''' # '''
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
-from os import getcwd
-from socket import gethostname
 
 
 def run_module():

@@ -87,6 +87,16 @@ options:
         description:
             - Configure carriage-return/linefeed (CR/LF) conversion
         type: str
+    options:
+        default: noallwrite noclobber nocompress unlocked nomodtime normdir
+        description:
+            - A set of switches that control particular workspace options
+        type: str
+    submitoptions:
+        default: submitunchanged
+        description:
+            - Options to govern the default behavior of p4 submit
+        type: str
     server:
         description:
             - The hostname/ip and port of the server (perforce:1666)
@@ -171,6 +181,8 @@ def run_module():
         altroots=dict(type='list', elements='str', default=None),
         view=dict(type='list', elements='str', required=True),
         lineend=dict(type='str', default='local', choices=['local', 'unix', 'mac', 'win', 'share']),
+        options=dict(type='str', default='noallwrite noclobber nocompress unlocked nomodtime normdir'),
+        submitoptions=dict(type='str', default='submitunchanged'),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -216,6 +228,8 @@ def run_module():
                 p4_client_changes.append(p4_client_spec["Root"] == module.params['root'])
                 p4_client_changes.append(p4_client_spec["View"] == module.params['view'])
                 p4_client_changes.append(p4_client_spec["LineEnd"] == module.params['lineend'])
+                p4_client_changes.append(p4_client_spec["Options"] == module.params['options'])
+                p4_client_changes.append(p4_client_spec["SubmitOptions"] == module.params['submitoptions'])
 
                 if module.params['altroots'] is not None:
                     p4_client_changes.append(p4_client_spec["AltRoots"] == module.params['altroots'])
@@ -235,6 +249,8 @@ def run_module():
                         p4_client_spec["Description"] = module.params['description']
                         p4_client_spec["View"] = module.params['view']
                         p4_client_spec["LineEnd"] = module.params['lineend']
+                        p4_client_spec["Options"] = module.params['options']
+                        p4_client_spec["SubmitOptions"] = module.params['submitoptions']
 
                         if module.params['altroots'] is not None:
                             p4_client_spec["AltRoots"] = module.params['altroots']
@@ -253,6 +269,8 @@ def run_module():
                     p4_client_spec["Description"] = module.params['description']
                     p4_client_spec["View"] = module.params['view']
                     p4_client_spec["LineEnd"] = module.params['lineend']
+                    p4_client_spec["Options"] = module.params['options']
+                    p4_client_spec["SubmitOptions"] = module.params['submitoptions']
 
                     if module.params['altroots'] is not None:
                         p4_client_spec["AltRoots"] = module.params['altroots']

@@ -1,5 +1,11 @@
 name: Ansible Helix Core Collection
 on: [push, pull_request]
+
+env:
+  COLLECTION_NAMESPACE: ripclawffb
+  COLLECTION_NAME: helix_core
+  MOLECULE_DISTRO: default
+
 jobs:
   Test-Helix-Core-Modules:
     runs-on: ubuntu-latest
@@ -18,4 +24,11 @@ jobs:
         run: python3 -m pip install pipenv
       - name: Install python virtual environment
         run: pipenv install
+      - name: Change directory
+        run: cd ../
+      - run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE
+      - run: mv ansible-collection-${COLLECTION_NAME/_/-} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - name: Test Helix Core Modules
+        run: molecule test
       - run: echo "🍏 This job's status is ${{ job.status }}."

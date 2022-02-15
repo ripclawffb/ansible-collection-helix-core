@@ -28,7 +28,7 @@ jobs:
       - run: pwd
       - name: Setup Ansible Collection Folder
         run: cd ../
-        run: ls
+      - run: ls
       - run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE
       - run: mv ansible-collection-${COLLECTION_NAME/_/-} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME

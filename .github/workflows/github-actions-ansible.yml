@@ -22,8 +22,6 @@ jobs:
           ls ${{ github.workspace }}
       - name: Install pipenv
         run: python3 -m pip install pipenv
-      - name: Install python virtual environment
-        run: pipenv install
       - run: ls
       - run: pwd
       - name: Setup Ansible Collection Folder
@@ -31,12 +29,15 @@ jobs:
       - run: mv galaxy.yml ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv molecule ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv plugins ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
-      - run: mv test ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv {Pipfile, Pipfile.lock, test} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: pwd
         working-directory: ansible_collections/ripclawffb/helix_core
       - run: ls
         working-directory: ansible_collections/ripclawffb/helix_core
-      - name: Test Helix Core Modules
+      - name: Install python virtual environment
+        run: pipenv install
         working-directory: ansible_collections/ripclawffb/helix_core
+      - name: Test Helix Core Modules
         run: pipenv run molecule test
+        working-directory: ansible_collections/ripclawffb/helix_core
       - run: echo "🍏 This job's status is ${{ job.status }}."

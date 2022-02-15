@@ -29,7 +29,9 @@ jobs:
       - run: mv galaxy.yml ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv molecule ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv plugins ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
-      - run: mv {Pipfile, Pipfile.lock, test} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv Pipfile ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv Pipfile.lock ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv test ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: pwd
         working-directory: ansible_collections/ripclawffb/helix_core
       - run: ls

@@ -27,12 +27,11 @@ jobs:
       - run: ls
       - run: pwd
       - name: Setup Ansible Collection Folder
-        run: cd ..
+      - run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv {galaxy.yml, molecule, plugins, test} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: pwd
       - run: ls
-      - run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE
-      - run: mv ansible-collection-${COLLECTION_NAME/_/-} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
-      - run: cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - name: Test Helix Core Modules
         run: molecule test
       - run: echo "🍏 This job's status is ${{ job.status }}."

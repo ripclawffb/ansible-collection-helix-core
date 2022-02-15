@@ -22,8 +22,6 @@ jobs:
           ls ${{ github.workspace }}
       - name: Install pipenv
         run: python3 -m pip install pipenv
-      - run: ls
-      - run: pwd
       - name: Setup Ansible Collection Folder
         run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv .yamllint ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
@@ -33,10 +31,6 @@ jobs:
       - run: mv Pipfile ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv Pipfile.lock ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv test ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
-      - run: pwd
-        working-directory: ansible_collections/ripclawffb/helix_core
-      - run: ls
-        working-directory: ansible_collections/ripclawffb/helix_core
       - name: Install python virtual environment
         run: pipenv install
         working-directory: ansible_collections/ripclawffb/helix_core

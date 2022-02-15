@@ -10,7 +10,7 @@
 #     executable: pip3
 
 - name: Create new client
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'

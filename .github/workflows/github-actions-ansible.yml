@@ -1,9 +1,5 @@
 name: Ansible Helix Core Collection
-on:
-  push
-  pull_request:
-    types:
-      - opened
+on: [push, pull_request]
 jobs:
   Test-Helix-Core-Modules:
     runs-on: ubuntu-latest

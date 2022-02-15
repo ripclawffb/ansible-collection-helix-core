@@ -1,0 +1,40 @@
+name: Ansible Helix Core Collection
+on: [push, pull_request]
+
+env:
+  COLLECTION_NAMESPACE: ripclawffb
+  COLLECTION_NAME: helix_core
+  MOLECULE_DISTRO: default
+
+jobs:
+  Test-Helix-Core-Modules:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: Install pipenv
+        run: python3 -m pip install pipenv
+      - name: Setup Ansible Collection Folder
+        run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv .yamllint ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv galaxy.yml ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv molecule ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv plugins ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv Pipfile ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv Pipfile.lock ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv test ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - name: Install python virtual environment
+        run: pipenv install
+        working-directory: ansible_collections/ripclawffb/helix_core
+      - name: Test Helix Core Modules
+        run: pipenv run molecule test
+        working-directory: ansible_collections/ripclawffb/helix_core
+      - run: echo "🍏 This job's status is ${{ job.status }}."

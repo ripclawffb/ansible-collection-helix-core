@@ -24,8 +24,11 @@ jobs:
         run: python3 -m pip install pipenv
       - name: Install python virtual environment
         run: pipenv install
-      - name: Change directory
+      - run: ls
+      - run: pwd
+      - name: Setup Ansible Collection Folder
         run: cd ../
+        run: ls
       - run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE
       - run: mv ansible-collection-${COLLECTION_NAME/_/-} ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME

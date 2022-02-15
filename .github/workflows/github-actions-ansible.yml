@@ -14,6 +14,8 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - name: Check for docker
-        run: docker ps
+      - name: Install pipenv
+        run: python3 -m pip install pipenv
+      - name: Install python virtual environment
+        run: pipenv install
       - run: echo "🍏 This job's status is ${{ job.status }}."

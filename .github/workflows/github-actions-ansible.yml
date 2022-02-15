@@ -33,10 +33,10 @@ jobs:
       - run: mv plugins ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv test ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: pwd
-        working-directory: ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+        working-directory: ansible_collections/ripclawffb/helix_core
       - run: ls
-        working-directory: ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+        working-directory: ansible_collections/ripclawffb/helix_core
       - name: Test Helix Core Modules
-        working-directory: ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+        working-directory: ansible_collections/ripclawffb/helix_core
         run: pipenv run molecule test
       - run: echo "🍏 This job's status is ${{ job.status }}."

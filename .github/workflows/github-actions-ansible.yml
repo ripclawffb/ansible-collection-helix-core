@@ -26,6 +26,7 @@ jobs:
       - run: pwd
       - name: Setup Ansible Collection Folder
         run: mkdir -p ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+      - run: mv .yamllint ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv galaxy.yml ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv molecule ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
       - run: mv plugins ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME

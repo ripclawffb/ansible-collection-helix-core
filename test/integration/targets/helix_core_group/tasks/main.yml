@@ -22,11 +22,11 @@
   register: create_group
 
 - name: Output create_group
-  debug:
+  ansible.builtin.debug:
     var: create_group
 
 - name: Verify create_group is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_group is changed
 
@@ -43,11 +43,11 @@
   register: create_group_idempotent
 
 - name: Output create_group_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_group_idempotent
 
 - name: Verify create_group_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_group_idempotent is not changed
 
@@ -62,11 +62,11 @@
   register: delete_group
 
 - name: Output delete_group
-  debug:
+  ansible.builtin.debug:
     var: delete_group
 
 - name: Verify delete_group is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_group is changed
 
@@ -81,11 +81,11 @@
   register: delete_group_idempotent
 
 - name: Output delete_group_idempotent
-  debug:
+  ansible.builtin.debug:
     var: delete_group_idempotent
 
 - name: Verify delete_group_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_group_idempotent is not changed
 
@@ -103,11 +103,11 @@
   check_mode: true
 
 - name: Output create_group_check_mode
-  debug:
+  ansible.builtin.debug:
     var: create_group_check_mode
 
 - name: Verify create_group_check_mode is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_group_check_mode is changed
 
@@ -124,11 +124,11 @@
   register: create_group_check_mode_confirm
 
 - name: Output create_group_check_mode_confirm
-  debug:
+  ansible.builtin.debug:
     var: create_group_check_mode_confirm
 
 - name: Verify create_group_check_mode_confirm is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_group_check_mode_confirm is changed
 
@@ -144,11 +144,11 @@
   check_mode: true
 
 - name: Output delete_group_check_mode
-  debug:
+  ansible.builtin.debug:
     var: delete_group_check_mode
 
 - name: Verify delete_group_check_mode is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_group_check_mode is changed
 
@@ -163,11 +163,11 @@
   register: delete_group_check_mode_confirm
 
 - name: Output delete_group_check_mode_confirm
-  debug:
+  ansible.builtin.debug:
     var: delete_group_check_mode_confirm
 
 - name: Verify delete_group_check_mode_confirm is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_group_check_mode_confirm is changed
 
@@ -185,11 +185,11 @@
   ignore_errors: true
 
 - name: Output create_group_invalid_login
-  debug:
+  ansible.builtin.debug:
     var: create_group_invalid_login
 
 - name: Verify create_group_invalid_login failed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_group_invalid_login.failed | bool
 
@@ -207,10 +207,10 @@
   ignore_errors: true
 
 - name: Output create_group_invalid_port
-  debug:
+  ansible.builtin.debug:
     var: create_group_invalid_port
 
 - name: Verify create_group_invalid_port failed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_group_invalid_port.failed | bool

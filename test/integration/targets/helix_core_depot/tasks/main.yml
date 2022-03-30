@@ -23,11 +23,11 @@
   register: create_depot
 
 - name: Output create_depot
-  debug:
+  ansible.builtin.debug:
     var: create_depot
 
 - name: Verify create_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_depot is changed
 
@@ -44,11 +44,11 @@
   register: create_spec_depot
 
 - name: Output create_spec_depot
-  debug:
+  ansible.builtin.debug:
     var: create_spec_depot
 
 - name: Verify create_spec_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_spec_depot is changed
 
@@ -65,11 +65,11 @@
   register: create_tangent_depot
 
 - name: Output create_tangent_depot
-  debug:
+  ansible.builtin.debug:
     var: create_tangent_depot
 
 - name: Verify create_tangent_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_tangent_depot is changed
 
@@ -86,11 +86,11 @@
   register: create_unload_depot
 
 - name: Output create_unload_depot
-  debug:
+  ansible.builtin.debug:
     var: create_unload_depot
 
 - name: Verify create_unload_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_unload_depot is changed
 
@@ -107,11 +107,11 @@
   register: create_archive_depot
 
 - name: Output create_archive_depot
-  debug:
+  ansible.builtin.debug:
     var: create_archive_depot
 
 - name: Verify create_archive_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_archive_depot is changed
 
@@ -129,11 +129,11 @@
   register: create_remote_depot
 
 - name: Output create_remote_depot
-  debug:
+  ansible.builtin.debug:
     var: create_remote_depot
 
 - name: Verify create_remote_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_remote_depot is changed
 
@@ -151,11 +151,11 @@
   register: create_stream_depot
 
 - name: Output create_stream_depot
-  debug:
+  ansible.builtin.debug:
     var: create_stream_depot
 
 - name: Verify create_stream_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_stream_depot is changed
 
@@ -173,11 +173,11 @@
   register: create_depot_idempotent
 
 - name: Output create_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_depot_idempotent
 
 - name: Verify create_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_depot_idempotent is not changed
 
@@ -194,11 +194,11 @@
   register: create_spec_depot_idempotent
 
 - name: Output create_spec_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_spec_depot_idempotent
 
 - name: Verify create_spec_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_spec_depot_idempotent is not changed
 
@@ -215,11 +215,11 @@
   register: create_tangent_depot_idempotent
 
 - name: Output create_tangent_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_tangent_depot_idempotent
 
 - name: Verify create_tangent_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_tangent_depot_idempotent is not changed
 
@@ -236,11 +236,11 @@
   register: create_unload_depot_idempotent
 
 - name: Output create_unload_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_unload_depot_idempotent
 
 - name: Verify create_unload_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_unload_depot_idempotent is not changed
 
@@ -257,11 +257,11 @@
   register: create_archive_depot_idempotent
 
 - name: Output create_archive_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_archive_depot_idempotent
 
 - name: Verify create_archive_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_archive_depot_idempotent is not changed
 
@@ -279,11 +279,11 @@
   register: create_remote_depot_idempotent
 
 - name: Output create_remote_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_remote_depot_idempotent
 
 - name: Verify create_remote_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_remote_depot_idempotent is not changed
 
@@ -301,11 +301,11 @@
   register: create_stream_depot_idempotent
 
 - name: Output create_stream_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_stream_depot_idempotent
 
 - name: Verify create_stream_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_stream_depot_idempotent is not changed
 
@@ -323,11 +323,11 @@
   register: update_depot
 
 - name: Output update_depot
-  debug:
+  ansible.builtin.debug:
     var: update_depot
 
 - name: Verify update_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - update_depot is changed
 
@@ -345,11 +345,11 @@
   register: update_depot_idempotent
 
 - name: Output update_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: update_depot_idempotent
 
 - name: Verify update_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - update_depot_idempotent is not changed
 
@@ -364,11 +364,11 @@
   register: delete_depot
 
 - name: Output delete_depot
-  debug:
+  ansible.builtin.debug:
     var: delete_depot
 
 - name: Verify delete_depot is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_depot is changed
 
@@ -383,11 +383,11 @@
   register: delete_depot_idempotent
 
 - name: Output delete_depot_idempotent
-  debug:
+  ansible.builtin.debug:
     var: delete_depot_idempotent
 
 - name: Verify delete_depot_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_depot_idempotent is not changed
 
@@ -404,11 +404,11 @@
   check_mode: true
 
 - name: Output create_depot_check_mode
-  debug:
+  ansible.builtin.debug:
     var: create_depot_check_mode
 
 - name: Verify create_depot_check_mode is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_depot_check_mode is changed
 
@@ -424,11 +424,11 @@
   register: create_depot_check_mode_confirm
 
 - name: Output create_depot_check_mode_confirm
-  debug:
+  ansible.builtin.debug:
     var: create_depot_check_mode_confirm
 
 - name: Verify create_depot_check_mode_confirm is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_depot_check_mode_confirm is changed
 
@@ -444,11 +444,11 @@
   check_mode: true
 
 - name: Output delete_depot_check_mode
-  debug:
+  ansible.builtin.debug:
     var: delete_depot_check_mode
 
 - name: Verify delete_depot_check_mode is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_depot_check_mode is changed
 
@@ -463,10 +463,10 @@
   register: delete_depot_check_mode_confirm
 
 - name: Output delete_depot_check_mode_confirm
-  debug:
+  ansible.builtin.debug:
     var: delete_depot_check_mode_confirm
 
 - name: Verify delete_depot_check_mode_confirm is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_depot_check_mode_confirm is changed

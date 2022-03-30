@@ -22,11 +22,11 @@
   register: create_server_spec
 
 - name: Output create_server_spec
-  debug:
+  ansible.builtin.debug:
     var: create_server_spec
 
 - name: Verify create_server_spec is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_server_spec is changed
 
@@ -43,11 +43,11 @@
   register: create_server_idempotent
 
 - name: Output create_server_idempotent
-  debug:
+  ansible.builtin.debug:
     var: create_server_idempotent
 
 - name: Verify create_server_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_server_idempotent is not changed
 
@@ -64,11 +64,11 @@
   register: update_server
 
 - name: Output update_server
-  debug:
+  ansible.builtin.debug:
     var: update_server
 
 - name: Verify update_server is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - update_server is changed
 
@@ -85,11 +85,11 @@
   register: update_server_idempotent
 
 - name: Output update_server_idempotent
-  debug:
+  ansible.builtin.debug:
     var: update_server_idempotent
 
 - name: Verify update_server_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - update_server_idempotent is not changed
 
@@ -104,11 +104,11 @@
   register: delete_server_spec
 
 - name: Output delete_server_spec
-  debug:
+  ansible.builtin.debug:
     var: delete_server_spec
 
 - name: Verify delete_server_spec is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_server_spec is changed
 
@@ -123,11 +123,11 @@
   register: delete_server_idempotent
 
 - name: Output delete_server_idempotent
-  debug:
+  ansible.builtin.debug:
     var: delete_server_idempotent
 
 - name: Verify delete_server_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_server_idempotent is not changed
 
@@ -153,11 +153,11 @@
   check_mode: true
 
 - name: Output create_server_check_mode
-  debug:
+  ansible.builtin.debug:
     var: create_server_check_mode
 
 - name: Verify create_server_check_mode is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_server_check_mode is changed
 
@@ -182,11 +182,11 @@
   register: create_server_check_mode_confirm
 
 - name: Output create_server_check_mode_confirm
-  debug:
+  ansible.builtin.debug:
     var: create_server_check_mode_confirm
 
 - name: Verify create_server_check_mode_confirm is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_server_check_mode_confirm is changed
 
@@ -211,11 +211,11 @@
   register: update_edge_archivedata
 
 - name: Output update_edge_archivedata
-  debug:
+  ansible.builtin.debug:
     var: update_edge_archivedata
 
 - name: Verify update_edge_archivedata is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - update_edge_archivedata is changed
 
@@ -231,11 +231,11 @@
   check_mode: true
 
 - name: Output delete_server_check_mode
-  debug:
+  ansible.builtin.debug:
     var: delete_server_check_mode
 
 - name: Verify delete_server_check_mode is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_server_check_mode is changed
 
@@ -250,11 +250,11 @@
   register: delete_server_check_mode_confirm
 
 - name: Output delete_server_check_mode_confirm
-  debug:
+  ansible.builtin.debug:
     var: delete_server_check_mode_confirm
 
 - name: Verify delete_server_check_mode_confirm is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - delete_server_check_mode_confirm is changed
 
@@ -272,11 +272,11 @@
   ignore_errors: true
 
 - name: Output create_server_invalid_login
-  debug:
+  ansible.builtin.debug:
     var: create_server_invalid_login
 
 - name: Verify create_server_invalid_login failed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_server_invalid_login.failed | bool
 
@@ -294,10 +294,10 @@
   ignore_errors: true
 
 - name: Output create_server_invalid_port
-  debug:
+  ansible.builtin.debug:
     var: create_server_invalid_port
 
 - name: Verify create_server_invalid_port failed
-  assert:
+  ansible.builtin.assert:
     that:
       - create_server_invalid_port.failed | bool

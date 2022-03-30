@@ -21,11 +21,11 @@
   register: auth_set_configurable
 
 - name: Output auth_set_configurable
-  debug:
+  ansible.builtin.debug:
     var: auth_set_configurable
 
 - name: Verify auth_set_configurable is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_configurable is changed
 
@@ -41,11 +41,11 @@
   register: auth_set_configurable_idempotent
 
 - name: Output auth_set_configurable_idempotent
-  debug:
+  ansible.builtin.debug:
     var: auth_set_configurable_idempotent
 
 - name: Verify auth_set_configurable_idempotent is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_configurable_idempotent is not changed
 
@@ -61,11 +61,11 @@
   register: auth_unset_configurable
 
 - name: Output auth_set_configurable
-  debug:
+  ansible.builtin.debug:
     var: auth_set_configurable
 
 - name: Verify auth_set_configurable is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_configurable is changed
 
@@ -83,11 +83,11 @@
   check_mode: true
 
 - name: Output auth_set_serverid_configurable
-  debug:
+  ansible.builtin.debug:
     var: auth_set_serverid_configurable
 
 - name: Verify auth_set_serverid_configurable is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_serverid_configurable is changed
 
@@ -104,11 +104,11 @@
   register: auth_set_serverid_configurable
 
 - name: Output auth_set_serverid_configurable
-  debug:
+  ansible.builtin.debug:
     var: auth_set_serverid_configurable
 
 - name: Verify auth_set_serverid_configurable is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_serverid_configurable is changed
 
@@ -125,11 +125,11 @@
   register: auth_unset_serverid_configurable
 
 - name: Output auth_unset_serverid_configurable
-  debug:
+  ansible.builtin.debug:
     var: auth_unset_serverid_configurable
 
 - name: Verify auth_unset_serverid_configurable is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_unset_serverid_configurable is changed
 
@@ -146,11 +146,11 @@
   ignore_errors: true
 
 - name: Output auth_set_invalid_login
-  debug:
+  ansible.builtin.debug:
     var: auth_set_invalid_login
 
 - name: Verify auth_set_invalid_login failed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_invalid_login.failed | bool
 
@@ -167,10 +167,10 @@
   ignore_errors: true
 
 - name: Output auth_set_invalid_port
-  debug:
+  ansible.builtin.debug:
     var: auth_set_invalid_port
 
 - name: Verify auth_set_invalid_port failed
-  assert:
+  ansible.builtin.assert:
     that:
       - auth_set_invalid_port.failed | bool

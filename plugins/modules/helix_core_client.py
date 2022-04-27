@@ -62,7 +62,7 @@ options:
         type: str
     root:
         description:
-            - The directory (on the local host) relative to which all the files in the View: are specified
+            - The directory (on the local host) relative to which all the files in the View are specified
         required: true
         type: str
     altroots:

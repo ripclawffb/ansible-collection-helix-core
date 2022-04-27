@@ -10,6 +10,7 @@ molecule = "==3.0.3"
 ansible-lint = "*"
 yamllint = "*"
 flake8 = "*"
+antsibull-docs = "*"
 
 [requires]
 python_version = "3.8"

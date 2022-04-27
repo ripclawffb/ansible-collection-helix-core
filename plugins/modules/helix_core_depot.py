@@ -51,7 +51,7 @@ options:
         type: str
     address:
         description:
-            - If the Type: is remote, the address should be the P4PORT address of the remote server
+            - If the Type is remote, the address should be the P4PORT address of the remote server
         type: str
     description:
         default: Created by user.
@@ -74,7 +74,7 @@ options:
     suffix:
         default: .p4s
         description:
-            -  If the Type: is spec, this field holds an optional suffix for generated paths to objects in the spec depo
+            -  If the Type is spec, this field holds an optional suffix for generated paths to objects in the spec depot
         required: true
         type: str
     type:

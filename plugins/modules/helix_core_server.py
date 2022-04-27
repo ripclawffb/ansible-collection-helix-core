@@ -115,8 +115,8 @@ options:
             - The server type server provides
         type: str
     serviceuser:
-        descripton:
-            - The service user name used by the server (this is the user: field in server spec)
+        description:
+            - The service user name used by the server (this is the user field in server spec)
         type: str
     type:
         default: server

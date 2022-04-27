@@ -55,7 +55,7 @@ options:
             - ldap
         default: perforce
         description:
-            - One of the following: perforce or ldap
+            - One of the following, perforce or ldap
         type: str
     email:
         default: user@hostname

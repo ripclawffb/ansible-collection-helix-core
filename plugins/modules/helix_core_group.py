@@ -260,7 +260,7 @@ def run_module():
                     p4_group_changes.append(False)
 
                 # check to see if changes are detected in any of the fields
-                if(all(p4_group_changes)):
+                if (all(p4_group_changes)):
 
                     result['changed'] = False
 

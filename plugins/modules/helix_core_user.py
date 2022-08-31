@@ -55,7 +55,7 @@ options:
             - ldap
         default: perforce
         description:
-            - One of the following: perforce or ldap
+            - One of the following, perforce or ldap
         type: str
     email:
         default: user@hostname
@@ -177,7 +177,7 @@ def run_module():
         if module.params['state'] == 'present':
             if 'Access' in p4_user_spec:
                 # check to see if changes are detected in any of the fields
-                if(p4_user_spec["AuthMethod"] == module.params['authmethod']
+                if (p4_user_spec["AuthMethod"] == module.params['authmethod']
                    and p4_user_spec["Email"] == module.params['email']
                    and p4_user_spec["FullName"] == module.params['fullname']):
 

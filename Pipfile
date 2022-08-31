@@ -10,6 +10,8 @@ molecule = "==3.0.3"
 ansible-lint = "*"
 yamllint = "*"
 flake8 = "*"
+antsibull-docs = "*"
+sphinx-ansible-theme = "*"
 
 [requires]
 python_version = "3.8"

@@ -62,7 +62,7 @@ options:
         type: str
     root:
         description:
-            - The directory (on the local host) relative to which all the files in the View: are specified
+            - The directory (on the local host) relative to which all the files in the View are specified
         required: true
         type: str
     altroots:
@@ -238,7 +238,7 @@ def run_module():
                     p4_client_changes.append(False)
 
                 # check to see if changes are detected in any of the fields
-                if(all(p4_client_changes)):
+                if (all(p4_client_changes)):
 
                     result['changed'] = False
 

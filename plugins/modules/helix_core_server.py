@@ -115,8 +115,8 @@ options:
             - The server type server provides
         type: str
     serviceuser:
-        descripton:
-            - The service user name used by the server (this is the user: field in server spec)
+        description:
+            - The service user name used by the server (this is the user field in server spec)
         type: str
     type:
         default: server
@@ -332,7 +332,7 @@ def run_module():
                     p4_server_changes.append(False)
 
                 # check to see if changes are detected in any of the fields
-                if(all(p4_server_changes)):
+                if (all(p4_server_changes)):
 
                     result['changed'] = False
 

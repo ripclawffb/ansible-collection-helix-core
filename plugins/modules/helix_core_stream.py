@@ -244,7 +244,7 @@ def run_module():
                     p4_stream_changes.append(False)
 
                 # check to see if changes are detected in any of the fields
-                if(all(p4_stream_changes)):
+                if (all(p4_stream_changes)):
 
                     result['changed'] = False
 

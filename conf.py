@@ -36,4 +36,3 @@ intersphinx_mapping = {
 default_role = 'any'
 
 nitpicky = True
-

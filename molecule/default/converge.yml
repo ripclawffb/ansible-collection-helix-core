@@ -6,7 +6,7 @@
     - ripclawffb.helix_core
 
   tasks:
-    - name: add perforce yum repo
+    - name: Add perforce yum repo
       ansible.builtin.yum_repository:
         name: Perforce
         baseurl: http://package.perforce.com/yum/rhel/7/x86_64/
@@ -16,26 +16,26 @@
         gpgkey: https://package.perforce.com/perforce.pubkey
       when: ansible_facts['os_family'] == 'RedHat'
 
-    - name: add perforce apt key
+    - name: Add perforce apt key
       ansible.builtin.apt_key:
         url: https://package.perforce.com/perforce.pubkey
         state: present
       when: ansible_facts['os_family'] == 'Debian'
 
-    - name: add perforce apt repo
+    - name: Add perforce apt repo
       ansible.builtin.apt_repository:
         repo: "deb http://package.perforce.com/apt/ubuntu {{ ansible_facts['distribution_release'] }} release"
         state: present
       when: ansible_facts['os_family'] == 'Debian'
 
-    - name: install p4python module
+    - name: Install p4python module
       vars:
         ansible_python_interpreter: /usr/bin/python
       ansible.builtin.package:
         name: perforce-p4python3
       when: ansible_facts['os_family'] == 'RedHat'
 
-    - name: install p4 python module (python 3.6)
+    - name: Install p4 python module (python 3.6)
       vars:
         ansible_python_interpreter: /usr/bin/python
       ansible.builtin.package:
@@ -46,7 +46,7 @@
         - ansible_facts['os_family'] == 'Debian'
         - ansible_facts['distribution_release'] == 'bionic'
 
-    - name: install p4 python module (python 3.8)
+    - name: Install p4 python module (python 3.8)
       vars:
         ansible_python_interpreter: /usr/bin/python
       ansible.builtin.package:
@@ -57,23 +57,23 @@
         - ansible_facts['os_family'] == 'Debian'
         - ansible_facts['distribution_release'] == 'focal'
 
-    - name: import helix_core_client tasks
+    - name: Import helix_core_client tasks
       import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
 
-    - name: import helix_core_configurable tasks
+    - name: Import helix_core_configurable tasks
       import_tasks: ../../test/integration/targets/helix_core_configurable/tasks/main.yml
 
     - name: import helix_core_depot tasks
       import_tasks: ../../test/integration/targets/helix_core_depot/tasks/main.yml
 
-    - name: import helix_core_group tasks
+    - name: Import helix_core_group tasks
       import_tasks: ../../test/integration/targets/helix_core_group/tasks/main.yml
 
-    - name: import helix_core_server tasks
+    - name: Import helix_core_server tasks
       import_tasks: ../../test/integration/targets/helix_core_server/tasks/main.yml
 
-    - name: import helix_core_stream tasks
+    - name: Import helix_core_stream tasks
       import_tasks: ../../test/integration/targets/helix_core_stream/tasks/main.yml
 
-    - name: import helix_core_user tasks
+    - name: Import helix_core_user tasks
       import_tasks: ../../test/integration/targets/helix_core_user/tasks/main.yml

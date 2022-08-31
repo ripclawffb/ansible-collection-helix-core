@@ -233,7 +233,7 @@ def run_module():
                     p4_depot_changes.append(False)
 
                 # check to see if changes are detected in any of the fields
-                if(all(p4_depot_changes)):
+                if (all(p4_depot_changes)):
                     result['changed'] = False
 
                 # if changes are detected, update depot with new values

@@ -4,17 +4,29 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: centos7
-    dockerfile: Dockerfile.centos.7.j2
-    image: centos:7
+  - name: centos7-19.2
+    dockerfile: Dockerfile.centos.7-19.2.j2
+    image: centos:7-19.2
     command: '-r .'
-  - name: ubuntu1804
-    dockerfile: Dockerfile.ubuntu.18.04.j2
-    image: ubuntu:18.04
+  - name: centos7-20.2
+    dockerfile: Dockerfile.centos.7-20.2.j2
+    image: centos:7-20.2
     command: '-r .'
-  - name: ubuntu2004
-    dockerfile: Dockerfile.ubuntu.20.04.j2
-    image: ubuntu:20.04
+  - name: ubuntu1804-19.2
+    dockerfile: Dockerfile.ubuntu.18.04-19.2.j2
+    image: ubuntu:18.04-19.2
+    command: '-r .'
+  - name: ubuntu1804-20.2
+    dockerfile: Dockerfile.ubuntu.18.04-20.2.j2
+    image: ubuntu:18.04-20.2
+    command: '-r .'
+  - name: ubuntu2004-19.2
+    dockerfile: Dockerfile.ubuntu.20.04-19.2.j2
+    image: ubuntu:20.04-19.2
+    command: '-r .'
+  - name: ubuntu2004-20.2
+    dockerfile: Dockerfile.ubuntu.20.04-20.2.j2
+    image: ubuntu:20.04-20.2
     command: '-r .'
 provisioner:
   name: ansible

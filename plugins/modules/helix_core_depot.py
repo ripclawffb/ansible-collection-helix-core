@@ -140,6 +140,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Delete a depot
 - name: Delete a depot
   helix_core_depot:

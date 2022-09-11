@@ -158,6 +158,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Delete a group
 - name: Delete a group
   helix_core_group:

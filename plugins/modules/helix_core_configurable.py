@@ -109,6 +109,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Unset auth.id configurable for specific server
 - name: Unset auth.id
   helix_core_configurable:

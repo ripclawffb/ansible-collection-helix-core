@@ -157,6 +157,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Delete a stream
 - name: Delete a stream
   helix_core_stream:

@@ -177,6 +177,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Create a filtered edge server spec
 - name: Create filtered edge server
   helix_core_server:
@@ -196,6 +197,7 @@ EXAMPLES = '''
     user: bruno
     charset: auto
     password: ''
+
 # Delete a server spec
 - name: Delete a server spec
   helix_core_server:

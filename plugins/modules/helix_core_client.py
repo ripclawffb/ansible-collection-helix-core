@@ -151,6 +151,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Delete a client
 - name: Delete a client
   helix_core_client:

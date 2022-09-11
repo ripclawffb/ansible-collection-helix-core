@@ -1,3 +1,4 @@
+
 .. Document meta
 
 :orphan:
@@ -44,11 +45,9 @@ ripclawffb.helix_core.helix_core_configurable module -- This module will allow y
 .. note::
     This module is part of the `ripclawffb.helix_core collection <https://galaxy.ansible.com/ripclawffb/helix_core>`_ (version 1.0.4).
 
-    You might already have this collection installed if you are using the ``ansible`` package.
-    It is not included in ``ansible-core``.
-    To check whether it is installed, run :code:`ansible-galaxy collection list`.
-
     To install it, use: :code:`ansible-galaxy collection install ripclawffb.helix_core`.
+    You need further requirements to be able to use this module,
+    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_configurable_module_requirements>` for details.
 
     To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_configurable`.
 
@@ -76,6 +75,8 @@ Synopsis
 
 .. Requirements
 
+.. _ansible_collections.ripclawffb.helix_core.helix_core_configurable_module_requirements:
+
 Requirements
 ------------
 The below requirements are needed on the host that executes this module.
@@ -83,10 +84,15 @@ The below requirements are needed on the host that executes this module.
 - P4Python pip module is required. Tested with 2018.2.1743033
 
 
+
+
+
+
 .. Options
 
 Parameters
 ----------
+
 
 .. rst-class:: ansible-option-table
 

@@ -116,6 +116,7 @@ EXAMPLES = '''
     user: bruno
     charset: none
     password: ''
+
 # Delete a user
 - name: Delete a user
   helix_core_user:

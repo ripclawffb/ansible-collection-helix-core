@@ -29,15 +29,11 @@
       when: ansible_facts['os_family'] == 'Debian'
 
     - name: Install p4python module
-      vars:
-        ansible_python_interpreter: /usr/bin/python
       ansible.builtin.package:
         name: perforce-p4python3
       when: ansible_facts['os_family'] == 'RedHat'
 
     - name: Install p4 python module (python 3.6)
-      vars:
-        ansible_python_interpreter: /usr/bin/python
       ansible.builtin.package:
         name:
           - python-apt
@@ -47,8 +43,6 @@
         - ansible_facts['distribution_release'] == 'bionic'
 
     - name: Install p4 python module (python 3.8)
-      vars:
-        ansible_python_interpreter: /usr/bin/python
       ansible.builtin.package:
         name:
           - python-apt

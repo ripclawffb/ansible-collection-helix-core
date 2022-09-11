@@ -4,17 +4,53 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: centos7
-    dockerfile: Dockerfile.centos.7.j2
-    image: centos:7
+  - name: centos7-19.2
+    dockerfile: Dockerfile.centos.7-19.2.j2
+    image: centos:7-19.2
     command: '-r .'
-  - name: ubuntu1804
-    dockerfile: Dockerfile.ubuntu.18.04.j2
-    image: ubuntu:18.04
+  - name: centos7-20.2
+    dockerfile: Dockerfile.centos.7-20.2.j2
+    image: centos:7-20.2
     command: '-r .'
-  - name: ubuntu2004
-    dockerfile: Dockerfile.ubuntu.20.04.j2
-    image: ubuntu:20.04
+  - name: centos7-21.2
+    dockerfile: Dockerfile.centos.7-21.2.j2
+    image: centos:7-21.2
+    command: '-r .'
+  - name: centos7-22.1
+    dockerfile: Dockerfile.centos.7-22.1.j2
+    image: centos:7-22.1
+    command: '-r .'
+  - name: ubuntu1804-19.2
+    dockerfile: Dockerfile.ubuntu.18.04-19.2.j2
+    image: ubuntu:18.04-19.2
+    command: '-r .'
+  - name: ubuntu1804-20.2
+    dockerfile: Dockerfile.ubuntu.18.04-20.2.j2
+    image: ubuntu:18.04-20.2
+    command: '-r .'
+  - name: ubuntu1804-21.2
+    dockerfile: Dockerfile.ubuntu.18.04-21.2.j2
+    image: ubuntu:18.04-21.2
+    command: '-r .'
+  - name: ubuntu1804-22.1
+    dockerfile: Dockerfile.ubuntu.18.04-22.1.j2
+    image: ubuntu:18.04-22.1
+    command: '-r .'
+  - name: ubuntu2004-19.2
+    dockerfile: Dockerfile.ubuntu.20.04-19.2.j2
+    image: ubuntu:20.04-19.2
+    command: '-r .'
+  - name: ubuntu2004-20.2
+    dockerfile: Dockerfile.ubuntu.20.04-20.2.j2
+    image: ubuntu:20.04-20.2
+    command: '-r .'
+  - name: ubuntu2004-21.2
+    dockerfile: Dockerfile.ubuntu.20.04-21.2.j2
+    image: ubuntu:20.04-21.2
+    command: '-r .'
+  - name: ubuntu2004-22.1
+    dockerfile: Dockerfile.ubuntu.20.04-22.1.j2
+    image: ubuntu:20.04-22.1
     command: '-r .'
 provisioner:
   name: ansible
@@ -24,10 +60,8 @@ provisioner:
   env:
     ANSIBLE_COLLECTIONS_PATHS: "/home/runner/work/ansible-collection-helix-core/ansible-collection-helix-core:~/.ansible/collections"
   inventory:
-    host_vars:
-      centos7:
-        ansible_python_interpreter: "/usr/bin/python3"
-      ubuntu:
+    group_vars:
+      all:
         ansible_python_interpreter: "/usr/bin/python3"
 scenario:
   name: default

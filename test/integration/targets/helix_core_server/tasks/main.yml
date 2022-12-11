@@ -10,7 +10,7 @@
 #     executable: pip3
 
 - name: Create a new server spec
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: standard
     description: 'Created by root.'
@@ -31,7 +31,7 @@
       - create_server_spec is changed
 
 - name: Create new server spec (idempotent)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: standard
     description: 'Created by root.'
@@ -52,7 +52,7 @@
       - create_server_idempotent is not changed
 
 - name: Update server spec
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: standard
     description: 'Created by user.'
@@ -73,7 +73,7 @@
       - update_server is changed
 
 - name: Update server spec (idempotent)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: standard
     description: 'Created by user.'
@@ -94,7 +94,7 @@
       - update_server_idempotent is not changed
 
 - name: Delete a server spec
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: absent
     serverid: standard
     server: '1666'
@@ -113,7 +113,7 @@
       - delete_server_spec is changed
 
 - name: Delete a server (idempotent)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: absent
     serverid: standard
     server: '1666'
@@ -132,7 +132,7 @@
       - delete_server_idempotent is not changed
 
 - name: Create filtered edge server (check mode)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: edge_replica
     description: 'Created by root.'
@@ -162,7 +162,7 @@
       - create_server_check_mode is changed
 
 - name: Create filtered edge server (confirm check mode)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: edge_replica
     description: 'Created by root.'
@@ -191,7 +191,7 @@
       - create_server_check_mode_confirm is changed
 
 - name: Update filtered edge server
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: edge_replica
     description: 'Created by root.'
@@ -220,7 +220,7 @@
       - update_edge_archivedata is changed
 
 - name: Delete filtered edge server (check mode)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: absent
     serverid: edge_replica
     server: '1666'
@@ -240,7 +240,7 @@
       - delete_server_check_mode is changed
 
 - name: Delete filtered edge server (confirm check mode)
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: absent
     serverid: edge_replica
     server: '1666'
@@ -259,7 +259,7 @@
       - delete_server_check_mode_confirm is changed
 
 - name: Fail when using invalid login
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: edge_replica2
     description: 'Created by root.'
@@ -281,7 +281,7 @@
       - create_server_invalid_login.failed | bool
 
 - name: Fail when using invalid port
-  helix_core_server:
+  ripclawffb.helix_core.helix_core_server:
     state: present
     serverid: edge_replica2
     description: 'Created by root.'

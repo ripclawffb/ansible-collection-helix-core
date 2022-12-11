@@ -10,7 +10,7 @@
 #     executable: pip3
 
 - name: Create new client
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'
@@ -34,7 +34,7 @@
       - create_client is changed
 
 - name: Create new client (idempotent)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'
@@ -58,7 +58,7 @@
       - create_client_idempotent is not changed
 
 - name: Update client
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     host: workstation01
@@ -82,7 +82,7 @@
       - update_client is changed
 
 - name: Update client (idempotent)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     host: workstation01
@@ -106,7 +106,7 @@
       - update_client_idempotent is not changed
 
 - name: Delete a client
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: absent
     name: bruno_new_client
     view: []
@@ -126,7 +126,7 @@
       - delete_client is changed
 
 - name: Delete a client (idempotent)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: absent
     name: bruno_new_client
     view: []
@@ -146,7 +146,7 @@
       - delete_client_idempotent is not changed
 
 - name: Create new client (check mode)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'
@@ -171,7 +171,7 @@
       - create_client_check_mode is changed
 
 - name: Create new client (confirm check mode)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'
@@ -195,7 +195,7 @@
       - create_client_check_mode_confirm is changed
 
 - name: Delete client (check mode)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: absent
     name: bruno_new_client
     view: []
@@ -216,7 +216,7 @@
       - delete_client_check_mode is changed
 
 - name: Delete client (confirm check mode)
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: absent
     name: bruno_new_client
     view: []
@@ -236,7 +236,7 @@
       - delete_client_check_mode_confirm is changed
 
 - name: Fail when using invalid login
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'
@@ -261,7 +261,7 @@
       - create_client_invalid_login.failed | bool
 
 - name: Fail when using invalid port
-  helix_core_client:
+  ripclawffb.helix_core.helix_core_client:
     state: present
     name: bruno_new_client
     description: 'New client for Bruno'

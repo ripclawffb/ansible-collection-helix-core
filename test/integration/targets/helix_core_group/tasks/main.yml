@@ -10,7 +10,7 @@
 #     executable: pip3
 
 - name: Create new group
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: present
     name: super_admins
     users:
@@ -31,7 +31,7 @@
       - create_group is changed
 
 - name: Create new group (idempotent)
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: present
     name: super_admins
     users:
@@ -52,7 +52,7 @@
       - create_group_idempotent is not changed
 
 - name: Delete a group
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: absent
     name: super_admins
     server: '1666'
@@ -71,7 +71,7 @@
       - delete_group is changed
 
 - name: Delete a group (idempotent)
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: absent
     name: super_admins
     server: '1666'
@@ -90,7 +90,7 @@
       - delete_group_idempotent is not changed
 
 - name: Create new group (check mode)
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: present
     name: new_group
     users:
@@ -112,7 +112,7 @@
       - create_group_check_mode is changed
 
 - name: Create new group (confirm check mode)
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: present
     name: new_group
     users:
@@ -133,7 +133,7 @@
       - create_group_check_mode_confirm is changed
 
 - name: Delete group (check mode)
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: absent
     name: new_group
     server: '1666'
@@ -153,7 +153,7 @@
       - delete_group_check_mode is changed
 
 - name: Delete group (confirm check mode)
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: absent
     name: new_group
     server: '1666'
@@ -172,7 +172,7 @@
       - delete_group_check_mode_confirm is changed
 
 - name: Fail when using invalid login
-  helix_core_group:
+  ripclawffb.helix_core.helix_core_group:
     state: present
     name: new_group
     users:
@@ -194,7 +194,7 @@
       - create_group_invalid_login.failed | bool
 
 - name: Fail when using invalid port
-  helix_core_user:
+  ripclawffb.helix_core.helix_core_user:
     state: present
     name: new_group
     users:

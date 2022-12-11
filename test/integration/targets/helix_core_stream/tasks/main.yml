@@ -5,7 +5,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
 - name: Create a stream depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: stream1
     streamdepth: '//stream1/1'
@@ -17,7 +17,7 @@
     p4charset: auto
 
 - name: Create new mainline stream
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/main
     description: 'Mainline Stream'
@@ -40,7 +40,7 @@
       - create_stream is changed
 
 - name: Create new stream (idempotent)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/main
     description: 'Mainline Stream'
@@ -63,7 +63,7 @@
       - create_stream_idempotent is not changed
 
 - name: Update stream
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/main
     description: 'Mainline Stream1'
@@ -86,7 +86,7 @@
       - update_stream is changed
 
 - name: Update stream (idempotent)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/main
     description: 'Mainline Stream1'
@@ -109,7 +109,7 @@
       - update_stream_idempotent is not changed
 
 - name: Delete a stream
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: absent
     stream: //stream1/main
     p4port: '1666'
@@ -128,7 +128,7 @@
       - delete_stream is changed
 
 - name: Delete a stream (idempotent)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: absent
     stream: //stream1/main
     p4port: '1666'
@@ -147,7 +147,7 @@
       - delete_stream_idempotent is not changed
 
 - name: Create mainline stream
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/main
     description: 'Mainline Stream1'
@@ -160,7 +160,7 @@
     p4charset: auto
 
 - name: Create new stream (check mode)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/dev
     description: 'Development Stream1'
@@ -184,7 +184,7 @@
       - create_stream_check_mode is changed
 
 - name: Create new stream (confirm check mode)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/dev
     description: 'Development Stream1'
@@ -207,7 +207,7 @@
       - create_stream_check_mode_confirm is changed
 
 - name: Delete stream (check mode)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: absent
     stream: //stream1/dev
     p4port: '1666'
@@ -227,7 +227,7 @@
       - delete_stream_check_mode is changed
 
 - name: Delete stream (confirm check mode)
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: absent
     stream: //stream1/dev
     p4port: '1666'
@@ -246,7 +246,7 @@
       - delete_stream_check_mode_confirm is changed
 
 - name: Fail when using invalid login
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/dev2
     description: 'Development Stream1'
@@ -271,7 +271,7 @@
       - create_stream_invalid_login.failed | bool
 
 - name: Fail when using invalid port
-  helix_core_stream:
+  ripclawffb.helix_core.helix_core_stream:
     state: present
     stream: //stream1/dev2
     description: 'Development Stream1'

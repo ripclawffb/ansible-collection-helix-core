@@ -10,7 +10,7 @@
 #     executable: pip3
 
 - name: Create a new depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: bruno
     type: local
@@ -32,7 +32,7 @@
       - create_depot is changed
 
 - name: Create a specs depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: spec
     type: spec
@@ -53,7 +53,7 @@
       - create_spec_depot is changed
 
 - name: Create a tangent depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: tangent
     type: tangent
@@ -74,7 +74,7 @@
       - create_tangent_depot is changed
 
 - name: Create a unload depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: unload
     type: unload
@@ -95,7 +95,7 @@
       - create_unload_depot is changed
 
 - name: Create a archive depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: archive
     type: archive
@@ -116,7 +116,7 @@
       - create_archive_depot is changed
 
 - name: Create a remote depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: remote
     address: '1666'
@@ -138,7 +138,7 @@
       - create_remote_depot is changed
 
 - name: Create a stream depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: stream_depot
     streamdepth: '//stream_depot/1/2/3'
@@ -160,7 +160,7 @@
       - create_stream_depot is changed
 
 - name: Create a new depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: bruno
     type: local
@@ -182,7 +182,7 @@
       - create_depot_idempotent is not changed
 
 - name: Create a specs depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: spec
     type: spec
@@ -203,7 +203,7 @@
       - create_spec_depot_idempotent is not changed
 
 - name: Create a tangent depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: tangent
     type: tangent
@@ -224,7 +224,7 @@
       - create_tangent_depot_idempotent is not changed
 
 - name: Create a unload depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: unload
     type: unload
@@ -245,7 +245,7 @@
       - create_unload_depot_idempotent is not changed
 
 - name: Create a archive depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: archive
     type: archive
@@ -266,7 +266,7 @@
       - create_archive_depot_idempotent is not changed
 
 - name: Create a remote depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: remote
     address: '1666'
@@ -288,7 +288,7 @@
       - create_remote_depot_idempotent is not changed
 
 - name: Create a stream depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: stream_depot
     streamdepth: '//stream_depot/1/2/3'
@@ -310,7 +310,7 @@
       - create_stream_depot_idempotent is not changed
 
 - name: Update depot
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: bruno
     type: local
@@ -332,7 +332,7 @@
       - update_depot is changed
 
 - name: Update depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     depot: bruno
     type: local
@@ -354,7 +354,7 @@
       - update_depot_idempotent is not changed
 
 - name: Delete depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: absent
     depot: bruno
     p4port: '1666'
@@ -373,7 +373,7 @@
       - delete_depot is changed
 
 - name: Delete a depot (idempotent)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: absent
     depot: bruno
     p4port: '1666'
@@ -392,7 +392,7 @@
       - delete_depot_idempotent is not changed
 
 - name: Create new depot (check mode)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     name: bruno_new_depot
     description: 'New depot for Bruno'
@@ -413,7 +413,7 @@
       - create_depot_check_mode is changed
 
 - name: Create new depot (confirm check mode)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: present
     name: bruno_new_depot
     description: 'New depot for Bruno'
@@ -433,7 +433,7 @@
       - create_depot_check_mode_confirm is changed
 
 - name: Delete depot (check mode)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: absent
     depot: bruno_new_depot
     p4port: '1666'
@@ -453,7 +453,7 @@
       - delete_depot_check_mode is changed
 
 - name: Delete depot (confirm check mode)
-  helix_core_depot:
+  ripclawffb.helix_core.helix_core_depot:
     state: absent
     depot: bruno_new_depot
     p4port: '1666'

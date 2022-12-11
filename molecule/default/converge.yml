@@ -52,22 +52,22 @@
         - ansible_facts['distribution_release'] == 'focal'
 
     - name: Import helix_core_client tasks
-      import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
 
     - name: Import helix_core_configurable tasks
-      import_tasks: ../../test/integration/targets/helix_core_configurable/tasks/main.yml
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_configurable/tasks/main.yml
 
-    - name: import helix_core_depot tasks
-      import_tasks: ../../test/integration/targets/helix_core_depot/tasks/main.yml
+    - name: Import helix_core_depot tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_depot/tasks/main.yml
 
     - name: Import helix_core_group tasks
-      import_tasks: ../../test/integration/targets/helix_core_group/tasks/main.yml
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_group/tasks/main.yml
 
     - name: Import helix_core_server tasks
-      import_tasks: ../../test/integration/targets/helix_core_server/tasks/main.yml
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_server/tasks/main.yml
 
     - name: Import helix_core_stream tasks
-      import_tasks: ../../test/integration/targets/helix_core_stream/tasks/main.yml
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_stream/tasks/main.yml
 
     - name: Import helix_core_user tasks
-      import_tasks: ../../test/integration/targets/helix_core_user/tasks/main.yml
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_user/tasks/main.yml

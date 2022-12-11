@@ -20,6 +20,10 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
       - name: Install pipenv
         run: python3 -m pip install pipenv
       - name: Setup Ansible Collection Folder

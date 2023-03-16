@@ -1,6 +1,9 @@
 ---
 dependency:
   name: galaxy
+  options:
+    role-file: requirements.yml
+    requirements-file: requirements.yml
 driver:
   name: docker
 platforms:
@@ -75,8 +78,8 @@ scenario:
     - converge
     - side_effect
     - destroy
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
-  flake8
+# lint: |
+#   set -e
+#   yamllint .
+#   ansible-lint
+#   flake8

@@ -5,13 +5,15 @@ verify_ssl = true
 
 [packages]
 ansible = "~=7.0.0"
-molecule = "~=4.0.0"
-ansible-lint = "*"
-yamllint = "*"
-flake8 = "*"
+ansible-compat = "==3.0.1"
+ansible-lint = "~=6.16.0"
 antsibull-docs = "*"
-sphinx-ansible-theme = "*"
+flake8 = "*"
+molecule = "~=4.0.0"
 molecule-docker = "*"
+requests = "==2.28.1"
+sphinx-ansible-theme = "*"
+yamllint = "*"
 
 [requires]
 python_version = "3.9"

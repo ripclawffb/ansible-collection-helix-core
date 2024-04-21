@@ -1,10 +1,9 @@
 ---
 dependency:
   name: galaxy
-  # env:
-  #   ANSIBLE_COLLECTIONS_PATHS: "/home/runner/work/ansible-collection-helix-core/ansible-collection-helix-core:~/.ansible/collections"
-  # options:
-  #   requirements-file: requirements.yml
+  enabled: False
+  options:
+    requirements-file: requirements.yml
 driver:
   name: docker
 platforms:

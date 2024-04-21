@@ -2,9 +2,9 @@
 authors:
   - Asif Shaikh
 dependencies: {}
-description: A collection of roles and modules to manage Perforce Helix Core
-documentation: 'https://github.com/ripclawffb/ansible-collection-helix-core'
-issues: 'https://github.com/ripclawffb/ansible-collection-helix-core'
+description: A collection of modules to manage Perforce Helix Core
+documentation: 'https://ripclawffb.github.io/ansible-collection-helix-core/collections/index_module.html'
+issues: 'https://github.com/ripclawffb/ansible-collection-helix-core/issues'
 license:
   - MIT
 name: helix_core
@@ -17,5 +17,10 @@ tags:
   - perforce
   - p4
   - p4d
-version: 1.0.4
-# homepage: ''
+version: 1.0.5
+homepage: 'https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/'
+build_ignore:
+  - '.cache'
+  - '.github'
+  - '.vscode'
+  - 'rst'

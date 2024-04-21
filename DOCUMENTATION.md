@@ -24,3 +24,17 @@ If you add or update the Helix Core modules, you'll need to run  `./build.sh` fr
 Review the changes by opening the `builds/html/index.html` file and navigating through the various links.
 
 If changes look good, copy the contents of the `builds/html` into the `docs` folder. Commit and push the changes up to Github.
+
+
+## Generating Changelog
+
+When releasing a new version of this collection, add the changes to the `changelogs/changelog.yml`. Docs can be found [here](https://github.com/ansible-community/antsibull-changelog/tree/main/docs).
+
+Once the `changelog.yml` has been updated, run the following commands in the `pipenv` environment:
+
+```
+antsibull-changelog lint
+antsibull-changelog generate
+```
+
+Commit and push changes up to Github.

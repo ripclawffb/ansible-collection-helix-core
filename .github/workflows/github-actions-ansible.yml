@@ -39,6 +39,6 @@ jobs:
         run: pipenv install
         working-directory: ansible_collections/ripclawffb/helix_core
       - name: Test Helix Core Modules
-        run: pipenv run molecule test
+        run: pipenv run molecule -vvvv test
         working-directory: ansible_collections/ripclawffb/helix_core
       - run: echo "🍏 This job's status is ${{ job.status }}."

@@ -1,0 +1,9 @@
+ancestor: null
+releases:
+  1.0.5:
+    release_date: '2024-04-20'
+    changes:
+      release_summary: Updated the collection metadata URLs and added docs
+      minor_changes:
+        - docs - Generated HTML documentation for modules
+        - urls - Update URLs for the collection

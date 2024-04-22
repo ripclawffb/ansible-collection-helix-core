@@ -1,6 +1,6 @@
 # Ansible Collection - Perforce Helix Core
 
-[![Build Status](https://travis-ci.org/ripclawffb/ansible-collection-helix-core.svg?branch=master)](https://travis-ci.org/ripclawffb/ansible-collection-helix-core)
+[![Build Status](https://github.com/ripclawffb/ansible-collection-helix-core/actions/workflows/github-actions-ansible.yml/badge.svg)](https://github.com/ripclawffb/ansible-collection-helix-core/actions/workflows/github-actions-ansible.yml)
 
 This collection contains modules to install and configure Perforce Helix Core.
 

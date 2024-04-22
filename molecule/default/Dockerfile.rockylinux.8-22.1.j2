@@ -1,0 +1,53 @@
+FROM rockylinux:8
+
+ENV PERFORCE_DEPOT https://cdist2.perforce.com/perforce/tools/sampledepot.tar.gz
+ENV PERFORCE_DATA_DIR /p4
+ENV PERFORCE_VER r22.1
+
+# Perforce Environment Variables
+ENV P4PORT 1666
+ENV P4ROOT $PERFORCE_DATA_DIR/PerforceSample
+
+# Download Perforce binaries
+ADD https://cdist2.perforce.com/perforce/$PERFORCE_VER/bin.linux26x86_64/p4d /usr/local/bin/p4d
+ADD https://cdist2.perforce.com/perforce/$PERFORCE_VER/bin.linux26x86_64/p4 /usr/local/bin/p4
+RUN chmod +x /usr/local/bin/p4*
+
+# Set working directory
+WORKDIR $PERFORCE_DATA_DIR
+
+# Download and extract sample depot
+RUN curl -sSL $PERFORCE_DEPOT > sampledepot.tar.gz && tar xvf sampledepot.tar.gz
+
+# Restore journal & upgrade db(s)
+WORKDIR $PERFORCE_DATA_DIR/PerforceSample
+RUN p4d -r . -jr ./checkpoint
+
+# Upgrade database to current p4d binary version
+RUN p4d -r . -xu
+
+# Run as unicode
+RUN p4d -r . -xi
+
+RUN p4d -r . -xD "perforce-master"
+
+RUN yum update -y; \
+    yum install -y rsync; \
+    yum install -y sudo; \
+    yum install -y wget; \
+    echo /usr/local/lib>> /etc/ld.so.conf; \
+    echo /usr/lib64>> /etc/ld.so.conf; \
+    sed -ie "s/^Defaults[ \t]*requiretty/#Defaults  requiretty/g" /etc/sudoers
+
+RUN yum install -y openssh-server openssh-clients passwd; \
+    yum clean all; \
+    ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''; \
+    ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ''
+
+RUN yum install -y epel-release; \
+    yum update; \
+    yum install -y python39 python39-libs python39-devel python39-pip openssl openssl-devel;
+
+# Let's start Perforce
+ENTRYPOINT ["p4d"]
+CMD ["-A", "STDOUT", "-L", "STDOUT"]

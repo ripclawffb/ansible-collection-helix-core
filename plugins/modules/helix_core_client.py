@@ -224,6 +224,11 @@ def run_module():
             # check to see if any fields have changed
             if 'Access' in p4_client_spec:
 
+                # detect noaltsync option (available in Helix Core 23.1 and later)
+                # required for idempotency for Helix Core 23.1 or newer
+                if 'noaltsync' in p4_client_spec["Options"]:
+                    module.params['options'] = f'{module.params["options"]} noaltsync'
+
                 p4_client_changes = []
                 p4_client_changes.append(p4_client_spec["Description"].rstrip() == module.params['description'])
                 p4_client_changes.append(p4_client_spec["Host"] == module.params['host'])

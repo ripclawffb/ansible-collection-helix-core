@@ -39,14 +39,14 @@ platforms:
     dockerfile: Dockerfile.rockylinux.8-22.2.j2
     image: rockylinux.8-22.2
     command: '-r .'
-  # - name: rockylinux8-23.1
-  #   dockerfile: Dockerfile.rockylinux.8-23.1.j2
-  #   image: rockylinux.8-23.1
-  #   command: '-r .'
-  # - name: rockylinux8-23.2
-  #   dockerfile: Dockerfile.rockylinux.8-23.2.j2
-  #   image: rockylinux.8-23.2
-  #   command: '-r .'
+  - name: rockylinux8-23.1
+    dockerfile: Dockerfile.rockylinux.8-23.1.j2
+    image: rockylinux.8-23.1
+    command: '-r .'
+  - name: rockylinux8-23.2
+    dockerfile: Dockerfile.rockylinux.8-23.2.j2
+    image: rockylinux.8-23.2
+    command: '-r .'
   - name: rockylinux9-22.1
     dockerfile: Dockerfile.rockylinux.9-22.1.j2
     image: rockylinux.9-22.1
@@ -55,14 +55,14 @@ platforms:
     dockerfile: Dockerfile.rockylinux.9-22.2.j2
     image: rockylinux.9-22.2
     command: '-r .'
-  # - name: rockylinux9-23.1
-  #   dockerfile: Dockerfile.rockylinux.9-23.1.j2
-  #   image: rockylinux.9-23.1
-  #   command: '-r .'
-  # - name: rockylinux9-23.2
-  #   dockerfile: Dockerfile.rockylinux.9-23.2.j2
-  #   image: rockylinux.9-23.2
-  #   command: '-r .'
+  - name: rockylinux9-23.1
+    dockerfile: Dockerfile.rockylinux.9-23.1.j2
+    image: rockylinux.9-23.1
+    command: '-r .'
+  - name: rockylinux9-23.2
+    dockerfile: Dockerfile.rockylinux.9-23.2.j2
+    image: rockylinux.9-23.2
+    command: '-r .'
   # - name: ubuntu1804-20.2
   #   dockerfile: Dockerfile.ubuntu.18.04-20.2.j2
   #   image: ubuntu:18.04-20.2
@@ -103,30 +103,30 @@ platforms:
     dockerfile: Dockerfile.ubuntu.20.04-22.2.j2
     image: ubuntu:20.04-22.2
     command: '-r .'
-  # - name: ubuntu2004-23.1
-  #   dockerfile: Dockerfile.ubuntu.20.04-23.1.j2
-  #   image: ubuntu:20.04-23.1
-  #   command: '-r .'
-  # - name: ubuntu2004-23.2
-  #   dockerfile: Dockerfile.ubuntu.20.04-23.2.j2
-  #   image: ubuntu:20.04-23.2
-  #   command: '-r .'
-  # - name: ubuntu2204-22.1
-  #   dockerfile: Dockerfile.ubuntu.22.04-22.1.j2
-  #   image: ubuntu:22.04-22.1
-  #   command: '-r .'
+  - name: ubuntu2004-23.1
+    dockerfile: Dockerfile.ubuntu.20.04-23.1.j2
+    image: ubuntu:20.04-23.1
+    command: '-r .'
+  - name: ubuntu2004-23.2
+    dockerfile: Dockerfile.ubuntu.20.04-23.2.j2
+    image: ubuntu:20.04-23.2
+    command: '-r .'
+  - name: ubuntu2204-22.1
+    dockerfile: Dockerfile.ubuntu.22.04-22.1.j2
+    image: ubuntu:22.04-22.1
+    command: '-r .'
   - name: ubuntu2204-22.2
     dockerfile: Dockerfile.ubuntu.22.04-22.2.j2
     image: ubuntu:22.04-22.2
     command: '-r .'
-  # - name: ubuntu2204-23.1
-  #   dockerfile: Dockerfile.ubuntu.22.04-23.1.j2
-  #   image: ubuntu:22.04-23.1
-  #   command: '-r .'
-  # - name: ubuntu2204-23.2
-  #   dockerfile: Dockerfile.ubuntu.22.04-23.2.j2
-  #   image: ubuntu:22.04-23.2
-  #   command: '-r .'
+  - name: ubuntu2204-23.1
+    dockerfile: Dockerfile.ubuntu.22.04-23.1.j2
+    image: ubuntu:22.04-23.1
+    command: '-r .'
+  - name: ubuntu2204-23.2
+    dockerfile: Dockerfile.ubuntu.22.04-23.2.j2
+    image: ubuntu:22.04-23.2
+    command: '-r .'
   # - name: ubuntu2404-22.1
   #   dockerfile: Dockerfile.ubuntu.24.04-22.1.j2
   #   image: ubuntu:24.04-22.1

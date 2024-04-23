@@ -7,3 +7,9 @@ releases:
       minor_changes:
         - docs - Generated HTML documentation for modules
         - urls - Update URLs for the collection
+  1.0.6:
+    release_date: '2024-04-22'
+    changes:
+      release_summary: Fix helix_core_client idempotency for 23.1 or newer
+      minor_changes:
+        - helix_core_client - Check for noaltsync option when creating clients on Helix Core 23.1 or newer

@@ -12,7 +12,7 @@ antsibull-docs = "*"
 flake8 = "*"
 molecule = "~=4.0.0"
 molecule-docker = "*"
-requests = "==2.31.0"
+requests = "==2.32.2"
 sphinx-ansible-theme = "*"
 yamllint = "*"
 

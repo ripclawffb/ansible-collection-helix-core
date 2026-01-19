@@ -136,8 +136,17 @@ from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_c
 from socket import gethostname
 
 
+def construct_spec(module):
+    # Construct a user spec dictionary from module parameters.
+    spec = {}
+    spec['User'] = module.params['name']
+    spec['FullName'] = module.params['fullname'] or module.params['name']
+    spec['Email'] = module.params['email'] or f"{module.params['name']}@{gethostname()}"
+    spec['AuthMethod'] = module.params['authmethod']
+    return spec
+
+
 def run_module():
-    # define available arguments/parameters a user can pass to the module
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True),
@@ -160,64 +169,35 @@ def run_module():
         supports_check_mode=True
     )
 
-    # connect to helix
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing user definition
-        p4_user_spec = p4.fetch_user(module.params['name'])
-
-        # if full name is not given, set a default
-        if module.params['fullname'] is None:
-            module.params['fullname'] = module.params['name']
-
-        # if email is not given, set a default
-        if module.params['email'] is None:
-            module.params['email'] = "{0}@{1}".format(module.params['name'], gethostname())
-
         if module.params['state'] == 'present':
-            if 'Access' in p4_user_spec:
-                # check to see if changes are detected in any of the fields
-                if (p4_user_spec["AuthMethod"] == module.params['authmethod']
-                   and p4_user_spec["Email"] == module.params['email']
-                   and p4_user_spec["FullName"] == module.params['fullname']):
+            # Create or update a user spec.
+            desired_spec = construct_spec(module)
+            existing_spec = p4.fetch_user(module.params['name'])
 
-                    result['changed'] = False
-
-                # update user with new values
-                else:
-                    if not module.check_mode:
-                        p4_user_spec["AuthMethod"] = module.params['authmethod']
-                        p4_user_spec["Email"] = module.params['email']
-                        p4_user_spec["FullName"] = module.params['fullname']
-                        p4.save_user(p4_user_spec, "-f")
-
-                    result['changed'] = True
-
-            # create new user with specified values
-            else:
-                if not module.check_mode:
-                    p4_user_spec["AuthMethod"] = module.params['authmethod']
-                    p4_user_spec["Email"] = module.params['email']
-                    p4_user_spec["FullName"] = module.params['fullname']
-                    p4.save_user(p4_user_spec, "-f")
-
+            # Compare the desired spec with the existing spec.
+            if 'Access' not in existing_spec or any(existing_spec.get(key) != value for key, value in desired_spec.items()):
                 result['changed'] = True
+                if not module.check_mode:
+                    # Apply the desired spec to the existing spec and save.
+                    for key, value in desired_spec.items():
+                        existing_spec[key] = value
+                    p4.save_user(existing_spec, "-f")
 
         elif module.params['state'] == 'absent':
-            # delete user
-            if 'Access' in p4_user_spec:
+            # Delete a user spec if it exists.
+            existing_spec = p4.fetch_user(module.params['name'])
+            if 'Access' in existing_spec:
+                result['changed'] = True
                 if not module.check_mode:
                     p4.delete_user('-f', module.params['name'])
 
-                result['changed'] = True
-            else:
-                result['changed'] = False
-
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
-
-    helix_core_disconnect(module, p4)
+        module.fail_json(msg=f"Error: {e}", **result)
+    finally:
+        helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

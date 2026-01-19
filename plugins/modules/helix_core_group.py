@@ -177,8 +177,32 @@ from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
 
 
+def construct_spec(module):
+    # Construct a group spec dictionary from module parameters.
+    spec = {}
+    spec['Group'] = module.params['name']
+    spec['MaxLockTime'] = module.params['maxlocktime']
+    spec['MaxResults'] = module.params['maxresults']
+    spec['MaxOpenFiles'] = module.params['maxopenfiles']
+    spec['MaxScanRows'] = module.params['maxscanrows']
+    spec['PasswordTimeout'] = module.params['passwordtimeout']
+    spec['Timeout'] = module.params['timeout']
+    if module.params['ldapconfig']:
+        spec['LdapConfig'] = module.params['ldapconfig']
+    if module.params['ldapsearchquery']:
+        spec['LdapSearchQuery'] = module.params['ldapsearchquery']
+    if module.params['ldapuserattribute']:
+        spec['LdapUserAttribute'] = module.params['ldapuserattribute']
+    if module.params['owners']:
+        spec['Owners'] = module.params['owners']
+    if module.params['subgroups']:
+        spec['Subgroups'] = module.params['subgroups']
+    if module.params['users']:
+        spec['Users'] = module.params['users']
+    return spec
+
+
 def run_module():
-    # define available arguments/parameters a user can pass to the module
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True, aliases=['group']),
@@ -210,153 +234,35 @@ def run_module():
         supports_check_mode=True
     )
 
-    # connect to helix
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing group definition
-        p4_group_spec = p4.fetch_group(module.params['name'])
-
         if module.params['state'] == 'present':
-            if 'Users' in p4_group_spec:
+            # Create or update a group spec.
+            desired_spec = construct_spec(module)
+            existing_spec = p4.fetch_group(module.params['name'])
 
-                # check to see if any fields have changed
-                p4_group_changes = []
-                p4_group_changes.append(p4_group_spec['Group'] == module.params['name'])
-                p4_group_changes.append(p4_group_spec['MaxLockTime'] == module.params['maxlocktime'])
-                p4_group_changes.append(p4_group_spec['MaxResults'].rstrip() == module.params['maxresults'])
-                p4_group_changes.append(p4_group_spec['MaxOpenFiles'] == module.params['maxopenfiles'])
-                p4_group_changes.append(p4_group_spec['MaxScanRows'] == module.params['maxscanrows'])
-                p4_group_changes.append(p4_group_spec['PasswordTimeout'] == module.params['passwordtimeout'])
-                p4_group_changes.append(p4_group_spec['Timeout'] == module.params['timeout'])
-
-                if module.params['ldapconfig'] is not None:
-                    p4_group_changes.append(p4_group_spec['LdapConfig'] == module.params['ldapconfig'])
-                elif 'LdapConfig' in p4_group_spec:
-                    p4_group_changes.append(False)
-
-                if module.params['ldapsearchquery'] is not None:
-                    p4_group_changes.append(p4_group_spec['LdapSearchQuery'] == module.params['ldapsearchquery'])
-                elif 'LdapSearchQuery' in p4_group_spec:
-                    p4_group_changes.append(False)
-
-                if module.params['ldapuserattribute'] is not None:
-                    p4_group_changes.append(p4_group_spec['LdapUserAttribute'] == module.params['ldapuserattribute'])
-                elif 'LdapUserAttribute' in p4_group_spec:
-                    p4_group_changes.append(False)
-
-                if module.params['owners'] is not None:
-                    p4_group_changes.append(p4_group_spec['Owners'] == module.params['owners'])
-                elif 'Owners' in p4_group_spec:
-                    p4_group_changes.append(False)
-
-                if module.params['subgroups'] is not None:
-                    p4_group_changes.append(p4_group_spec['Subgroups'] == module.params['subgroups'])
-                elif 'Subgroups' in p4_group_spec:
-                    p4_group_changes.append(False)
-
-                if module.params['users'] is not None:
-                    p4_group_changes.append(p4_group_spec['Users'] == module.params['users'])
-                elif 'Users' in p4_group_spec:
-                    p4_group_changes.append(False)
-
-                # check to see if changes are detected in any of the fields
-                if (all(p4_group_changes)):
-
-                    result['changed'] = False
-
-                # if changes are detected, update group with new values
-                else:
-                    if not module.check_mode:
-                        p4_group_spec['Group'] = module.params['name']
-                        p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
-                        p4_group_spec['MaxResults'] = module.params['maxresults']
-                        p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
-                        p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
-                        p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
-                        p4_group_spec['Timeout'] = module.params['timeout']
-
-                        if module.params['ldapconfig'] is not None:
-                            p4_group_spec['LdapConfig'] = module.params['ldapconfig']
-                        elif 'LdapConfig' in p4_group_spec:
-                            del p4_group_spec['LdapConfig']
-
-                        if module.params['ldapsearchquery'] is not None:
-                            p4_group_spec['LdapSearchQuery'] = module.params['ldapsearchquery']
-                        elif 'LdapSearchQuery' in p4_group_spec:
-                            del p4_group_spec['LdapSearchQuery']
-
-                        if module.params['ldapuserattribute'] is not None:
-                            p4_group_spec['LdapUserAttribute'] = module.params['ldapuserattribute']
-                        elif 'LdapUserAttribute' in p4_group_spec:
-                            del p4_group_spec['LdapUserAttribute']
-
-                        if module.params['owners'] is not None:
-                            p4_group_spec['Owners'] = module.params['owners']
-                        elif 'Owners' in p4_group_spec:
-                            del p4_group_spec['Owners']
-
-                        if module.params['subgroups'] is not None:
-                            p4_group_spec['Subgroups'] = module.params['subgroups']
-                        elif 'Subgroups' in p4_group_spec:
-                            del p4_group_spec['Subgroups']
-
-                        if module.params['users'] is not None:
-                            p4_group_spec['Users'] = module.params['users']
-                        elif 'Users' in p4_group_spec:
-                            del p4_group_spec['Users']
-
-                        p4.save_group(p4_group_spec)
-
-                    result['changed'] = True
-
-            # create new user with specified values
-            else:
-                if not module.check_mode:
-                    p4_group_spec['Group'] = module.params['name']
-                    p4_group_spec['MaxLockTime'] = module.params['maxlocktime']
-                    p4_group_spec['MaxResults'] = module.params['maxresults']
-                    p4_group_spec['MaxOpenFiles'] = module.params['maxopenfiles']
-                    p4_group_spec['MaxScanRows'] = module.params['maxscanrows']
-                    p4_group_spec['PasswordTimeout'] = module.params['passwordtimeout']
-                    p4_group_spec['Timeout'] = module.params['timeout']
-
-                    if module.params['ldapconfig'] is not None:
-                        p4_group_spec['LdapConfig'] = module.params['ldapconfig']
-
-                    if module.params['ldapsearchquery'] is not None:
-                        p4_group_spec['LdapSearchQuery'] = module.params['ldapsearchquery']
-
-                    if module.params['ldapuserattribute'] is not None:
-                        p4_group_spec['LdapUserAttribute'] = module.params['ldapuserattribute']
-
-                    if module.params['owners'] is not None:
-                        p4_group_spec['Owners'] = module.params['owners']
-
-                    if module.params['subgroups'] is not None:
-                        p4_group_spec['Subgroups'] = module.params['subgroups']
-
-                    if module.params['users'] is not None:
-                        p4_group_spec['Users'] = module.params['users']
-
-                    p4.save_group(p4_group_spec)
-
+            # Compare the desired spec with the existing spec.
+            if 'Users' not in existing_spec or any(existing_spec.get(key) != value for key, value in desired_spec.items()):
                 result['changed'] = True
+                if not module.check_mode:
+                    # Apply the desired spec to the existing spec and save.
+                    for key, value in desired_spec.items():
+                        existing_spec[key] = value
+                    p4.save_group(existing_spec)
 
         elif module.params['state'] == 'absent':
-            # delete group
-            if 'Users' in p4_group_spec:
+            # Delete a group spec if it exists.
+            existing_spec = p4.fetch_group(module.params['name'])
+            if 'Users' in existing_spec:
+                result['changed'] = True
                 if not module.check_mode:
                     p4.delete_group(module.params['name'])
 
-                result['changed'] = True
-            else:
-                result['changed'] = False
-
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
-
-    helix_core_disconnect(module, p4)
+        module.fail_json(msg=f"Error: {e}", **result)
+    finally:
+        helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

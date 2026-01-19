@@ -152,41 +152,30 @@ def run_module():
         supports_check_mode=True
     )
 
-    # connect to helix
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing config values
+        # Get all current server configurations.
         p4_current_configs = p4.run('configure', 'show', 'allservers')
-
-        p4_current_values = []
-
-        # search for all config values specific to this server id and add to list
-        for config in p4_current_configs:
-            if config["ServerName"] == module.params['serverid']:
-                p4_current_values.append(config)
-
-        # get the current value of our specific configurable
-        p4_current_value = next((item for item in p4_current_values if item["Name"] == module.params['name']), None)
+        # Find the value of the specified configurable for the given server ID.
+        p4_current_value = next((c['Value'] for c in p4_current_configs if c["ServerName"] == module.params['serverid'] and c["Name"] == module.params['name']), None)
 
         if module.params['state'] == 'present':
-            if p4_current_value is None or module.params['value'] != p4_current_value['Value']:
-                if not module.check_mode:
-                    p4.run('configure', 'set', "{0}#{1}={2}".format(
-                        module.params['serverid'], module.params['name'], module.params['value'])
-                    )
+            # Set the configurable if it's not already set to the desired value.
+            if p4_current_value != module.params['value']:
                 result['changed'] = True
+                if not module.check_mode:
+                    p4.run('configure', 'set', f"{module.params['serverid']}#{module.params['name']}={module.params['value']}")
         elif module.params['state'] == 'absent':
+            # Unset the configurable if it's currently set.
             if p4_current_value is not None:
-                if not module.check_mode:
-                    p4.run('configure', 'unset', "{0}#{1}".format(
-                        module.params['serverid'], module.params['name'])
-                    )
                 result['changed'] = True
+                if not module.check_mode:
+                    p4.run('configure', 'unset', f"{module.params['serverid']}#{module.params['name']}")
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
-
-    helix_core_disconnect(module, p4)
+        module.fail_json(msg=f"Error: {e}", **result)
+    finally:
+        helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

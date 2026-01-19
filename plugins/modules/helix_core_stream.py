@@ -176,8 +176,25 @@ from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
 
 
+def construct_spec(module):
+    # Construct a stream spec dictionary from module parameters.
+    spec = {}
+    spec['Stream'] = module.params['stream']
+    spec['Owner'] = module.params['owner'] or module.params['user']
+    spec['Name'] = module.params['name'] or module.params['stream'].split('/')[-1]
+    spec['Parent'] = module.params['parent']
+    spec['Type'] = module.params['type']
+    spec['Description'] = module.params['description'] or f"Created by {module.params['user']}."
+    spec['Options'] = module.params['options']
+    spec['Paths'] = module.params['paths']
+    if module.params['remapped']:
+        spec['Remapped'] = module.params['remapped']
+    if module.params['ignored']:
+        spec['Ignored'] = module.params['ignored']
+    return spec
+
+
 def run_module():
-    # define available arguments/parameters a user can pass to the module
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str'),
@@ -189,8 +206,8 @@ def run_module():
         type=dict(type='str', default='development', choices=['mainline', 'development', 'release', 'virtual', 'task']),
         options=dict(type='str', default='allsubmit unlocked toparent fromparent mergedown'),
         paths=dict(type='list', default=['share ...'], elements='str'),
-        remapped=dict(type='list', elements='str'),
-        ignored=dict(type='list', elements='str'),
+        remapped=dict(type='list', elements='str', default=None),
+        ignored=dict(type='list', elements='str', default=None),
         server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
         user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
         password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
@@ -207,106 +224,48 @@ def run_module():
         supports_check_mode=True
     )
 
-    # connect to helix
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing stream definition
-        p4_stream_spec = p4.fetch_stream(module.params['stream'])
-
-        # if description is not given, set a default
-        if module.params['description'] is None:
-            module.params['description'] = "Created by {0}.".format(module.params['user'])
-
-        # if owner is not given, set a default
-        if module.params['owner'] is None:
-            module.params['owner'] = module.params['user']
-
         if module.params['state'] == 'present':
-            # check to see if any fields have changed
-            if 'Access' in p4_stream_spec:
+            # Create or update a stream spec.
+            desired_spec = construct_spec(module)
+            existing_spec = p4.fetch_stream(module.params['stream'])
 
-                p4_stream_changes = []
-                p4_stream_changes.append(p4_stream_spec["Description"].rstrip() == module.params['description'])
-                p4_stream_changes.append(p4_stream_spec["Owner"] == module.params['owner'])
-                p4_stream_changes.append(p4_stream_spec["Parent"] == module.params['parent'])
-                p4_stream_changes.append(p4_stream_spec["Type"] == module.params['type'])
-                p4_stream_changes.append(p4_stream_spec["Options"] == module.params['options'])
-                p4_stream_changes.append(p4_stream_spec["Paths"] == module.params['paths'])
-
-                if module.params['remapped'] is not None:
-                    p4_stream_changes.append(p4_stream_spec["Remapped"] == module.params['remapped'])
-                elif 'Remapped' in p4_stream_spec:
-                    p4_stream_changes.append(False)
-
-                if module.params['ignored'] is not None:
-                    p4_stream_changes.append(p4_stream_spec["Ignored"] == module.params['ignored'])
-                elif 'Ignored' in p4_stream_spec:
-                    p4_stream_changes.append(False)
-
-                # check to see if changes are detected in any of the fields
-                if (all(p4_stream_changes)):
-
-                    result['changed'] = False
-
-                # if changes are detected, update stream with new values
-                else:
-                    if not module.check_mode:
-                        p4_stream_spec["Description"] = module.params['description']
-                        p4_stream_spec["Owner"] = module.params['owner']
-                        p4_stream_spec["Parent"] = module.params['parent']
-                        p4_stream_spec["Type"] = module.params['type']
-                        p4_stream_spec["Options"] = module.params['options']
-                        p4_stream_spec["Paths"] = module.params['paths']
-
-                        if module.params['remapped'] is not None:
-                            p4_stream_spec["Remapped"] == module.params['remapped']
-                        elif 'Remapped' in p4_stream_spec:
-                            del p4_stream_spec["Remapped"]
-
-                        if module.params['ignored'] is not None:
-                            p4_stream_spec["Ignored"] == module.params['ignored']
-                        elif 'Ignored' in p4_stream_spec:
-                            del p4_stream_spec["Ignored"]
-
-                        p4.save_stream(p4_stream_spec)
-
-                    result['changed'] = True
-
-            # create new stream with specified values
+            # Compare the desired spec with the existing spec.
+            changed = False
+            if 'Update' not in existing_spec:
+                changed = True
             else:
-                if not module.check_mode:
-                    p4_stream_spec["Description"] = module.params['description']
-                    p4_stream_spec["Owner"] = module.params['owner']
-                    p4_stream_spec["Parent"] = module.params['parent']
-                    p4_stream_spec["Type"] = module.params['type']
-                    p4_stream_spec["Options"] = module.params['options']
-                    p4_stream_spec["Paths"] = module.params['paths']
-
-                    if module.params['remapped'] is not None:
-                        p4_stream_spec["Remapped"] == module.params['remapped']
-
-                    if module.params['ignored'] is not None:
-                        p4_stream_spec["Ignored"] == module.params['ignored']
-
-                    p4.save_stream(p4_stream_spec)
-
+                for key, value in desired_spec.items():
+                    if key == 'Description':
+                        if existing_spec.get(key, '').rstrip() != value:
+                            changed = True
+                            break
+                    elif existing_spec.get(key) != value:
+                        changed = True
+                        break
+            
+            if changed:
                 result['changed'] = True
+                if not module.check_mode:
+                    # Apply the desired spec to the existing spec and save.
+                    for key, value in desired_spec.items():
+                        existing_spec[key] = value
+                    p4.save_stream(existing_spec)
 
         elif module.params['state'] == 'absent':
-            # delete stream
-            if 'Access' in p4_stream_spec:
+            # Delete a stream spec if it exists.
+            existing_spec = p4.fetch_stream(module.params['stream'])
+            if 'Update' in existing_spec:
+                result['changed'] = True
                 if not module.check_mode:
                     p4.delete_stream('-f', module.params['stream'])
 
-                result['changed'] = True
-            else:
-                result['changed'] = False
-
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
-
-    helix_core_disconnect(module, p4)
+        module.fail_json(msg=f"Error: {e}", **result)
+    finally:
+        helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

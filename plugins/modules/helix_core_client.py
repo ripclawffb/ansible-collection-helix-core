@@ -172,6 +172,21 @@ from os import getcwd
 from socket import gethostname
 
 
+def construct_spec(module):
+    # Construct a client spec dictionary from module parameters.
+    spec = {}
+    spec['Root'] = module.params['root'] or getcwd()
+    spec['Host'] = module.params['host'] or gethostname()
+    spec['Description'] = module.params['description'] or f"Created by {module.params['user']}."
+    spec['View'] = module.params['view']
+    spec['LineEnd'] = module.params['lineend']
+    spec['Options'] = module.params['options']
+    spec['SubmitOptions'] = module.params['submitoptions']
+    if module.params['altroots']:
+        spec['AltRoots'] = module.params['altroots']
+    return spec
+
+
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
@@ -181,7 +196,7 @@ def run_module():
         host=dict(type='str'),
         root=dict(type='str'),
         altroots=dict(type='list', elements='str', default=None),
-        view=dict(type='list', elements='str', required=True),
+        view=dict(type='list', elements='str', default=None),
         lineend=dict(type='str', default='local', choices=['local', 'unix', 'mac', 'win', 'share']),
         options=dict(type='str', default='noallwrite noclobber nocompress unlocked nomodtime normdir'),
         submitoptions=dict(type='str', default='submitunchanged'),
@@ -201,105 +216,53 @@ def run_module():
         supports_check_mode=True
     )
 
-    # connect to helix
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing client definition
-        p4_client_spec = p4.fetch_client(module.params['name'])
-
-        # if description is not given, set a default
-        if module.params['description'] is None:
-            module.params['description'] = "Created by {0}.".format(module.params['user'])
-
-        # if host is not given, set a default
-        if module.params['host'] is None:
-            module.params['host'] = gethostname()
-
-        # if root is not given, set a default
-        if module.params['root'] is None:
-            module.params['root'] = getcwd()
-
         if module.params['state'] == 'present':
-            # check to see if any fields have changed
-            if 'Access' in p4_client_spec:
+            # Create or update a client spec.
+            desired_spec = construct_spec(module)
+            existing_spec = p4.fetch_client(module.params['name'])
 
-                # detect noaltsync option (available in Helix Core 23.1 and later)
-                # required for idempotency for Helix Core 23.1 or newer
-                if 'noaltsync' in p4_client_spec["Options"]:
-                    module.params['options'] = f'{module.params["options"]} noaltsync'
+            # Required for idempotency for Helix Core 23.1 or newer.
+            if 'noaltsync' in existing_spec.get("Options", ""):
+                desired_spec['Options'] = f'{desired_spec["Options"]} noaltsync'
 
-                p4_client_changes = []
-                p4_client_changes.append(p4_client_spec["Description"].rstrip() == module.params['description'])
-                p4_client_changes.append(p4_client_spec["Host"] == module.params['host'])
-                p4_client_changes.append(p4_client_spec["Root"] == module.params['root'])
-                p4_client_changes.append(p4_client_spec["View"] == module.params['view'])
-                p4_client_changes.append(p4_client_spec["LineEnd"] == module.params['lineend'])
-                p4_client_changes.append(p4_client_spec["Options"] == module.params['options'])
-                p4_client_changes.append(p4_client_spec["SubmitOptions"] == module.params['submitoptions'])
-
-                if module.params['altroots'] is not None:
-                    p4_client_changes.append(p4_client_spec["AltRoots"] == module.params['altroots'])
-                elif 'AltRoots' in p4_client_spec:
-                    p4_client_changes.append(False)
-
-                # check to see if changes are detected in any of the fields
-                if (all(p4_client_changes)):
-
-                    result['changed'] = False
-
-                # if changes are detected, update client with new values
-                else:
-                    if not module.check_mode:
-                        p4_client_spec["Root"] = module.params['root']
-                        p4_client_spec["Host"] = module.params['host']
-                        p4_client_spec["Description"] = module.params['description']
-                        p4_client_spec["View"] = module.params['view']
-                        p4_client_spec["LineEnd"] = module.params['lineend']
-                        p4_client_spec["Options"] = module.params['options']
-                        p4_client_spec["SubmitOptions"] = module.params['submitoptions']
-
-                        if module.params['altroots'] is not None:
-                            p4_client_spec["AltRoots"] = module.params['altroots']
-                        elif 'AltRoots' in p4_client_spec:
-                            del p4_client_spec["AltRoots"]
-
-                        p4.save_client(p4_client_spec)
-
-                    result['changed'] = True
-
-            # create new client with specified values
+            # Compare the desired spec with the existing spec.
+            changed = False
+            if 'Access' not in existing_spec:
+                changed = True
             else:
-                if not module.check_mode:
-                    p4_client_spec["Root"] = module.params['root']
-                    p4_client_spec["Host"] = module.params['host']
-                    p4_client_spec["Description"] = module.params['description']
-                    p4_client_spec["View"] = module.params['view']
-                    p4_client_spec["LineEnd"] = module.params['lineend']
-                    p4_client_spec["Options"] = module.params['options']
-                    p4_client_spec["SubmitOptions"] = module.params['submitoptions']
-
-                    if module.params['altroots'] is not None:
-                        p4_client_spec["AltRoots"] = module.params['altroots']
-
-                    p4.save_client(p4_client_spec)
-
+                for key, value in desired_spec.items():
+                    if key == 'Description':
+                        if existing_spec.get(key, '').rstrip() != value:
+                            changed = True
+                            break
+                    elif existing_spec.get(key) != value:
+                        changed = True
+                        break
+            
+            if changed:
                 result['changed'] = True
+                if not module.check_mode:
+                    # Apply the desired spec to the existing spec and save.
+                    for key, value in desired_spec.items():
+                        existing_spec[key] = value
+                    p4.save_client(existing_spec)
 
         elif module.params['state'] == 'absent':
-            # delete client
-            if 'Access' in p4_client_spec:
+            # Delete a client spec if it exists.
+            existing_spec = p4.fetch_client(module.params['name'])
+            if 'Access' in existing_spec:
+                result['changed'] = True
                 if not module.check_mode:
                     p4.delete_client('-f', module.params['name'])
 
-                result['changed'] = True
-            else:
-                result['changed'] = False
-
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
-    helix_core_disconnect(module, p4)
+    finally:
+        helix_core_disconnect(module, p4)
 
     module.exit_json(**result)
 

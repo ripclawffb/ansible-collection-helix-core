@@ -7,18 +7,6 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: rockylinux8-23.1
-    dockerfile: Dockerfile.rockylinux.8-23.1.j2
-    image: rockylinux.8-23.1
-    command: '-r .'
-    groups:
-      - rockylinux8
-  - name: rockylinux8-23.2
-    dockerfile: Dockerfile.rockylinux.8-23.2.j2
-    image: rockylinux.8-23.2
-    command: '-r .'
-    groups:
-      - rockylinux8
   - name: rockylinux9-23.1
     dockerfile: Dockerfile.rockylinux.9-23.1.j2
     image: rockylinux.9-23.1
@@ -70,8 +58,6 @@ provisioner:
     group_vars:
       all:
         ansible_python_interpreter: "/usr/bin/python3"
-      rockylinux8:
-        ansible_python_interpreter: "/usr/bin/python3.9"
 scenario:
   name: default
   test_sequence:

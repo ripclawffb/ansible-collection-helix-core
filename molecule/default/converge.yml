@@ -28,14 +28,6 @@
         state: present
       when: ansible_facts['os_family'] == 'Debian'
 
-    - name: Install p4python module for Rocky 8
-      ansible.builtin.package:
-        name: perforce-p4python3-python3.9
-      when:
-        - ansible_facts['os_family'] == 'RedHat'
-        - ansible_facts['distribution'] == 'Rocky'
-        - ansible_facts['distribution_major_version'] == '8'
-
     - name: Install p4python module
       ansible.builtin.package:
         name: perforce-p4python3

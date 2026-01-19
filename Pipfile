@@ -4,17 +4,17 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-ansible = "~=8.5.0"
-ansible-compat = "==3.0.1"
-ansible-lint = "~=6.16.0"
+ansible = "*"
+ansible-compat = "*"
+ansible-lint = "*"
 antsibull-changelog = "*"
 antsibull-docs = "*"
 flake8 = "*"
-molecule = "~=4.0.0"
+molecule = "==25.12.0"
 molecule-docker = "*"
-requests = "==2.31.0"
+requests = "*"
 sphinx-ansible-theme = "*"
 yamllint = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"

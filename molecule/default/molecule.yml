@@ -89,7 +89,6 @@ provisioner:
 scenario:
   name: default
   test_sequence:
-    - lint
     - destroy
     - dependency
     - syntax
@@ -98,8 +97,3 @@ scenario:
     - converge
     - side_effect
     - destroy
-# lint: |
-#   set -e
-#   yamllint .
-#   ansible-lint
-#   flake8

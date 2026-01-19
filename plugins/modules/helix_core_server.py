@@ -123,7 +123,7 @@ options:
         description:
             - Server executable type
         type: str
-    updatecachedrepos:
+    updatedcachedrepos:
         description:
             - Beginning in 2019.2, this optional field can contain a list of repos to be updated, with each repo name on a separate line
         type: str

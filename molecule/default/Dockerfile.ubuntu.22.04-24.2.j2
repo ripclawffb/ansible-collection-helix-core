@@ -1,8 +1,8 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV PERFORCE_DEPOT https://cdist2.perforce.com/perforce/tools/sampledepot.tar.gz
 ENV PERFORCE_DATA_DIR /p4
-ENV PERFORCE_VER r22.1
+ENV PERFORCE_VER r24.2
 
 # Perforce Environment Variables
 ENV P4PORT 1666
@@ -12,7 +12,7 @@ RUN apt update -y; \
     apt install -y curl rsync sudo wget; \
     echo /usr/local/lib >> /etc/ld.so.conf; \
     echo /usr/lib64 >> /etc/ld.so.conf; \
-    sed -ie "s/^Defaults[ \t]*requiretty/#Defaults  requiretty/g" /etc/sudoers
+    sed -ie "s/^Defaults[ 	]*requiretty/#Defaults  requiretty/g" /etc/sudoers
 
 # Download Perforce binaries
 ADD https://cdist2.perforce.com/perforce/$PERFORCE_VER/bin.linux26x86_64/p4d /usr/local/bin/p4d
@@ -42,7 +42,7 @@ RUN apt install -y openssh-server openssh-client passwd; \
     ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''; \
     ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ''
 
-RUN apt install -y python python3 python3-dev python3-pip openssl libssl-dev;
+RUN apt install -y python2 python3 python3-dev python3-pip openssl libssl-dev;
 
 # Let's start Perforce
 ENTRYPOINT ["p4d"]

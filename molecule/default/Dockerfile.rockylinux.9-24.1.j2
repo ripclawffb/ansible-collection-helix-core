@@ -2,7 +2,7 @@ FROM rockylinux:9
 
 ENV PERFORCE_DEPOT https://cdist2.perforce.com/perforce/tools/sampledepot.tar.gz
 ENV PERFORCE_DATA_DIR /p4
-ENV PERFORCE_VER r22.1
+ENV PERFORCE_VER r24.1
 
 # Perforce Environment Variables
 ENV P4PORT 1666
@@ -37,7 +37,7 @@ RUN yum update -y; \
     yum install -y wget; \
     echo /usr/local/lib>> /etc/ld.so.conf; \
     echo /usr/lib64>> /etc/ld.so.conf; \
-    sed -ie "s/^Defaults[ \t]*requiretty/#Defaults  requiretty/g" /etc/sudoers
+    sed -ie "s/^Defaults[ 	]*requiretty/#Defaults  requiretty/g" /etc/sudoers
 
 RUN yum install -y openssh-server openssh-clients passwd; \
     yum clean all; \

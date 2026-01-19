@@ -1,3 +1,11 @@
 /temp-rst
 /build
 *.tar.gz
+__pycache__/
+*.pyc
+.tox/
+.pytest_cache/
+__pycache__/
+*.pyc
+.tox/
+.pytest_cache/

@@ -290,7 +290,13 @@ def run_module():
         if module.params['state'] == 'present':
             # Create or update a server spec.
             desired_spec = construct_spec(module)
-            existing_spec = p4.fetch_server(module.params['serverid'])
+            try:
+                existing_spec = p4.fetch_server(module.params['serverid'])
+            except P4.P4Exception as e:
+                if "no such server" in str(e):
+                    existing_spec = {}
+                else:
+                    raise
 
             # Compare the desired spec with the existing spec.
             changed = False
@@ -316,8 +322,8 @@ def run_module():
 
         elif module.params['state'] == 'absent':
             # Delete a server spec if it exists.
-            existing_spec = p4.fetch_server(module.params['serverid'])
-            if existing_spec:
+            servers_dict = p4.run('servers')
+            if any(s['ServerID'] == module.params['serverid'] for s in servers_dict):
                 result['changed'] = True
                 if not module.check_mode:
                     p4.delete_server(module.params['serverid'])

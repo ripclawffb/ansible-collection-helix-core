@@ -234,8 +234,8 @@ def run_module():
 
         elif module.params['state'] == 'absent':
             # Delete a depot spec if it exists.
-            existing_spec = p4.fetch_depot(module.params['name'])
-            if existing_spec:
+            depots_dict = p4.run('depots')
+            if any(d['name'] == module.params['name'] for d in depots_dict):
                 result['changed'] = True
                 if not module.check_mode:
                     p4.delete_depot('-f', module.params['name'])

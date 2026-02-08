@@ -171,6 +171,119 @@
     that:
       - delete_group_check_mode_confirm is changed
 
+- name: Create group with subgroups and owners
+  ripclawffb.helix_core.helix_core_group:
+    state: present
+    name: group_with_subgroups
+    users:
+      - bruno
+    subgroups:
+      - super_admins
+    owners:
+      - bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_group_subgroups
+
+- name: Output create_group_subgroups
+  ansible.builtin.debug:
+    var: create_group_subgroups
+
+- name: Verify create_group_subgroups is changed
+  ansible.builtin.assert:
+    that:
+      - create_group_subgroups is changed
+
+- name: Create group with subgroups and owners (idempotent)
+  ripclawffb.helix_core.helix_core_group:
+    state: present
+    name: group_with_subgroups
+    users:
+      - bruno
+    subgroups:
+      - super_admins
+    owners:
+      - bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_group_subgroups_idempotent
+
+- name: Output create_group_subgroups_idempotent
+  ansible.builtin.debug:
+    var: create_group_subgroups_idempotent
+
+- name: Verify create_group_subgroups_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_group_subgroups_idempotent is not changed
+
+- name: Update group subgroups
+  ripclawffb.helix_core.helix_core_group:
+    state: present
+    name: group_with_subgroups
+    users:
+      - bruno
+    subgroups: []
+    owners:
+      - bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_group_subgroups
+
+- name: Output update_group_subgroups
+  ansible.builtin.debug:
+    var: update_group_subgroups
+
+- name: Verify update_group_subgroups is changed
+  ansible.builtin.assert:
+    that:
+      - update_group_subgroups is changed
+
+- name: Update group subgroups (idempotent)
+  ripclawffb.helix_core.helix_core_group:
+    state: present
+    name: group_with_subgroups
+    users:
+      - bruno
+    subgroups: []
+    owners:
+      - bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_group_subgroups_idempotent
+
+- name: Output update_group_subgroups_idempotent
+  ansible.builtin.debug:
+    var: update_group_subgroups_idempotent
+
+- name: Verify update_group_subgroups_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_group_subgroups_idempotent is not changed
+
+- name: Delete group with subgroups
+  ripclawffb.helix_core.helix_core_group:
+    state: absent
+    name: group_with_subgroups
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_group_subgroups
+
+- name: Verify delete_group_subgroups is changed
+  ansible.builtin.assert:
+    that:
+      - delete_group_subgroups is changed
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_group:
     state: present

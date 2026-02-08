@@ -235,6 +235,122 @@
     that:
       - delete_client_check_mode_confirm is changed
 
+- name: Create client with submitoptions
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: bruno_submit_client
+    description: 'Client with submitoptions'
+    host: workstation01
+    root: /tmp/bruno_submit_client
+    view:
+      - //depot/... //bruno_submit_client/depot/...
+    submitoptions: submitunchanged
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_submitoptions
+
+- name: Output create_client_submitoptions
+  ansible.builtin.debug:
+    var: create_client_submitoptions
+
+- name: Verify create_client_submitoptions is changed
+  ansible.builtin.assert:
+    that:
+      - create_client_submitoptions is changed
+
+- name: Create client with submitoptions (idempotent)
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: bruno_submit_client
+    description: 'Client with submitoptions'
+    host: workstation01
+    root: /tmp/bruno_submit_client
+    view:
+      - //depot/... //bruno_submit_client/depot/...
+    submitoptions: submitunchanged
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_submitoptions_idempotent
+
+- name: Output create_client_submitoptions_idempotent
+  ansible.builtin.debug:
+    var: create_client_submitoptions_idempotent
+
+- name: Verify create_client_submitoptions_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_client_submitoptions_idempotent is not changed
+
+- name: Update client submitoptions
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: bruno_submit_client
+    description: 'Client with submitoptions'
+    host: workstation01
+    root: /tmp/bruno_submit_client
+    view:
+      - //depot/... //bruno_submit_client/depot/...
+    submitoptions: leaveunchanged
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_client_submitoptions
+
+- name: Output update_client_submitoptions
+  ansible.builtin.debug:
+    var: update_client_submitoptions
+
+- name: Verify update_client_submitoptions is changed
+  ansible.builtin.assert:
+    that:
+      - update_client_submitoptions is changed
+
+- name: Update client submitoptions (idempotent)
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: bruno_submit_client
+    description: 'Client with submitoptions'
+    host: workstation01
+    root: /tmp/bruno_submit_client
+    view:
+      - //depot/... //bruno_submit_client/depot/...
+    submitoptions: leaveunchanged
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_client_submitoptions_idempotent
+
+- name: Output update_client_submitoptions_idempotent
+  ansible.builtin.debug:
+    var: update_client_submitoptions_idempotent
+
+- name: Verify update_client_submitoptions_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_client_submitoptions_idempotent is not changed
+
+- name: Delete client with submitoptions
+  ripclawffb.helix_core.helix_core_client:
+    state: absent
+    name: bruno_submit_client
+    view: []
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_client_submitoptions
+
+- name: Verify delete_client_submitoptions is changed
+  ansible.builtin.assert:
+    that:
+      - delete_client_submitoptions is changed
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_client:
     state: present

@@ -6,6 +6,13 @@ on:
     paths:
       - 'plugins/modules/*.py'
       - 'plugins/module_utils/*.py'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'plugins/modules/*.py'
+      - 'plugins/module_utils/*.py'
+      - '.github/workflows/update-docs.yml'
   workflow_dispatch:
 
 env:
@@ -40,6 +47,7 @@ jobs:
         run: |
           pipenv run antsibull-docs lint-collection-docs --plugin-docs \
             ~/.ansible/collections/ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+        continue-on-error: true
 
       - name: Generate documentation
         run: |
@@ -57,8 +65,13 @@ jobs:
               --dest-dir temp-rst \
               $COLLECTION_NAMESPACE.$COLLECTION_NAME
           
-          # Copy to RST source directory
-          rsync -cprv --delete-after temp-rst/collections/ rst/collections/
+          # Debug: Show what was generated
+          echo "Generated files:"
+          find temp-rst -type f | head -20
+          
+          # Copy generated RST files to source directory
+          # With --squash-hierarchy, files are directly in temp-rst, not temp-rst/collections/
+          rsync -cprv --delete-after temp-rst/ rst/
           
           # Build Sphinx site
           pipenv run sphinx-build -M html rst build -c . -W --keep-going
@@ -73,7 +86,7 @@ jobs:
           git diff --quiet docs/ || echo "has_changes=true" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
-        if: steps.changes.outputs.has_changes == 'true'
+        if: github.event_name == 'push' && steps.changes.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

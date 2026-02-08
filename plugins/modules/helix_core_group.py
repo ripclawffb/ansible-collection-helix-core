@@ -250,12 +250,20 @@ def run_module():
                     p4_group_changes.append(False)
 
                 if module.params['owners'] is not None:
-                    p4_group_changes.append(p4_group_spec['Owners'] == module.params['owners'])
+                    if 'Owners' in p4_group_spec:
+                        p4_group_changes.append(p4_group_spec['Owners'] == module.params['owners'])
+                    else:
+                        # owners param provided but spec has no Owners - need to add them
+                        p4_group_changes.append(len(module.params['owners']) == 0)
                 elif 'Owners' in p4_group_spec:
                     p4_group_changes.append(False)
 
                 if module.params['subgroups'] is not None:
-                    p4_group_changes.append(p4_group_spec['Subgroups'] == module.params['subgroups'])
+                    if 'Subgroups' in p4_group_spec:
+                        p4_group_changes.append(p4_group_spec['Subgroups'] == module.params['subgroups'])
+                    else:
+                        # subgroups param provided but spec has no Subgroups - need to add them
+                        p4_group_changes.append(len(module.params['subgroups']) == 0)
                 elif 'Subgroups' in p4_group_spec:
                     p4_group_changes.append(False)
 

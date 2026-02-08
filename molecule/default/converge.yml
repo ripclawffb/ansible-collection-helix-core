@@ -91,3 +91,6 @@
 
     - name: Import helix_core_user tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_user/tasks/main.yml
+
+    - name: Import helix_core_typemap tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_typemap/tasks/main.yml

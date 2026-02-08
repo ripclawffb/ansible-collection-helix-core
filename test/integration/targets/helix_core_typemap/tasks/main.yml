@@ -1,0 +1,228 @@
+# Test code for the Helix typemap module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Set typemap entries
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....exe
+      - type: binary+l
+        path: //depot/....dll
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_typemap
+
+- name: Output create_typemap
+  ansible.builtin.debug:
+    var: create_typemap
+
+- name: Verify create_typemap is changed
+  ansible.builtin.assert:
+    that:
+      - create_typemap is changed
+
+- name: Set typemap entries (idempotent)
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....exe
+      - type: binary+l
+        path: //depot/....dll
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_typemap_idempotent
+
+- name: Output create_typemap_idempotent
+  ansible.builtin.debug:
+    var: create_typemap_idempotent
+
+- name: Verify create_typemap_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_typemap_idempotent is not changed
+
+- name: Update typemap entries
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....exe
+      - type: binary+l
+        path: //depot/....dll
+      - type: text+k
+        path: //depot/....txt
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_typemap
+
+- name: Output update_typemap
+  ansible.builtin.debug:
+    var: update_typemap
+
+- name: Verify update_typemap is changed
+  ansible.builtin.assert:
+    that:
+      - update_typemap is changed
+
+- name: Update typemap entries (idempotent)
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....exe
+      - type: binary+l
+        path: //depot/....dll
+      - type: text+k
+        path: //depot/....txt
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_typemap_idempotent
+
+- name: Output update_typemap_idempotent
+  ansible.builtin.debug:
+    var: update_typemap_idempotent
+
+- name: Verify update_typemap_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_typemap_idempotent is not changed
+
+- name: Set typemap entries (check mode)
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary
+        path: //depot/....bin
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: typemap_check_mode
+  check_mode: true
+
+- name: Output typemap_check_mode
+  ansible.builtin.debug:
+    var: typemap_check_mode
+
+- name: Verify typemap_check_mode is changed
+  ansible.builtin.assert:
+    that:
+      - typemap_check_mode is changed
+
+- name: Verify typemap not actually changed (confirm check mode)
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....exe
+      - type: binary+l
+        path: //depot/....dll
+      - type: text+k
+        path: //depot/....txt
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: typemap_check_mode_confirm
+
+- name: Output typemap_check_mode_confirm
+  ansible.builtin.debug:
+    var: typemap_check_mode_confirm
+
+- name: Verify typemap_check_mode_confirm is not changed
+  ansible.builtin.assert:
+    that:
+      - typemap_check_mode_confirm is not changed
+
+- name: Clear typemap entries
+  ripclawffb.helix_core.helix_core_typemap:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: clear_typemap
+
+- name: Output clear_typemap
+  ansible.builtin.debug:
+    var: clear_typemap
+
+- name: Verify clear_typemap is changed
+  ansible.builtin.assert:
+    that:
+      - clear_typemap is changed
+
+- name: Clear typemap entries (idempotent)
+  ripclawffb.helix_core.helix_core_typemap:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: clear_typemap_idempotent
+
+- name: Output clear_typemap_idempotent
+  ansible.builtin.debug:
+    var: clear_typemap_idempotent
+
+- name: Verify clear_typemap_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - clear_typemap_idempotent is not changed
+
+- name: Fail when using invalid login
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary
+        path: //depot/....exe
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+  register: typemap_invalid_login
+  ignore_errors: true
+
+- name: Output typemap_invalid_login
+  ansible.builtin.debug:
+    var: typemap_invalid_login
+
+- name: Verify typemap_invalid_login failed
+  ansible.builtin.assert:
+    that:
+      - typemap_invalid_login.failed | bool
+
+- name: Fail when using invalid port
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary
+        path: //depot/....exe
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: typemap_invalid_port
+  ignore_errors: true
+
+- name: Output typemap_invalid_port
+  ansible.builtin.debug:
+    var: typemap_invalid_port
+
+- name: Verify typemap_invalid_port failed
+  ansible.builtin.assert:
+    that:
+      - typemap_invalid_port.failed | bool

@@ -52,6 +52,108 @@
     that:
       - create_spec_depot is changed
 
+# Tests for suffix field (bug fix verification)
+# Note: Perforce only allows one spec depot, so we update the existing 'spec' depot
+- name: Update spec depot with custom suffix
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    suffix: .txt
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_spec_depot_suffix
+
+- name: Output update_spec_depot_suffix
+  ansible.builtin.debug:
+    var: update_spec_depot_suffix
+
+- name: Verify update_spec_depot_suffix is changed
+  ansible.builtin.assert:
+    that:
+      - update_spec_depot_suffix is changed
+
+- name: Update spec depot with custom suffix (idempotent)
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    suffix: .txt
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_spec_depot_suffix_idempotent
+
+- name: Output update_spec_depot_suffix_idempotent
+  ansible.builtin.debug:
+    var: update_spec_depot_suffix_idempotent
+
+- name: Verify update_spec_depot_suffix_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_spec_depot_suffix_idempotent is not changed
+
+- name: Update spec depot suffix to different value
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    suffix: .json
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_spec_depot_suffix_change
+
+- name: Output update_spec_depot_suffix_change
+  ansible.builtin.debug:
+    var: update_spec_depot_suffix_change
+
+- name: Verify update_spec_depot_suffix_change is changed
+  ansible.builtin.assert:
+    that:
+      - update_spec_depot_suffix_change is changed
+
+- name: Update spec depot suffix to different value (idempotent)
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    suffix: .json
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_spec_depot_suffix_change_idempotent
+
+- name: Output update_spec_depot_suffix_change_idempotent
+  ansible.builtin.debug:
+    var: update_spec_depot_suffix_change_idempotent
+
+- name: Verify update_spec_depot_suffix_change_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_spec_depot_suffix_change_idempotent is not changed
+
+# Reset spec depot to default suffix for other tests
+- name: Reset spec depot to default suffix
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: spec
+    type: spec
+    description: Specs depot
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+
 - name: Create a tangent depot
   ripclawffb.helix_core.helix_core_depot:
     state: present

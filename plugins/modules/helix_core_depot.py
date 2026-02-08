@@ -229,7 +229,10 @@ def run_module():
                     p4_depot_changes.append(False)
 
                 if module.params['suffix'] is not None:
-                    p4_depot_changes.append(p4_depot_spec["Suffix"] == module.params['suffix'])
+                    if 'Suffix' in p4_depot_spec:
+                        p4_depot_changes.append(p4_depot_spec["Suffix"] == module.params['suffix'])
+                    else:
+                        p4_depot_changes.append(False)  # Suffix is being added
                 elif 'Suffix' in p4_depot_spec:
                     p4_depot_changes.append(False)
 
@@ -260,7 +263,7 @@ def run_module():
                             del p4_depot_spec["StreamDepth"]
 
                         if module.params['suffix'] is not None:
-                            p4_depot_spec["StreamDepth"] = module.params['suffix']
+                            p4_depot_spec["Suffix"] = module.params['suffix']
                         elif 'Suffix' in p4_depot_spec:
                             del p4_depot_spec["Suffix"]
 

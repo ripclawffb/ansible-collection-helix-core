@@ -108,6 +108,127 @@
     that:
       - update_stream_idempotent is not changed
 
+# Tests for remapped and ignored fields (bug fix verification)
+- name: Create stream with remapped field
+  ripclawffb.helix_core.helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream with remapped'
+    type: mainline
+    paths:
+      - share ...
+    remapped:
+      - src/... lib/src/...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_remapped
+
+- name: Output create_stream_remapped
+  ansible.builtin.debug:
+    var: create_stream_remapped
+
+- name: Verify create_stream_remapped is changed
+  ansible.builtin.assert:
+    that:
+      - create_stream_remapped is changed
+
+- name: Create stream with remapped field (idempotent)
+  ripclawffb.helix_core.helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream with remapped'
+    type: mainline
+    paths:
+      - share ...
+    remapped:
+      - src/... lib/src/...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: create_stream_remapped_idempotent
+
+- name: Output create_stream_remapped_idempotent
+  ansible.builtin.debug:
+    var: create_stream_remapped_idempotent
+
+- name: Verify create_stream_remapped_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_stream_remapped_idempotent is not changed
+
+- name: Update stream with ignored field
+  ripclawffb.helix_core.helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream with remapped and ignored'
+    type: mainline
+    paths:
+      - share ...
+    remapped:
+      - src/... lib/src/...
+    ignored:
+      - .git
+      - "*.tmp"
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_stream_ignored
+
+- name: Output update_stream_ignored
+  ansible.builtin.debug:
+    var: update_stream_ignored
+
+- name: Verify update_stream_ignored is changed
+  ansible.builtin.assert:
+    that:
+      - update_stream_ignored is changed
+
+- name: Update stream with ignored field (idempotent)
+  ripclawffb.helix_core.helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream with remapped and ignored'
+    type: mainline
+    paths:
+      - share ...
+    remapped:
+      - src/... lib/src/...
+    ignored:
+      - .git
+      - "*.tmp"
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+  register: update_stream_ignored_idempotent
+
+- name: Output update_stream_ignored_idempotent
+  ansible.builtin.debug:
+    var: update_stream_ignored_idempotent
+
+- name: Verify update_stream_ignored_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_stream_ignored_idempotent is not changed
+
+# Reset stream for remaining tests
+- name: Reset stream to basic state
+  ripclawffb.helix_core.helix_core_stream:
+    state: present
+    stream: //stream1/main
+    description: 'Mainline Stream1'
+    type: mainline
+    paths:
+      - share ...
+    p4port: '1666'
+    p4user: 'bruno'
+    p4passwd: ''
+    p4charset: auto
+
 - name: Delete a stream
   ripclawffb.helix_core.helix_core_stream:
     state: absent

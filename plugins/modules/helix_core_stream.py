@@ -169,7 +169,13 @@ EXAMPLES = '''
     password: ''
 '''
 
-RETURN = r''' # '''
+RETURN = r'''
+changed:
+    description: Whether any changes were made to the stream.
+    returned: always
+    type: bool
+    sample: true
+'''
 
 
 from ansible.module_utils.basic import AnsibleModule

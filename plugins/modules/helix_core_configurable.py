@@ -123,7 +123,13 @@ EXAMPLES = '''
     charset: auto
 '''
 
-RETURN = r''' # '''
+RETURN = r'''
+changed:
+    description: Whether any changes were made to the configurable.
+    returned: always
+    type: bool
+    sample: true
+'''
 
 
 from ansible.module_utils.basic import AnsibleModule

@@ -13,7 +13,20 @@ except ImportError:
     P4_IMP_ERR = traceback.format_exc()
     HAS_P4 = False
 
-from ansible.module_utils.basic import missing_required_lib
+from ansible.module_utils.basic import missing_required_lib, env_fallback
+
+
+def helix_core_connection_argspec():
+    """
+    Returns the common connection arguments used by all Helix Core modules.
+    This avoids duplicating these argument definitions across all modules.
+    """
+    return dict(
+        server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
+        user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
+        password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
+        charset=dict(type='str', default='none', aliases=['p4charset'], fallback=(env_fallback, ['P4CHARSET'])),
+    )
 
 
 def helix_core_connect(module, script_name):

@@ -126,8 +126,10 @@ EXAMPLES = '''
 RETURN = r''' # '''
 
 
-from ansible.module_utils.basic import AnsibleModule, env_fallback
-from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import helix_core_connect, helix_core_disconnect
+from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+)
 
 
 def run_module():
@@ -136,11 +138,8 @@ def run_module():
         state=dict(type='str', default='present', choices=['present', 'absent']),
         name=dict(type='str', required=True),
         value=dict(type='str', required=True),
-        server=dict(type='str', required=True, aliases=['p4port'], fallback=(env_fallback, ['P4PORT'])),
-        user=dict(type='str', required=True, aliases=['p4user'], fallback=(env_fallback, ['P4USER'])),
-        password=dict(type='str', required=True, aliases=['p4passwd'], fallback=(env_fallback, ['P4PASSWD']), no_log=True),
-        charset=dict(type='str', default='none', aliases=['p4charset'], fallback=(env_fallback, ['P4CHARSET'])),
-        serverid=dict(type='str', default='any')
+        serverid=dict(type='str', default='any'),
+        **helix_core_connection_argspec()
     )
 
     result = dict(

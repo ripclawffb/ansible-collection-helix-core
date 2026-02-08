@@ -62,6 +62,15 @@
         - ansible_facts['os_family'] == 'Debian'
         - ansible_facts['distribution_release'] == 'jammy'
 
+    - name: Install p4 python module (python 3.12)
+      ansible.builtin.package:
+        name:
+          - python3-apt
+          - perforce-p4python3-python3.12
+      when:
+        - ansible_facts['os_family'] == 'Debian'
+        - ansible_facts['distribution_release'] == 'noble'
+
     - name: Import helix_core_client tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_client/tasks/main.yml
 

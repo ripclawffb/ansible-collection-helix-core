@@ -47,6 +47,22 @@ platforms:
     dockerfile: Dockerfile.ubuntu.22.04-24.2.j2
     image: ubuntu:22.04-24.2
     command: '-r .'
+  - name: ubuntu2404-23.1
+    dockerfile: Dockerfile.ubuntu.24.04-23.1.j2
+    image: ubuntu:24.04-23.1
+    command: '-r .'
+  - name: ubuntu2404-23.2
+    dockerfile: Dockerfile.ubuntu.24.04-23.2.j2
+    image: ubuntu:24.04-23.2
+    command: '-r .'
+  - name: ubuntu2404-24.1
+    dockerfile: Dockerfile.ubuntu.24.04-24.1.j2
+    image: ubuntu:24.04-24.1
+    command: '-r .'
+  - name: ubuntu2404-24.2
+    dockerfile: Dockerfile.ubuntu.24.04-24.2.j2
+    image: ubuntu:24.04-24.2
+    command: '-r .'
 provisioner:
   name: ansible
   log: true

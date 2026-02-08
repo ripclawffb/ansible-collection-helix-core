@@ -6,7 +6,7 @@ This collection contains modules to install and configure Perforce Helix Core.
 
 ## Documentation
 
-You can find the documentation for this collection [here](https://ripclawffb.github.io/ansible-collection-helix-core/collections/index_module.html).
+You can find the documentation for this collection [here](https://ripclawffb.github.io/ansible-collection-helix-core/).
 
 ## Usage
 

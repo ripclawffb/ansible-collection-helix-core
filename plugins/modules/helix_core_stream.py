@@ -235,12 +235,18 @@ def run_module():
                 p4_stream_changes.append(p4_stream_spec["Paths"] == module.params['paths'])
 
                 if module.params['remapped'] is not None:
-                    p4_stream_changes.append(p4_stream_spec["Remapped"] == module.params['remapped'])
+                    if 'Remapped' in p4_stream_spec:
+                        p4_stream_changes.append(p4_stream_spec["Remapped"] == module.params['remapped'])
+                    else:
+                        p4_stream_changes.append(False)  # Remapped is being added
                 elif 'Remapped' in p4_stream_spec:
                     p4_stream_changes.append(False)
 
                 if module.params['ignored'] is not None:
-                    p4_stream_changes.append(p4_stream_spec["Ignored"] == module.params['ignored'])
+                    if 'Ignored' in p4_stream_spec:
+                        p4_stream_changes.append(p4_stream_spec["Ignored"] == module.params['ignored'])
+                    else:
+                        p4_stream_changes.append(False)  # Ignored is being added
                 elif 'Ignored' in p4_stream_spec:
                     p4_stream_changes.append(False)
 
@@ -260,12 +266,12 @@ def run_module():
                         p4_stream_spec["Paths"] = module.params['paths']
 
                         if module.params['remapped'] is not None:
-                            p4_stream_spec["Remapped"] == module.params['remapped']
+                            p4_stream_spec["Remapped"] = module.params['remapped']
                         elif 'Remapped' in p4_stream_spec:
                             del p4_stream_spec["Remapped"]
 
                         if module.params['ignored'] is not None:
-                            p4_stream_spec["Ignored"] == module.params['ignored']
+                            p4_stream_spec["Ignored"] = module.params['ignored']
                         elif 'Ignored' in p4_stream_spec:
                             del p4_stream_spec["Ignored"]
 
@@ -284,10 +290,10 @@ def run_module():
                     p4_stream_spec["Paths"] = module.params['paths']
 
                     if module.params['remapped'] is not None:
-                        p4_stream_spec["Remapped"] == module.params['remapped']
+                        p4_stream_spec["Remapped"] = module.params['remapped']
 
                     if module.params['ignored'] is not None:
-                        p4_stream_spec["Ignored"] == module.params['ignored']
+                        p4_stream_spec["Ignored"] = module.params['ignored']
 
                     p4.save_stream(p4_stream_spec)
 

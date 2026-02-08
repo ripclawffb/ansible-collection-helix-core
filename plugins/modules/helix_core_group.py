@@ -29,7 +29,7 @@ requirements:
 seealso:
     - name: Helix Core Group
       description: "Add or delete users from a group, or set the maxresults, maxscanrows, maxlocktime, and timeout limits for the members of a group"
-      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_user.html
+      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_group.html
     - name: P4Python Pip Module
       description: "Python module to interact with Helix Core"
       link: https://pypi.org/project/p4python/

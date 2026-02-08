@@ -7,7 +7,7 @@
 <meta content="2.24.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core &mdash; Ansible collections  documentation</title>
+  <title>ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core &mdash; Ansible collections  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
       <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=b54c304f" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
@@ -22,8 +22,8 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core" href="helix_core_typemap_module.html" />
-    <link rel="prev" title="ripclawffb.helix_core.helix_core_server module – This module will allow you to manage server spec on Perforce Helix Core" href="helix_core_server_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+    <link rel="next" title="ripclawffb.helix_core.helix_core_user module – This module will allow you to manage users on Perforce Helix Core" href="helix_core_user_module.html" />
+    <link rel="prev" title="ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core" href="helix_core_stream_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
 
@@ -79,7 +79,8 @@
 <li class="toctree-l1"><a class="reference internal" href="helix_core_depot_module.html">ripclawffb.helix_core.helix_core_depot module – This module will allow you to manage depots on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_group_module.html">ripclawffb.helix_core.helix_core_group module – This module will allow you to manage groups on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_server_module.html">ripclawffb.helix_core.helix_core_server module – This module will allow you to manage server spec on Perforce Helix Core</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_stream_module.html">ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
@@ -92,7 +93,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="helix_core_typemap_module.html">ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_user_module.html">ripclawffb.helix_core.helix_core_user module – This module will allow you to manage users on Perforce Helix Core</a></li>
 </ul>
 <!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
@@ -111,7 +111,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core</li>
+      <li class="breadcrumb-item active">ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -122,8 +122,8 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module"></span><section id="ripclawffb-helix-core-helix-core-stream-module-this-module-will-allow-you-to-manage-streams-on-perforce-helix-core">
-<h1>ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core<a class="headerlink" href="#ripclawffb-helix-core-helix-core-stream-module-this-module-will-allow-you-to-manage-streams-on-perforce-helix-core" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module"></span><section id="ripclawffb-helix-core-helix-core-typemap-module-this-module-will-allow-you-to-manage-the-typemap-on-perforce-helix-core">
+<h1>ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core<a class="headerlink" href="#ripclawffb-helix-core-helix-core-typemap-module-this-module-will-allow-you-to-manage-the-typemap-on-perforce-helix-core" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.0.7).</p>
@@ -131,8 +131,8 @@
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">ripclawffb.helix_core</span></code>.
 You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-core-helix-core-stream-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">ripclawffb.helix_core.helix_core_stream</span></code>.</p>
+see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">ripclawffb.helix_core.helix_core_typemap</span></code>.</p>
 </div>
 <nav class="contents local" id="contents">
 <ul class="simple">
@@ -147,12 +147,13 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Create or edit an instance of a stream (also known as a stream definition).</p></li>
+<li><p>The typemap table associates file type modifiers with file patterns.</p></li>
+<li><p>This module manages the entire typemap table as a unit.</p></li>
 <li><p>This module supports check mode.</p></li>
 </ul>
 </section>
 <section id="requirements">
-<span id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<span id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
 <p>The below requirements are needed on the host that executes this module.</p>
 <ul class="simple">
 <li><p>P4Python pip module is required. Tested with 2018.2.1743033</p></li>
@@ -169,7 +170,7 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-charset"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4charset"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-p4charset"><span id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-charset"></span><strong>charset</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-p4charset"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-p4charset"><span id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-charset"></span><strong>charset</strong></p>
 <a class="ansibleOptionLink" href="#parameter-charset" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4charset</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -179,86 +180,18 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-description"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-description"><strong>description</strong></p>
-<a class="ansibleOptionLink" href="#parameter-description" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Description of the stream</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;Created</span> <span class="pre">by</span> <span class="pre">user.&quot;</span></code></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-ignored"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-ignored"><strong>ignored</strong></p>
-<a class="ansibleOptionLink" href="#parameter-ignored" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>A list of file or directory names to be ignored</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-name"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-name"><strong>name</strong></p>
-<a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Display name of the stream</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-options"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-options"><strong>options</strong></p>
-<a class="ansibleOptionLink" href="#parameter-options" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Settings that configure stream behavior</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;allsubmit</span> <span class="pre">unlocked</span> <span class="pre">toparent</span> <span class="pre">fromparent</span> <span class="pre">mergedown&quot;</span></code></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-owner"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-owner"><strong>owner</strong></p>
-<a class="ansibleOptionLink" href="#parameter-owner" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The Helix server user or group who owns the stream</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-parent"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-parent"><strong>parent</strong></p>
-<a class="ansibleOptionLink" href="#parameter-parent" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The parent of this stream</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-parentview"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-parentview"><strong>parentview</strong></p>
-<a class="ansibleOptionLink" href="#parameter-parentview" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Defines whether the stream inherits a view from its parent</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;inherit&quot;</span></code></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-password"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4passwd"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-password"><span id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-p4passwd"></span><strong>password</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-p4passwd"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-password"><span id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-p4passwd"></span><strong>password</strong></p>
 <a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4passwd</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The user password</p>
+<td><div class="ansible-option-cell"><p>The super user password</p>
 <p>Can also use ‘P4PASSWD’ environment variable</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-paths"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-paths"><strong>paths</strong></p>
-<a class="ansibleOptionLink" href="#parameter-paths" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Paths define how files are incorporated into the stream structure</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[&quot;share</span> <span class="pre">...&quot;]</span></code></p>
-</div></td>
-</tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-remapped"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-remapped"><strong>remapped</strong></p>
-<a class="ansibleOptionLink" href="#parameter-remapped" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Reassigns the location of workspace files</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-server"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4port"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-server"><span id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-p4port"></span><strong>server</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-p4port"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-server"><span id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-p4port"></span><strong>server</strong></p>
 <a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4port</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
@@ -266,11 +199,13 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <p>Can also use ‘P4PORT’ environment variable</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-state"><strong>state</strong></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Determines if the stream is present or deleted</p>
+<td><div class="ansible-option-cell"><p>Determines if the typemap entries are set or cleared</p>
+<p><code class="docutils literal notranslate"><span class="pre">present</span></code> replaces the typemap with the specified entries</p>
+<p><code class="docutils literal notranslate"><span class="pre">absent</span></code> clears all entries from the typemap</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;present&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -278,35 +213,36 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-stream"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-stream"><strong>stream</strong></p>
-<a class="ansibleOptionLink" href="#parameter-stream" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-typemap"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-typemap"><strong>typemap</strong></p>
+<a class="ansibleOptionLink" href="#parameter-typemap" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Specifies the stream’s name (permanent identifier) and its path in the stream depot, in the form //depotname/streamname</p>
+<td><div class="ansible-option-cell"><p>List of typemap entries</p>
+<p>Each entry must have a <code class="docutils literal notranslate"><span class="pre">type</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code> key</p>
+<p>Required when state is <code class="docutils literal notranslate"><span class="pre">present</span></code></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-type"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-type"><strong>type</strong></p>
-<a class="ansibleOptionLink" href="#parameter-type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-typemap/path"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-typemap-path"><strong>path</strong></p>
+<a class="ansibleOptionLink" href="#parameter-typemap/path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The stream’s type determines the expected flow of change. Valid stream types are mainline, development, release, virtual, andtask.</p>
-<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
-<ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;mainline&quot;</span></code></p></li>
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;development&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;release&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;virtual&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code></p></li>
-</ul>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The depot path pattern (e.g., //depot/….exe)</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-typemap/type"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-typemap-type"><strong>type</strong></p>
+<a class="ansibleOptionLink" href="#parameter-typemap/type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The file type to assign (e.g., binary, text+k, binary+l)</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-user"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4user"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-user"><span id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-parameter-p4user"></span><strong>user</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-p4user"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-user"><span id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-parameter-p4user"></span><strong>user</strong></p>
 <a class="ansibleOptionLink" href="#parameter-user" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4user</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>A user with access to create streams</p>
+<td><div class="ansible-option-cell"><p>A user with super user access</p>
 <p>Can also use ‘P4USER’ environment variable</p>
 </div></td>
 </tr>
@@ -318,7 +254,7 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_stream.html">Helix Core Stream</a></dt><dd><p>Create or edit an instance of a stream (also known as a stream definition).</p>
+<dt><a class="reference external" href="https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_typemap.html">Helix Core Typemap</a></dt><dd><p>Configure file type mappings</p>
 </dd>
 <dt><a class="reference external" href="https://pypi.org/project/p4python/">P4Python Pip Module</a></dt><dd><p>Python module to interact with Helix Core</p>
 </dd>
@@ -327,28 +263,29 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </section>
 <section id="examples">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a stream</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create a new stream</span>
-<span class="w">  </span><span class="nt">helix_core_stream</span><span class="p">:</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set typemap entries</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure typemap</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_typemap</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
-<span class="w">    </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depotname/streamname</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Development</span><span class="nv"> </span><span class="s">Stream&#39;</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">development</span>
-<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">share ...</span>
+<span class="w">    </span><span class="nt">typemap</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">binary+l</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depot/....exe</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">binary+l</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depot/....dll</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text+k</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depot/....txt</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
 <span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
-<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
 <span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
 
-<span class="c1"># Delete a stream</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete a stream</span>
-<span class="w">  </span><span class="nt">helix_core_stream</span><span class="p">:</span>
+<span class="c1"># Clear all typemap entries</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clear typemap</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_typemap</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depotname/streamname</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
 <span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
-<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
 <span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
 </pre></div>
 </div>
@@ -364,10 +301,10 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-changed"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-return-changed"><strong>changed</strong></p>
+<div class="ansibleOptionAnchor" id="return-changed"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-typemap-module-return-changed"><strong>changed</strong></p>
 <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Whether any changes were made to the stream.</p>
+<td><div class="ansible-option-cell"><p>Whether any changes were made to the typemap.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
 <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">true</span></code></p>
 </div></td>
@@ -397,8 +334,8 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
           
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="helix_core_server_module.html" class="btn btn-neutral float-left" title="ripclawffb.helix_core.helix_core_server module – This module will allow you to manage server spec on Perforce Helix Core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="helix_core_typemap_module.html" class="btn btn-neutral float-right" title="ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="helix_core_stream_module.html" class="btn btn-neutral float-left" title="ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="helix_core_user_module.html" class="btn btn-neutral float-right" title="ripclawffb.helix_core.helix_core_user module – This module will allow you to manage users on Perforce Helix Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

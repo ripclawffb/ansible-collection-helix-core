@@ -10,14 +10,14 @@
 
 .. Anchors
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_user_module:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module:
 
 .. Anchors: short name for ansible.builtin
 
 .. Title
 
-ripclawffb.helix_core.helix_core_user module -- This module will allow you to manage users on Perforce Helix Core
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_typemap module -- This module will allow you to manage the typemap on Perforce Helix Core
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -29,9 +29,9 @@ ripclawffb.helix_core.helix_core_user module -- This module will allow you to ma
 
     To install it, use: :code:`ansible\-galaxy collection install ripclawffb.helix\_core`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_user_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_typemap_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_user`.
+    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_typemap`.
 
 .. version_added
 
@@ -48,7 +48,8 @@ Synopsis
 
 .. Description
 
-- Create or edit Helix server user specifications and preferences
+- The typemap table associates file type modifiers with file patterns.
+- This module manages the entire typemap table as a unit.
 - This module supports check mode.
 
 
@@ -57,7 +58,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_user_module_requirements:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module_requirements:
 
 Requirements
 ------------
@@ -89,53 +90,11 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-authmethod"></div>
-
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-authmethod:
-
-      .. rst-class:: ansible-option-title
-
-      **authmethod**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-authmethod" title="Permalink to this option"></a>
-
-      .. ansible-option-type-line::
-
-        :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      One of the following, perforce or ldap
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"perforce"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"ldap"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-charset"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4charset"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-charset:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4charset:
 
       .. rst-class:: ansible-option-title
 
@@ -175,121 +134,11 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-email"></div>
-
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-email:
-
-      .. rst-class:: ansible-option-title
-
-      **email**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-email" title="Permalink to this option"></a>
-
-      .. ansible-option-type-line::
-
-        :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      The user’s email address
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-default-bold:`Default:` :ansible-option-default:`"user@hostname"`
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-fullname"></div>
-
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-fullname:
-
-      .. rst-class:: ansible-option-title
-
-      **fullname**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-fullname" title="Permalink to this option"></a>
-
-      .. ansible-option-type-line::
-
-        :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      The user’s full name
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-default-bold:`Default:` :ansible-option-default:`"name"`
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-name"></div>
-
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-name:
-
-      .. rst-class:: ansible-option-title
-
-      **name**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a>
-
-      .. ansible-option-type-line::
-
-        :ansible-option-type:`string` / :ansible-option-required:`required`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      The name of the user that needs to be managed
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-password"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4passwd"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4passwd:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-password:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4passwd:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-password:
 
       .. rst-class:: ansible-option-title
 
@@ -313,7 +162,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The user password
+      The super user password
 
       Can also use 'P4PASSWD' environment variable
 
@@ -328,8 +177,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-server"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4port"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4port:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-server:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4port:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-server:
 
       .. rst-class:: ansible-option-title
 
@@ -367,7 +216,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-state:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -389,7 +238,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      Determines if the user is present or deleted
+      Determines if the typemap entries are set or cleared
+
+      :literal:`present` replaces the typemap with the specified entries
+
+      :literal:`absent` clears all entries from the typemap
 
 
       .. rst-class:: ansible-option-line
@@ -407,11 +260,134 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-typemap"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-typemap:
+
+      .. rst-class:: ansible-option-title
+
+      **typemap**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-typemap" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      List of typemap entries
+
+      Each entry must have a :literal:`type` and :literal:`path` key
+
+      Required when state is :literal:`present`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-typemap/path"></div>
+
+      .. raw:: latex
+
+        \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-typemap/path:
+
+      .. rst-class:: ansible-option-title
+
+      **path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-typemap/path" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string` / :ansible-option-required:`required`
+
+      .. raw:: html
+
+        </div>
+
+      .. raw:: latex
+
+        \end{minipage}
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The depot path pattern (e.g., //depot/....exe)
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-typemap/type"></div>
+
+      .. raw:: latex
+
+        \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-typemap/type:
+
+      .. rst-class:: ansible-option-title
+
+      **type**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-typemap/type" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string` / :ansible-option-required:`required`
+
+      .. raw:: html
+
+        </div>
+
+      .. raw:: latex
+
+        \end{minipage}
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The file type to assign (e.g., binary, text+k, binary+l)
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4user"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4user:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -435,7 +411,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A user with access to create users
+      A user with super user access
 
       Can also use 'P4USER' environment variable
 
@@ -458,8 +434,8 @@ See Also
 
 .. seealso::
 
-   `Helix Core User <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_user.html>`_
-       Create, edit, or delete Helix server user specifications and preferences
+   `Helix Core Typemap <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_typemap.html>`_
+       Configure file type mappings
    `P4Python Pip Module <https://pypi.org/project/p4python/>`_
        Python module to interact with Helix Core
 
@@ -470,25 +446,29 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    # Create a user
-    - name: Create a new user
-      helix_core_user:
+    # Set typemap entries
+    - name: Configure typemap
+      ripclawffb.helix_core.helix_core_typemap:
         state: present
-        name: new_user
-        email: new_user@perforce.com
+        typemap:
+          - type: binary+l
+            path: //depot/....exe
+          - type: binary+l
+            path: //depot/....dll
+          - type: text+k
+            path: //depot/....txt
         server: '1666'
         user: bruno
-        charset: none
+        charset: auto
         password: ''
 
-    # Delete a user
-    - name: Delete a user
-      helix_core_user:
+    # Clear all typemap entries
+    - name: Clear typemap
+      ripclawffb.helix_core.helix_core_typemap:
         state: absent
-        name: new_user
         server: '1666'
         user: bruno
-        charset: none
+        charset: auto
         password: ''
 
 
@@ -518,7 +498,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changed"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-changed:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__return-changed:
 
       .. rst-class:: ansible-option-title
 
@@ -540,7 +520,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      Whether any changes were made to the user.
+      Whether any changes were made to the typemap.
 
 
       .. rst-class:: ansible-option-line

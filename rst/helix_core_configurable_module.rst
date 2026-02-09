@@ -63,7 +63,7 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- P4Python pip module is required. Tested with 2018.2.1743033
+- P4Python pip module is required
 
 
 

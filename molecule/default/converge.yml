@@ -100,3 +100,6 @@
 
     - name: Import helix_core_protect tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_protect/tasks/main.yml
+
+    - name: Import helix_core_protect_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_protect_info/tasks/main.yml

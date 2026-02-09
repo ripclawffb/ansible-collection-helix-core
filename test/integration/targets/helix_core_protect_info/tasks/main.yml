@@ -1,0 +1,92 @@
+# Test code for the Helix protect_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Test getting protection table info
+- name: Get protection table info
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info
+
+- name: Output protect_info
+  ansible.builtin.debug:
+    var: protect_info
+
+- name: Verify protect_info has protections list
+  ansible.builtin.assert:
+    that:
+      - protect_info.protections is defined
+      - protect_info.protections | type_debug == 'list'
+      - protect_info.protections | length > 0
+
+- name: Verify protection entries have required keys
+  ansible.builtin.assert:
+    that:
+      - protect_info.protections[0].access is defined
+      - protect_info.protections[0].type is defined
+      - protect_info.protections[0].name is defined
+      - protect_info.protections[0].host is defined
+      - protect_info.protections[0].path is defined
+
+- name: Verify protect_info is not changed (read-only)
+  ansible.builtin.assert:
+    that:
+      - protect_info is not changed
+
+# Test that check mode works the same
+- name: Get protection table info (check mode)
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_check
+  check_mode: true
+
+- name: Verify check mode returns same data
+  ansible.builtin.assert:
+    that:
+      - protect_info_check.protections is defined
+      - protect_info_check.protections | length > 0
+
+# Test invalid login
+- name: Fail when using invalid login
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+  register: protect_info_invalid_login
+  ignore_errors: true
+
+- name: Output protect_info_invalid_login
+  ansible.builtin.debug:
+    var: protect_info_invalid_login
+
+- name: Verify protect_info_invalid_login failed
+  ansible.builtin.assert:
+    that:
+      - protect_info_invalid_login.failed | bool
+
+- name: Fail when using invalid port
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_invalid_port
+  ignore_errors: true
+
+- name: Output protect_info_invalid_port
+  ansible.builtin.debug:
+    var: protect_info_invalid_port
+
+- name: Verify protect_info_invalid_port failed
+  ansible.builtin.assert:
+    that:
+      - protect_info_invalid_port.failed | bool

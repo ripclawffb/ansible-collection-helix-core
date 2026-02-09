@@ -15,22 +15,22 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-module: helix_core_typemap
+module: helix_core_trigger
 
-short_description: This module will allow you to manage the typemap on Perforce Helix Core
+short_description: This module will allow you to manage triggers on Perforce Helix Core
 
 description:
-    - "The typemap table associates file type modifiers with file patterns."
-    - "This module manages the entire typemap table as a unit."
+    - "Triggers are user-defined scripts executed by the Perforce server when specific operations occur."
+    - "This module manages the entire triggers table as a unit."
     - "This module supports check mode."
 
 requirements:
     - "P4Python pip module is required"
 
 seealso:
-    - name: Helix Core Typemap
-      description: "Configure file type mappings"
-      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_typemap.html
+    - name: Helix Core Triggers
+      description: "Configure trigger definitions"
+      link: https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_triggers.html
     - name: P4Python Pip Module
       description: "Python module to interact with Helix Core"
       link: https://pypi.org/project/p4python/
@@ -43,26 +43,36 @@ options:
             - absent
         default: present
         description:
-            - Determines if the typemap entries are set or cleared
-            - C(present) replaces the typemap with the specified entries
-            - C(absent) clears all entries from the typemap
+            - Determines if the trigger entries are set or cleared
+            - C(present) replaces the triggers with the specified entries
+            - C(absent) clears all entries from the triggers table
         type: str
-    typemap:
+    triggers:
         description:
-            - List of typemap entries
-            - Each entry must have a C(type) and C(path) key
+            - List of trigger entries
+            - Each entry must have C(name), C(type), C(path), and C(command) keys
             - Required when state is C(present)
         type: list
         elements: dict
         suboptions:
+            name:
+                description:
+                    - A unique name for the trigger
+                type: str
+                required: true
             type:
                 description:
-                    - The file type to assign (e.g., binary, text+k, binary+l)
+                    - The trigger type (e.g., change-submit, change-content, change-commit, form-save, auth-check)
                 type: str
                 required: true
             path:
                 description:
-                    - The depot path pattern (e.g., //depot/....exe)
+                    - The depot path pattern for changelist triggers, or form type for form triggers
+                type: str
+                required: true
+            command:
+                description:
+                    - The command to execute when the trigger fires
                 type: str
                 required: true
     server:
@@ -104,25 +114,27 @@ author:
 '''
 
 EXAMPLES = '''
-# Set typemap entries
-- name: Configure typemap
-  ripclawffb.helix_core.helix_core_typemap:
+# Set trigger entries
+- name: Configure triggers
+  ripclawffb.helix_core.helix_core_trigger:
     state: present
-    typemap:
-      - type: binary+l
-        path: //depot/....exe
-      - type: binary+l
-        path: //depot/....dll
-      - type: text+k
-        path: //depot/....txt
+    triggers:
+      - name: check_submit
+        type: change-submit
+        path: //depot/...
+        command: "/scripts/validate.sh %changelist%"
+      - name: notify_commit
+        type: change-commit
+        path: //depot/...
+        command: "/scripts/notify.sh %changelist% %user%"
     server: '1666'
     user: bruno
     charset: auto
     password: ''
 
-# Clear all typemap entries
-- name: Clear typemap
-  ripclawffb.helix_core.helix_core_typemap:
+# Clear all trigger entries
+- name: Clear triggers
+  ripclawffb.helix_core.helix_core_trigger:
     state: absent
     server: '1666'
     user: bruno
@@ -132,7 +144,7 @@ EXAMPLES = '''
 
 RETURN = r'''
 changed:
-    description: Whether any changes were made to the typemap.
+    description: Whether any changes were made to the triggers.
     returned: always
     type: bool
     sample: true
@@ -145,31 +157,48 @@ from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_c
 )
 
 
-def typemap_to_list(typemap_spec):
-    """Convert typemap spec to a list of (type, path) tuples for comparison."""
-    if 'TypeMap' not in typemap_spec or typemap_spec['TypeMap'] is None:
+def triggers_to_list(triggers_spec):
+    """Convert triggers spec to a list of tuples for comparison."""
+    if 'Triggers' not in triggers_spec or triggers_spec['Triggers'] is None:
         return []
     entries = []
-    for entry in typemap_spec['TypeMap']:
-        # Each entry is a string like "binary+l //depot/....exe"
-        parts = entry.split(None, 1)
-        if len(parts) == 2:
-            entries.append((parts[0], parts[1]))
+    for entry in triggers_spec['Triggers']:
+        # Each entry is a string like "name type path command"
+        # Format: "name type path command" where command can contain spaces and be quoted
+        parts = entry.split(None, 3)
+        if len(parts) >= 4:
+            command = parts[3]
+            # Strip quotes from command if present
+            if command.startswith('"') and command.endswith('"'):
+                command = command[1:-1]
+            entries.append((parts[0], parts[1], parts[2], command))
+        elif len(parts) == 3:
+            # Some triggers may not have a command with spaces
+            entries.append((parts[0], parts[1], parts[2], ''))
     return entries
 
 
-def list_to_typemap(entries):
-    """Convert a list of dicts to typemap format."""
-    return ["{0} {1}".format(e['type'], e['path']) for e in entries]
+def list_to_triggers(entries):
+    """Convert a list of dicts to triggers format."""
+    result = []
+    for e in entries:
+        command = e['command']
+        # Quote command if it contains spaces
+        if ' ' in command and not (command.startswith('"') and command.endswith('"')):
+            command = '"{0}"'.format(command)
+        result.append("{0} {1} {2} {3}".format(e['name'], e['type'], e['path'], command))
+    return result
 
 
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
-        typemap=dict(type='list', elements='dict', default=None, options=dict(
+        triggers=dict(type='list', elements='dict', default=None, options=dict(
+            name=dict(type='str', required=True),
             type=dict(type='str', required=True),
             path=dict(type='str', required=True),
+            command=dict(type='str', required=True),
         )),
         **helix_core_connection_argspec()
     )
@@ -182,7 +211,7 @@ def run_module():
         argument_spec=module_args,
         supports_check_mode=True,
         required_if=[
-            ('state', 'present', ['typemap']),
+            ('state', 'present', ['triggers']),
         ]
     )
 
@@ -190,27 +219,27 @@ def run_module():
     p4 = helix_core_connect(module, 'ansible')
 
     try:
-        # get existing typemap
-        p4_typemap_spec = p4.fetch_typemap()
-        current_entries = typemap_to_list(p4_typemap_spec)
+        # get existing triggers
+        p4_triggers_spec = p4.fetch_triggers()
+        current_entries = triggers_to_list(p4_triggers_spec)
 
         if module.params['state'] == 'present':
             # Build desired entries list
-            desired_entries = [(e['type'], e['path']) for e in module.params['typemap']]
+            desired_entries = [(e['name'], e['type'], e['path'], e['command']) for e in module.params['triggers']]
 
             # Compare current vs desired
             if current_entries != desired_entries:
                 if not module.check_mode:
-                    p4_typemap_spec['TypeMap'] = list_to_typemap(module.params['typemap'])
-                    p4.save_typemap(p4_typemap_spec)
+                    p4_triggers_spec['Triggers'] = list_to_triggers(module.params['triggers'])
+                    p4.save_triggers(p4_triggers_spec)
                 result['changed'] = True
 
         elif module.params['state'] == 'absent':
-            # Clear typemap if it has entries
+            # Clear triggers if it has entries
             if current_entries:
                 if not module.check_mode:
-                    p4_typemap_spec['TypeMap'] = []
-                    p4.save_typemap(p4_typemap_spec)
+                    p4_triggers_spec['Triggers'] = []
+                    p4.save_triggers(p4_triggers_spec)
                 result['changed'] = True
 
     except Exception as e:

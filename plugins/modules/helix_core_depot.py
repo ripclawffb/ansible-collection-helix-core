@@ -24,7 +24,7 @@ description:
     - "This module supports check mode."
 
 requirements:
-    - "P4Python pip module is required. Tested with 2018.2.1743033"
+    - "P4Python pip module is required"
 
 seealso:
     - name: Helix Core Depot

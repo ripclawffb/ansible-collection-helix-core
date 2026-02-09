@@ -1,0 +1,240 @@
+# Test code for the Helix trigger module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Set trigger entries
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_trigger
+
+- name: Output create_trigger
+  ansible.builtin.debug:
+    var: create_trigger
+
+- name: Verify create_trigger is changed
+  ansible.builtin.assert:
+    that:
+      - create_trigger is changed
+
+- name: Set trigger entries (idempotent)
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_trigger_idempotent
+
+- name: Output create_trigger_idempotent
+  ansible.builtin.debug:
+    var: create_trigger_idempotent
+
+- name: Verify create_trigger_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_trigger_idempotent is not changed
+
+- name: Update trigger entries
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+      - name: test_trigger2
+        type: change-commit
+        path: //depot/...
+        command: "/bin/echo done"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_trigger
+
+- name: Output update_trigger
+  ansible.builtin.debug:
+    var: update_trigger
+
+- name: Verify update_trigger is changed
+  ansible.builtin.assert:
+    that:
+      - update_trigger is changed
+
+- name: Update trigger entries (idempotent)
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+      - name: test_trigger2
+        type: change-commit
+        path: //depot/...
+        command: "/bin/echo done"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_trigger_idempotent
+
+- name: Output update_trigger_idempotent
+  ansible.builtin.debug:
+    var: update_trigger_idempotent
+
+- name: Verify update_trigger_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_trigger_idempotent is not changed
+
+- name: Set trigger entries (check mode)
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: check_mode_trigger
+        type: form-save
+        path: user
+        command: "/bin/false"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: trigger_check_mode
+  check_mode: true
+
+- name: Output trigger_check_mode
+  ansible.builtin.debug:
+    var: trigger_check_mode
+
+- name: Verify trigger_check_mode is changed
+  ansible.builtin.assert:
+    that:
+      - trigger_check_mode is changed
+
+- name: Verify trigger not actually changed (confirm check mode)
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+      - name: test_trigger2
+        type: change-commit
+        path: //depot/...
+        command: "/bin/echo done"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: trigger_check_mode_confirm
+
+- name: Output trigger_check_mode_confirm
+  ansible.builtin.debug:
+    var: trigger_check_mode_confirm
+
+- name: Verify trigger_check_mode_confirm is not changed
+  ansible.builtin.assert:
+    that:
+      - trigger_check_mode_confirm is not changed
+
+- name: Clear trigger entries
+  ripclawffb.helix_core.helix_core_trigger:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: clear_trigger
+
+- name: Output clear_trigger
+  ansible.builtin.debug:
+    var: clear_trigger
+
+- name: Verify clear_trigger is changed
+  ansible.builtin.assert:
+    that:
+      - clear_trigger is changed
+
+- name: Clear trigger entries (idempotent)
+  ripclawffb.helix_core.helix_core_trigger:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: clear_trigger_idempotent
+
+- name: Output clear_trigger_idempotent
+  ansible.builtin.debug:
+    var: clear_trigger_idempotent
+
+- name: Verify clear_trigger_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - clear_trigger_idempotent is not changed
+
+- name: Fail when using invalid login
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+  register: trigger_invalid_login
+  ignore_errors: true
+
+- name: Output trigger_invalid_login
+  ansible.builtin.debug:
+    var: trigger_invalid_login
+
+- name: Verify trigger_invalid_login failed
+  ansible.builtin.assert:
+    that:
+      - trigger_invalid_login.failed | bool
+
+- name: Fail when using invalid port
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: test_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: trigger_invalid_port
+  ignore_errors: true
+
+- name: Output trigger_invalid_port
+  ansible.builtin.debug:
+    var: trigger_invalid_port
+
+- name: Verify trigger_invalid_port failed
+  ansible.builtin.assert:
+    that:
+      - trigger_invalid_port.failed | bool

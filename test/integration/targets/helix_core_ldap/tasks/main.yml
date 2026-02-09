@@ -1,0 +1,237 @@
+# Test code for the Helix LDAP module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Test creating simple LDAP config
+- name: Create simple LDAP config
+  ripclawffb.helix_core.helix_core_ldap:
+    name: simple_ldap
+    state: present
+    host: ldap.example.com
+    port: 389
+    encryption: none
+    bind_method: simple
+    simple_pattern: "uid=%user%,ou=users,dc=example,dc=com"
+    options:
+      - nodowncase
+      - getattrs
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_simple
+
+- name: Output create_simple
+  ansible.builtin.debug:
+    var: create_simple
+
+- name: Verify create_simple is changed
+  ansible.builtin.assert:
+    that:
+      - create_simple is changed
+      - create_simple.ldap_spec.Name == 'simple_ldap'
+      - create_simple.ldap_spec.Host == 'ldap.example.com'
+      - create_simple.ldap_spec.Port == '389'
+
+# Test idempotent creation
+- name: Create simple LDAP config (idempotent)
+  ripclawffb.helix_core.helix_core_ldap:
+    name: simple_ldap
+    state: present
+    host: ldap.example.com
+    port: 389
+    encryption: none
+    bind_method: simple
+    simple_pattern: "uid=%user%,ou=users,dc=example,dc=com"
+    options:
+      - nodowncase
+      - getattrs
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_simple_idempotent
+
+- name: Output create_simple_idempotent
+  ansible.builtin.debug:
+    var: create_simple_idempotent
+
+- name: Verify create_simple_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_simple_idempotent is not changed
+
+# Test updating LDAP config
+- name: Update LDAP config options
+  ripclawffb.helix_core.helix_core_ldap:
+    name: simple_ldap
+    state: present
+    host: ldap.example.com
+    port: 389
+    encryption: none
+    bind_method: simple
+    simple_pattern: "uid=%user%,ou=users,dc=example,dc=com"
+    options:
+      - downcase
+      - nogetattrs
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_simple
+
+- name: Verify update_simple is changed
+  ansible.builtin.assert:
+    that:
+      - update_simple is changed
+      - "'downcase' in update_simple.ldap_spec.Options"
+      - "'nogetattrs' in update_simple.ldap_spec.Options"
+
+# Test creating search LDAP config
+- name: Create search LDAP config
+  ripclawffb.helix_core.helix_core_ldap:
+    name: search_ldap
+    state: present
+    host: ldap.secure.com
+    port: 636
+    encryption: ssl
+    bind_method: search
+    search_base_dn: "ou=people,dc=secure,dc=com"
+    search_filter: "(uid=%user%)"
+    search_bind_dn: "cn=admin,dc=secure,dc=com"
+    search_passwd: "secret"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_search
+
+- name: Output create_search
+  ansible.builtin.debug:
+    var: create_search
+
+- name: Verify create_search is changed
+  ansible.builtin.assert:
+    that:
+      - create_search is changed
+      - create_search.ldap_spec.Encryption == 'ssl'
+      - create_search.ldap_spec.BindMethod == 'search'
+
+# Test switching bind method (verify cleanup)
+- name: Switch simple_ldap to search bind
+  ripclawffb.helix_core.helix_core_ldap:
+    name: simple_ldap
+    state: present
+    host: ldap.example.com
+    port: 389
+    encryption: none
+    bind_method: search
+    search_base_dn: "ou=users,dc=example,dc=com"
+    search_filter: "(uid=%user%)"
+    search_bind_dn: "cn=admin,dc=example,dc=com"
+    search_passwd: "secret_password"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: switch_bind
+
+- name: Verify switch_bind cleanup
+  ansible.builtin.assert:
+    that:
+      - switch_bind is changed
+      - switch_bind.ldap_spec.BindMethod == 'search'
+      - switch_bind.ldap_spec.SimplePattern == ''
+      - switch_bind.ldap_spec.SearchBaseDN == 'ou=users,dc=example,dc=com'
+
+# Test check mode
+- name: Delete LDAP config (check mode)
+  ripclawffb.helix_core.helix_core_ldap:
+    name: simple_ldap
+    state: absent
+    host: ldap.example.com
+    port: 389
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_check
+  check_mode: true
+
+- name: Verify delete_check is changed
+  ansible.builtin.assert:
+    that:
+      - delete_check is changed
+
+# Test deleting LDAP config
+- name: Delete simple LDAP config
+  ripclawffb.helix_core.helix_core_ldap:
+    name: simple_ldap
+    state: absent
+    host: ldap.example.com
+    port: 389
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_simple
+
+- name: Verify delete_simple is changed
+  ansible.builtin.assert:
+    that:
+      - delete_simple is changed
+
+- name: Delete search LDAP config
+  ripclawffb.helix_core.helix_core_ldap:
+    name: search_ldap
+    state: absent
+    host: ldap.secure.com
+    port: 636
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_search
+
+- name: Verify delete_search is changed
+  ansible.builtin.assert:
+    that:
+      - delete_search is changed
+
+# Test invalid login
+- name: Fail when using invalid login
+  ripclawffb.helix_core.helix_core_ldap:
+    name: failed_ldap
+    host: localhost
+    port: 389
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+  register: ldap_invalid_login
+  ignore_errors: true
+
+- name: Verify ldap_invalid_login failed
+  ansible.builtin.assert:
+    that:
+      - ldap_invalid_login.failed | bool
+
+# Test invalid port
+- name: Fail when using invalid server port
+  ripclawffb.helix_core.helix_core_ldap:
+    name: failed_ldap
+    host: localhost
+    port: 389
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: ldap_invalid_port
+  ignore_errors: true
+
+- name: Verify ldap_invalid_port failed
+  ansible.builtin.assert:
+    that:
+      - ldap_invalid_port.failed | bool

@@ -10,14 +10,14 @@
 
 .. Anchors
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module:
 
 .. Anchors: short name for ansible.builtin
 
 .. Title
 
-ripclawffb.helix_core.helix_core_typemap module -- This module will allow you to manage the typemap on Perforce Helix Core
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_trigger module -- This module will allow you to manage triggers on Perforce Helix Core
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -29,9 +29,9 @@ ripclawffb.helix_core.helix_core_typemap module -- This module will allow you to
 
     To install it, use: :code:`ansible\-galaxy collection install ripclawffb.helix\_core`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_typemap_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_trigger_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_typemap`.
+    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_trigger`.
 
 .. version_added
 
@@ -48,8 +48,8 @@ Synopsis
 
 .. Description
 
-- The typemap table associates file type modifiers with file patterns.
-- This module manages the entire typemap table as a unit.
+- Triggers are user\-defined scripts executed by the Perforce server when specific operations occur.
+- This module manages the entire triggers table as a unit.
 - This module supports check mode.
 
 
@@ -58,7 +58,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module_requirements:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module_requirements:
 
 Requirements
 ------------
@@ -93,8 +93,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-charset"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4charset"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-charset:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-p4charset:
 
       .. rst-class:: ansible-option-title
 
@@ -137,8 +137,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-password"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4passwd"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4passwd:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-password:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-p4passwd:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-password:
 
       .. rst-class:: ansible-option-title
 
@@ -177,8 +177,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-server"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4port"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4port:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-server:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-p4port:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-server:
 
       .. rst-class:: ansible-option-title
 
@@ -216,7 +216,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-state:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -238,11 +238,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      Determines if the typemap entries are set or cleared
+      Determines if the trigger entries are set or cleared
 
-      :literal:`present` replaces the typemap with the specified entries
+      :literal:`present` replaces the triggers with the specified entries
 
-      :literal:`absent` clears all entries from the typemap
+      :literal:`absent` clears all entries from the triggers table
 
 
       .. rst-class:: ansible-option-line
@@ -260,17 +260,17 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-typemap"></div>
+        <div class="ansibleOptionAnchor" id="parameter-triggers"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-typemap:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-triggers:
 
       .. rst-class:: ansible-option-title
 
-      **typemap**
+      **triggers**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-typemap" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-triggers" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
@@ -284,9 +284,9 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      List of typemap entries
+      List of trigger entries
 
-      Each entry must have a :literal:`type` and :literal:`path` key
+      Each entry must have :literal:`name`\ , :literal:`type`\ , :literal:`path`\ , and :literal:`command` keys
 
       Required when state is :literal:`present`
 
@@ -298,21 +298,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-typemap/path"></div>
+        <div class="ansibleOptionAnchor" id="parameter-triggers/command"></div>
 
       .. raw:: latex
 
         \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-typemap/path:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-triggers/command:
 
       .. rst-class:: ansible-option-title
 
-      **path**
+      **command**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-typemap/path" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-triggers/command" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
@@ -330,7 +330,7 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      The depot path pattern (e.g., //depot/....exe)
+      The command to execute when the trigger fires
 
 
       .. raw:: html
@@ -340,21 +340,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-typemap/type"></div>
+        <div class="ansibleOptionAnchor" id="parameter-triggers/name"></div>
 
       .. raw:: latex
 
         \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-typemap/type:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-triggers/name:
 
       .. rst-class:: ansible-option-title
 
-      **type**
+      **name**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-typemap/type" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-triggers/name" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
@@ -372,7 +372,91 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      The file type to assign (e.g., binary, text+k, binary+l)
+      A unique name for the trigger
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-triggers/path"></div>
+
+      .. raw:: latex
+
+        \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-triggers/path:
+
+      .. rst-class:: ansible-option-title
+
+      **path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-triggers/path" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string` / :ansible-option-required:`required`
+
+      .. raw:: html
+
+        </div>
+
+      .. raw:: latex
+
+        \end{minipage}
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The depot path pattern for changelist triggers, or form type for form triggers
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-triggers/type"></div>
+
+      .. raw:: latex
+
+        \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-triggers/type:
+
+      .. rst-class:: ansible-option-title
+
+      **type**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-triggers/type" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string` / :ansible-option-required:`required`
+
+      .. raw:: html
+
+        </div>
+
+      .. raw:: latex
+
+        \end{minipage}
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The trigger type (e.g., change\-submit, change\-content, change\-commit, form\-save, auth\-check)
 
 
       .. raw:: html
@@ -386,8 +470,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4user"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-p4user:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__parameter-user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-p4user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -434,8 +518,8 @@ See Also
 
 .. seealso::
 
-   `Helix Core Typemap <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_typemap.html>`_
-       Configure file type mappings
+   `Helix Core Triggers <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_triggers.html>`_
+       Configure trigger definitions
    `P4Python Pip Module <https://pypi.org/project/p4python/>`_
        Python module to interact with Helix Core
 
@@ -446,25 +530,27 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    # Set typemap entries
-    - name: Configure typemap
-      ripclawffb.helix_core.helix_core_typemap:
+    # Set trigger entries
+    - name: Configure triggers
+      ripclawffb.helix_core.helix_core_trigger:
         state: present
-        typemap:
-          - type: binary+l
-            path: //depot/....exe
-          - type: binary+l
-            path: //depot/....dll
-          - type: text+k
-            path: //depot/....txt
+        triggers:
+          - name: check_submit
+            type: change-submit
+            path: //depot/...
+            command: "/scripts/validate.sh %changelist%"
+          - name: notify_commit
+            type: change-commit
+            path: //depot/...
+            command: "/scripts/notify.sh %changelist% %user%"
         server: '1666'
         user: bruno
         charset: auto
         password: ''
 
-    # Clear all typemap entries
-    - name: Clear typemap
-      ripclawffb.helix_core.helix_core_typemap:
+    # Clear all trigger entries
+    - name: Clear triggers
+      ripclawffb.helix_core.helix_core_trigger:
         state: absent
         server: '1666'
         user: bruno
@@ -498,7 +584,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changed"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_typemap_module__return-changed:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_trigger_module__return-changed:
 
       .. rst-class:: ansible-option-title
 
@@ -520,7 +606,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      Whether any changes were made to the typemap.
+      Whether any changes were made to the triggers.
 
 
       .. rst-class:: ansible-option-line

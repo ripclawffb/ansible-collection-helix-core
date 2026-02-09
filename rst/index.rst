@@ -62,6 +62,7 @@ Modules
 * :ansplugin:`helix_core_group module <ripclawffb.helix_core.helix_core_group#module>` -- This module will allow you to manage groups on Perforce Helix Core
 * :ansplugin:`helix_core_server module <ripclawffb.helix_core.helix_core_server#module>` -- This module will allow you to manage server spec on Perforce Helix Core
 * :ansplugin:`helix_core_stream module <ripclawffb.helix_core.helix_core_stream#module>` -- This module will allow you to manage streams on Perforce Helix Core
+* :ansplugin:`helix_core_trigger module <ripclawffb.helix_core.helix_core_trigger#module>` -- This module will allow you to manage triggers on Perforce Helix Core
 * :ansplugin:`helix_core_typemap module <ripclawffb.helix_core.helix_core_typemap#module>` -- This module will allow you to manage the typemap on Perforce Helix Core
 * :ansplugin:`helix_core_user module <ripclawffb.helix_core.helix_core_user#module>` -- This module will allow you to manage users on Perforce Helix Core
 
@@ -75,5 +76,6 @@ Modules
     helix_core_group_module
     helix_core_server_module
     helix_core_stream_module
+    helix_core_trigger_module
     helix_core_typemap_module
     helix_core_user_module

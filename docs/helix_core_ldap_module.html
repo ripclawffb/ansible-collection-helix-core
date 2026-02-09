@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="2.24.0" name="antsibull-docs" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ripclawffb.helix_core.helix_core_ldap module – Manage LDAP configurations on Perforce Helix Core &mdash; Ansible collections  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
+      <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=b54c304f" />
+      <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/rtd-ethical-ads.css?v=289b023e" />
+
+  
+    <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=7f41d439"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ripclawffb.helix_core.helix_core_protect module – This module will allow you to manage the protection table on Perforce Helix Core" href="helix_core_protect_module.html" />
+    <link rel="prev" title="ripclawffb.helix_core.helix_core_group module – This module will allow you to manage groups on Perforce Helix Core" href="helix_core_group_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav"><!-- extra body elements for Ansible beyond RTD Sphinx Theme -->
+
+<div class="DocSite-globalNav ansibleNav">
+  <ul>
+    <li><a href="https://www.ansible.com/blog" target="_blank">Blog</a></li>
+    <li><a href="https://forum.ansible.com/" target="_blank">Ansible community forum</a></li>
+    <li><a href="https://docs.ansible.com/" target="_blank">Documentation</a></li>
+  </ul>
+</div>
+
+<a class="DocSite-nav" href="/" style="padding-bottom: 30px;">
+
+  <img class="DocSiteNav-logo"
+    src="_static/images/Ansible-Mark-RGB_White.png"
+    alt="Ansible Logo">
+  <div class="DocSiteNav-title">Ansible Collections Documentation</div>
+</a>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ansible collections
+          </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
+
+<div class="version">
+  
+    
+  
+</div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <label class="sr-only" for="q">Search docs:</label>
+    <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="helix_core_client_module.html">ripclawffb.helix_core.helix_core_client module – This module will allow you to manage client/workspace on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_configurable_module.html">ripclawffb.helix_core.helix_core_configurable module – This module will allow you to set config options on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_depot_module.html">ripclawffb.helix_core.helix_core_depot module – This module will allow you to manage depots on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_group_module.html">ripclawffb.helix_core.helix_core_group module – This module will allow you to manage groups on Perforce Helix Core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ripclawffb.helix_core.helix_core_ldap module – Manage LDAP configurations on Perforce Helix Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#return-values">Return Values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_protect_module.html">ripclawffb.helix_core.helix_core_protect module – This module will allow you to manage the protection table on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_protect_info_module.html">ripclawffb.helix_core.helix_core_protect_info module – Get the current protection table from Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_server_module.html">ripclawffb.helix_core.helix_core_server module – This module will allow you to manage server spec on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_stream_module.html">ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_trigger_module.html">ripclawffb.helix_core.helix_core_trigger module – This module will allow you to manage triggers on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_typemap_module.html">ripclawffb.helix_core.helix_core_typemap module – This module will allow you to manage the typemap on Perforce Helix Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_user_module.html">ripclawffb.helix_core.helix_core_user module – This module will allow you to manage users on Perforce Helix Core</a></li>
+</ul>
+<!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ansible collections</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ripclawffb.helix_core.helix_core_ldap module – Manage LDAP configurations on Perforce Helix Core</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+  
+           <div itemprop="articleBody">
+             
+  <span class="target" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module"></span><section id="ripclawffb-helix-core-helix-core-ldap-module-manage-ldap-configurations-on-perforce-helix-core">
+<h1>ripclawffb.helix_core.helix_core_ldap module – Manage LDAP configurations on Perforce Helix Core<a class="headerlink" href="#ripclawffb-helix-core-helix-core-ldap-module-manage-ldap-configurations-on-perforce-helix-core" title="Link to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.0.7).</p>
+<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
+To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
+<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">ripclawffb.helix_core</span></code>.
+You need further requirements to be able to use this module,
+see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">ripclawffb.helix_core.helix_core_ldap</span></code>.</p>
+</div>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#see-also" id="id4">See Also</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id5">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id6">Return Values</a></p></li>
+</ul>
+</nav>
+<section id="synopsis">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>This module allows you to create, modify, or delete LDAP configurations on Perforce Helix Core.</p></li>
+<li><p>Supports various bind methods (simple, search, sasl) and encryption types.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<span id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>The below requirements are needed on the host that executes this module.</p>
+<ul class="simple">
+<li><p>P4Python pip module is required</p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-attribute_email"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-attribute-email"><strong>attribute_email</strong></p>
+<a class="ansibleOptionLink" href="#parameter-attribute_email" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The attribute used for the user’s email address.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-attribute_name"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-attribute-name"><strong>attribute_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-attribute_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The attribute used for the user’s full name.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-attribute_uid"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-attribute-uid"><strong>attribute_uid</strong></p>
+<a class="ansibleOptionLink" href="#parameter-attribute_uid" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The attribute used for the user ID.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-bind_method"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-bind-method"><strong>bind_method</strong></p>
+<a class="ansibleOptionLink" href="#parameter-bind_method" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The method used to bind to the LDAP server.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;simple&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;search&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;sasl&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-charset"></div>
+<div class="ansibleOptionAnchor" id="parameter-p4charset"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-p4charset"><span id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-charset"></span><strong>charset</strong></p>
+<a class="ansibleOptionLink" href="#parameter-charset" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4charset</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Character set used for translation of unicode files</p>
+<p>Can also use ‘P4CHARSET’ environment variable</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-encryption"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-encryption"><strong>encryption</strong></p>
+<a class="ansibleOptionLink" href="#parameter-encryption" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The encryption method used to connect to the LDAP server.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;none&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;ssl&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;tls&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-group_base_dn"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-group-base-dn"><strong>group_base_dn</strong></p>
+<a class="ansibleOptionLink" href="#parameter-group_base_dn" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The base DN for searching groups.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-group_search_filter"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-group-search-filter"><strong>group_search_filter</strong></p>
+<a class="ansibleOptionLink" href="#parameter-group_search_filter" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The filter used to search for groups.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-host"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-host"><strong>host</strong></p>
+<a class="ansibleOptionLink" href="#parameter-host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The LDAP server hostname or IP address.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-name"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-name"><strong>name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The name of the LDAP configuration.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-options"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-options"><strong>options</strong></p>
+<a class="ansibleOptionLink" href="#parameter-options" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>specific options for the LDAP configuration.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;downcase&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;nodowncase&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;getattrs&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;nogetattrs&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;realminusername&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;norealminusername&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-password"></div>
+<div class="ansibleOptionAnchor" id="parameter-p4passwd"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-password"><span id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-p4passwd"></span><strong>password</strong></p>
+<a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4passwd</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The super user password</p>
+<p>Can also use ‘P4PASSWD’ environment variable</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-port"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-port"><strong>port</strong></p>
+<a class="ansibleOptionLink" href="#parameter-port" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The LDAP server port.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-search_base_dn"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-search-base-dn"><strong>search_base_dn</strong></p>
+<a class="ansibleOptionLink" href="#parameter-search_base_dn" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The base DN for searching users.</p>
+<p>Required if bind_method is ‘search’.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-search_bind_dn"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-search-bind-dn"><strong>search_bind_dn</strong></p>
+<a class="ansibleOptionLink" href="#parameter-search_bind_dn" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The DN used to bind to the LDAP server for searching.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-search_filter"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-search-filter"><strong>search_filter</strong></p>
+<a class="ansibleOptionLink" href="#parameter-search_filter" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The search filter used to find users (e.g., (uid=%user%)).</p>
+<p>Required if bind_method is ‘search’.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-search_passwd"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-search-passwd"><strong>search_passwd</strong></p>
+<a class="ansibleOptionLink" href="#parameter-search_passwd" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The password used to bind to the LDAP server for searching.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-server"></div>
+<div class="ansibleOptionAnchor" id="parameter-p4port"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-server"><span id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-p4port"></span><strong>server</strong></p>
+<a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4port</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The hostname/ip and port of the server (perforce:1666)</p>
+<p>Can also use ‘P4PORT’ environment variable</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-simple_pattern"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-simple-pattern"><strong>simple_pattern</strong></p>
+<a class="ansibleOptionLink" href="#parameter-simple_pattern" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The pattern used for simple binding (e.g., uid=%user%,ou=users,dc=example,dc=com).</p>
+<p>Required if bind_method is ‘simple’.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-state"><strong>state</strong></p>
+<a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Whether the LDAP configuration should exist or not.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;present&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;absent&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-user"></div>
+<div class="ansibleOptionAnchor" id="parameter-p4user"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-user"><span id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-parameter-p4user"></span><strong>user</strong></p>
+<a class="ansibleOptionLink" href="#parameter-user" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4user</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>A user with super user access</p>
+<p>Can also use ‘P4USER’ environment variable</p>
+</div></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="see-also">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">See Also</a><a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_ldap.html">Helix Core LDAP</a></dt><dd><p>Manage LDAP configurations</p>
+</dd>
+<dt><a class="reference external" href="https://pypi.org/project/p4python/">P4Python Pip Module</a></dt><dd><p>Python module to interact with Helix Core</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="examples">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create LDAP configuration with simple bind</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_ldap</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple_ldap</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ldap.example.com</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">389</span>
+<span class="w">    </span><span class="nt">encryption</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="w">    </span><span class="nt">bind_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple</span>
+<span class="w">    </span><span class="nt">simple_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;uid=%user%,ou=users,dc=example,dc=com&quot;</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodowncase</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getattrs</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create LDAP configuration with search bind</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_ldap</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search_ldap</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ldap.example.com</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">636</span>
+<span class="w">    </span><span class="nt">encryption</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssl</span>
+<span class="w">    </span><span class="nt">bind_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search</span>
+<span class="w">    </span><span class="nt">search_base_dn</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ou=users,dc=example,dc=com&quot;</span>
+<span class="w">    </span><span class="nt">search_filter</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(uid=%user%)&quot;</span>
+<span class="w">    </span><span class="nt">search_bind_dn</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cn=admin,dc=example,dc=com&quot;</span>
+<span class="w">    </span><span class="nt">search_passwd</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret_password&quot;</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">downcase</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getattrs</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove LDAP configuration</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_ldap</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple_ldap</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ldap.example.com</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">389</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="return-values">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
+<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/devel/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible vdevel)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-changed"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-return-changed"><strong>changed</strong></p>
+<a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Whether any changes were made to the LDAP configuration.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">true</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-ldap_spec"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-ldap-module-return-ldap-spec"><strong>ldap_spec</strong></p>
+<a class="ansibleOptionLink" href="#return-ldap_spec" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The LDAP configuration specification.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">{&quot;BindMethod&quot;:</span> <span class="pre">&quot;simple&quot;,</span> <span class="pre">&quot;Encryption&quot;:</span> <span class="pre">&quot;none&quot;,</span> <span class="pre">&quot;Host&quot;:</span> <span class="pre">&quot;ldap.example.com&quot;,</span> <span class="pre">&quot;Name&quot;:</span> <span class="pre">&quot;simple_ldap&quot;,</span> <span class="pre">&quot;Port&quot;:</span> <span class="pre">389}</span></code></p>
+</div></td>
+</tr>
+</tbody>
+</table>
+<section id="authors">
+<h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Asif Shaikh (&#64;ripclawffb)</p></li>
+</ul>
+</section>
+<section id="collection-links">
+<h3>Collection links<a class="headerlink" href="#collection-links" title="Link to this heading"></a></h3>
+<ul class="ansible-links">
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ripclawffb/ansible-collection-helix-core/issues" rel="noopener external" target="_blank">Issue Tracker</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/" rel="noopener external" target="_blank">Homepage</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ripclawffb/ansible-collection-helix-core" rel="noopener external" target="_blank">Repository (Sources)</a></span></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+<footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="helix_core_group_module.html" class="btn btn-neutral float-left" title="ripclawffb.helix_core.helix_core_group module – This module will allow you to manage groups on Perforce Helix Core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="helix_core_protect_module.html" class="btn btn-neutral float-right" title="ripclawffb.helix_core.helix_core_protect module – This module will allow you to manage the protection table on Perforce Helix Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Ansible contributors.</p>
+  </div>
+
+  
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script><!-- extra footer elements for Ansible beyond RTD Sphinx Theme -->
+
+</body>
+</html>

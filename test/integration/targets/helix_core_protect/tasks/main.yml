@@ -20,6 +20,19 @@
     password: ''
   register: add_entry
 
+- name: Get protections after add
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_after_add
+
+- name: Verify entry was added
+  ansible.builtin.assert:
+    that:
+      - "'read' in (protect_info_after_add.protections | selectattr('name', 'equalto', 'test_readers') | map(attribute='access') | list)"
+
 - name: Output add_entry
   ansible.builtin.debug:
     var: add_entry
@@ -73,6 +86,20 @@
     charset: auto
     password: ''
   register: add_multiple
+
+- name: Get protections after add multiple
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_after_add_multiple
+
+- name: Verify entries were added
+  ansible.builtin.assert:
+    that:
+      - "'write' in (protect_info_after_add_multiple.protections | selectattr('name', 'equalto', 'test_writers') | map(attribute='access') | list)"
+      - "'admin' in (protect_info_after_add_multiple.protections | selectattr('name', 'equalto', 'test_admin') | map(attribute='access') | list)"
 
 - name: Output add_multiple
   ansible.builtin.debug:
@@ -128,6 +155,19 @@
     password: ''
   register: remove_entry
 
+- name: Get protections after remove
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_after_remove
+
+- name: Verify entry was removed
+  ansible.builtin.assert:
+    that:
+      - "(protect_info_after_remove.protections | selectattr('name', 'equalto', 'test_readers') | list | length) == 0"
+
 - name: Output remove_entry
   ansible.builtin.debug:
     var: remove_entry
@@ -181,6 +221,20 @@
     charset: auto
     password: ''
   register: remove_multiple
+
+- name: Get protections after remove multiple
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_after_remove_multiple
+
+- name: Verify entries were removed
+  ansible.builtin.assert:
+    that:
+      - "(protect_info_after_remove_multiple.protections | selectattr('name', 'equalto', 'test_writers') | list | length) == 0"
+      - "(protect_info_after_remove_multiple.protections | selectattr('name', 'equalto', 'test_admin') | list | length) == 0"
 
 - name: Output remove_multiple
   ansible.builtin.debug:

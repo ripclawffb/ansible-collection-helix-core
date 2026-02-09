@@ -97,3 +97,6 @@
 
     - name: Import helix_core_trigger tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_trigger/tasks/main.yml
+
+    - name: Import helix_core_protect tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_protect/tasks/main.yml

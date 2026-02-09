@@ -1,0 +1,370 @@
+# Test code for the Helix protect module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Test adding individual entries (entry mode)
+- name: Add protection entry
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: read
+        type: group
+        name: test_readers
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: add_entry
+
+- name: Output add_entry
+  ansible.builtin.debug:
+    var: add_entry
+
+- name: Verify add_entry is changed
+  ansible.builtin.assert:
+    that:
+      - add_entry is changed
+
+- name: Add protection entry (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: read
+        type: group
+        name: test_readers
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: add_entry_idempotent
+
+- name: Output add_entry_idempotent
+  ansible.builtin.debug:
+    var: add_entry_idempotent
+
+- name: Verify add_entry_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - add_entry_idempotent is not changed
+
+# Test adding multiple entries
+- name: Add multiple protection entries
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: write
+        type: group
+        name: test_writers
+        host: "*"
+        path: //depot/...
+      - access: admin
+        type: user
+        name: test_admin
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: add_multiple
+
+- name: Output add_multiple
+  ansible.builtin.debug:
+    var: add_multiple
+
+- name: Verify add_multiple is changed
+  ansible.builtin.assert:
+    that:
+      - add_multiple is changed
+
+- name: Add multiple protection entries (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: write
+        type: group
+        name: test_writers
+        host: "*"
+        path: //depot/...
+      - access: admin
+        type: user
+        name: test_admin
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: add_multiple_idempotent
+
+- name: Output add_multiple_idempotent
+  ansible.builtin.debug:
+    var: add_multiple_idempotent
+
+- name: Verify add_multiple_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - add_multiple_idempotent is not changed
+
+# Test removing individual entries
+- name: Remove protection entry
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    protections:
+      - access: read
+        type: group
+        name: test_readers
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_entry
+
+- name: Output remove_entry
+  ansible.builtin.debug:
+    var: remove_entry
+
+- name: Verify remove_entry is changed
+  ansible.builtin.assert:
+    that:
+      - remove_entry is changed
+
+- name: Remove protection entry (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    protections:
+      - access: read
+        type: group
+        name: test_readers
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_entry_idempotent
+
+- name: Output remove_entry_idempotent
+  ansible.builtin.debug:
+    var: remove_entry_idempotent
+
+- name: Verify remove_entry_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - remove_entry_idempotent is not changed
+
+# Test removing multiple entries
+- name: Remove multiple protection entries
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    protections:
+      - access: write
+        type: group
+        name: test_writers
+        host: "*"
+        path: //depot/...
+      - access: admin
+        type: user
+        name: test_admin
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_multiple
+
+- name: Output remove_multiple
+  ansible.builtin.debug:
+    var: remove_multiple
+
+- name: Verify remove_multiple is changed
+  ansible.builtin.assert:
+    that:
+      - remove_multiple is changed
+
+- name: Remove multiple protection entries (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    protections:
+      - access: write
+        type: group
+        name: test_writers
+        host: "*"
+        path: //depot/...
+      - access: admin
+        type: user
+        name: test_admin
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_multiple_idempotent
+
+- name: Output remove_multiple_idempotent
+  ansible.builtin.debug:
+    var: remove_multiple_idempotent
+
+- name: Verify remove_multiple_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - remove_multiple_idempotent is not changed
+
+# Test check mode
+- name: Add entry (check mode)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: super
+        type: user
+        name: check_mode_user
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: check_mode_add
+  check_mode: true
+
+- name: Output check_mode_add
+  ansible.builtin.debug:
+    var: check_mode_add
+
+- name: Verify check_mode_add is changed
+  ansible.builtin.assert:
+    that:
+      - check_mode_add is changed
+
+- name: Verify entry was not actually added (check mode confirmation)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: super
+        type: user
+        name: check_mode_user
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: check_mode_confirm
+
+- name: Verify check_mode_confirm is changed (entry wasn't added)
+  ansible.builtin.assert:
+    that:
+      - check_mode_confirm is changed
+
+# Test security block - should fail
+- name: Attempt to clear protection table (should fail)
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    mode: replace
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: clear_table
+  ignore_errors: true
+
+- name: Output clear_table
+  ansible.builtin.debug:
+    var: clear_table
+
+- name: Verify clear_table failed with security message
+  ansible.builtin.assert:
+    that:
+      - clear_table.failed | bool
+      - "'not allowed' in clear_table.msg"
+
+# Clean up test entries
+- name: Remove test entries
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    protections:
+      - access: write
+        type: group
+        name: test_writers
+        host: "*"
+        path: //depot/...
+      - access: admin
+        type: user
+        name: test_admin
+        host: "*"
+        path: //depot/...
+      - access: super
+        type: user
+        name: check_mode_user
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: cleanup
+
+- name: Output cleanup
+  ansible.builtin.debug:
+    var: cleanup
+
+# Test invalid login
+- name: Fail when using invalid login
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: read
+        type: user
+        name: test
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno1
+    charset: auto
+    password: ''
+  register: protect_invalid_login
+  ignore_errors: true
+
+- name: Output protect_invalid_login
+  ansible.builtin.debug:
+    var: protect_invalid_login
+
+- name: Verify protect_invalid_login failed
+  ansible.builtin.assert:
+    that:
+      - protect_invalid_login.failed | bool
+
+- name: Fail when using invalid port
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: read
+        type: user
+        name: test
+        host: "*"
+        path: //...
+    server: '1667'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_invalid_port
+  ignore_errors: true
+
+- name: Output protect_invalid_port
+  ansible.builtin.debug:
+    var: protect_invalid_port
+
+- name: Verify protect_invalid_port failed
+  ansible.builtin.assert:
+    that:
+      - protect_invalid_port.failed | bool

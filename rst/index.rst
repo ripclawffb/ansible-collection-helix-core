@@ -60,6 +60,7 @@ Modules
 * :ansplugin:`helix_core_configurable module <ripclawffb.helix_core.helix_core_configurable#module>` -- This module will allow you to set config options on Perforce Helix Core
 * :ansplugin:`helix_core_depot module <ripclawffb.helix_core.helix_core_depot#module>` -- This module will allow you to manage depots on Perforce Helix Core
 * :ansplugin:`helix_core_group module <ripclawffb.helix_core.helix_core_group#module>` -- This module will allow you to manage groups on Perforce Helix Core
+* :ansplugin:`helix_core_ldap module <ripclawffb.helix_core.helix_core_ldap#module>` -- Manage LDAP configurations on Perforce Helix Core
 * :ansplugin:`helix_core_protect module <ripclawffb.helix_core.helix_core_protect#module>` -- This module will allow you to manage the protection table on Perforce Helix Core
 * :ansplugin:`helix_core_protect_info module <ripclawffb.helix_core.helix_core_protect_info#module>` -- Get the current protection table from Perforce Helix Core
 * :ansplugin:`helix_core_server module <ripclawffb.helix_core.helix_core_server#module>` -- This module will allow you to manage server spec on Perforce Helix Core
@@ -76,6 +77,7 @@ Modules
     helix_core_configurable_module
     helix_core_depot_module
     helix_core_group_module
+    helix_core_ldap_module
     helix_core_protect_module
     helix_core_protect_info_module
     helix_core_server_module

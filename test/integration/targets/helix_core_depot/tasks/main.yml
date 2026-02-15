@@ -493,6 +493,168 @@
     that:
       - delete_depot_idempotent is not changed
 
+# Diff mode tests
+- name: Create depot with diff mode
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: diff_test_depot
+    type: local
+    description: Diff test depot
+    map: depot/...
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: diff_create_depot
+  diff: true
+
+- name: Output diff_create_depot
+  ansible.builtin.debug:
+    var: diff_create_depot
+
+- name: Verify diff output on depot create
+  ansible.builtin.assert:
+    that:
+      - diff_create_depot is changed
+      - diff_create_depot.diff is defined
+      - diff_create_depot.diff.before is defined
+      - diff_create_depot.diff.after is defined
+      - diff_create_depot.diff.before == ''
+      - "'Diff test depot' in diff_create_depot.diff.after"
+
+- name: Create depot with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: diff_test_depot
+    type: local
+    description: Diff test depot
+    map: depot/...
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: diff_create_depot_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent depot run
+  ansible.builtin.assert:
+    that:
+      - diff_create_depot_idempotent is not changed
+      - diff_create_depot_idempotent.diff is not defined
+
+- name: Update depot with diff mode
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: diff_test_depot
+    type: local
+    description: Diff test depot updated
+    map: depot/...
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: diff_update_depot
+  diff: true
+
+- name: Output diff_update_depot
+  ansible.builtin.debug:
+    var: diff_update_depot
+
+- name: Verify diff output on depot update
+  ansible.builtin.assert:
+    that:
+      - diff_update_depot is changed
+      - diff_update_depot.diff is defined
+      - "'Diff test depot' in diff_update_depot.diff.before"
+      - "'Diff test depot updated' in diff_update_depot.diff.after"
+
+- name: Update depot without diff mode (negative test)
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: diff_test_depot
+    type: local
+    description: Diff test depot final
+    map: depot/...
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: diff_disabled_depot
+
+- name: Verify no diff key when diff mode is not enabled
+  ansible.builtin.assert:
+    that:
+      - diff_disabled_depot is changed
+      - diff_disabled_depot.diff is not defined
+
+- name: Update depot in check+diff mode
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: diff_test_depot
+    type: local
+    description: Check mode update
+    map: depot/...
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: check_diff_depot
+  check_mode: true
+  diff: true
+
+- name: Output check_diff_depot
+  ansible.builtin.debug:
+    var: check_diff_depot
+
+- name: Verify check+diff produces diff without changing
+  ansible.builtin.assert:
+    that:
+      - check_diff_depot is changed
+      - check_diff_depot.diff is defined
+      - "'Diff test depot final' in check_diff_depot.diff.before"
+      - "'Check mode update' in check_diff_depot.diff.after"
+
+- name: Verify check mode did not actually change the depot
+  ripclawffb.helix_core.helix_core_depot:
+    state: present
+    depot: diff_test_depot
+    type: local
+    description: Diff test depot final
+    map: depot/...
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: verify_no_change_depot
+
+- name: Confirm depot was not changed by check mode
+  ansible.builtin.assert:
+    that:
+      - verify_no_change_depot is not changed
+
+- name: Delete depot with diff mode
+  ripclawffb.helix_core.helix_core_depot:
+    state: absent
+    depot: diff_test_depot
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
+  register: diff_delete_depot
+  diff: true
+
+- name: Output diff_delete_depot
+  ansible.builtin.debug:
+    var: diff_delete_depot
+
+- name: Verify diff output on depot delete
+  ansible.builtin.assert:
+    that:
+      - diff_delete_depot is changed
+      - diff_delete_depot.diff is defined
+      - "'Diff test depot final' in diff_delete_depot.diff.before"
+      - diff_delete_depot.diff.after == ''
+
 - name: Create new depot (check mode)
   ripclawffb.helix_core.helix_core_depot:
     state: present

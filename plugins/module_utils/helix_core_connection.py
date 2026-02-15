@@ -63,3 +63,19 @@ def helix_core_disconnect(module, connection):
         connection.disconnect()
     except Exception as e:
         module.fail_json(msg="There was a problem disconnecting from Helix: {0}".format(e))
+
+
+def spec_to_string(spec, fields):
+    """
+    Convert a Perforce spec dict to a readable string for diff output.
+    Only includes the specified fields. List values are joined with newlines.
+    """
+    lines = []
+    for field in fields:
+        val = spec.get(field, '')
+        if isinstance(val, list):
+            val = '\n\t'.join(val)
+        if isinstance(val, str):
+            val = val.rstrip()
+        lines.append('{0}: {1}'.format(field, val))
+    return '\n'.join(lines) + '\n'

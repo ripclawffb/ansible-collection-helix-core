@@ -191,6 +191,78 @@
     that:
       - clear_trigger_idempotent is not changed
 
+# Diff mode tests
+- name: Set trigger with diff mode
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: diff_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_trigger
+  diff: true
+
+- name: Output diff_create_trigger
+  ansible.builtin.debug:
+    var: diff_create_trigger
+
+- name: Verify diff output on trigger set
+  ansible.builtin.assert:
+    that:
+      - diff_create_trigger is changed
+      - diff_create_trigger.diff is defined
+      - diff_create_trigger.diff.before is defined
+      - diff_create_trigger.diff.after is defined
+      - "'diff_trigger' in diff_create_trigger.diff.after"
+
+- name: Set trigger with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_trigger:
+    state: present
+    triggers:
+      - name: diff_trigger
+        type: change-submit
+        path: //depot/...
+        command: "/bin/true"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_trigger_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent trigger run
+  ansible.builtin.assert:
+    that:
+      - diff_create_trigger_idempotent is not changed
+      - diff_create_trigger_idempotent.diff is not defined
+
+- name: Clear triggers with diff mode
+  ripclawffb.helix_core.helix_core_trigger:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_clear_trigger
+  diff: true
+
+- name: Output diff_clear_trigger
+  ansible.builtin.debug:
+    var: diff_clear_trigger
+
+- name: Verify diff output on trigger clear
+  ansible.builtin.assert:
+    that:
+      - diff_clear_trigger is changed
+      - diff_clear_trigger.diff is defined
+      - "'diff_trigger' in diff_clear_trigger.diff.before"
+      - diff_clear_trigger.diff.after == ''
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_trigger:
     state: present

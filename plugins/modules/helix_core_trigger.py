@@ -175,6 +175,7 @@ def run_module():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
+
         required_if=[
             ('state', 'present', ['triggers']),
         ]
@@ -188,24 +189,38 @@ def run_module():
         p4_triggers_spec = p4.fetch_triggers()
         current_entries = triggers_to_list(p4_triggers_spec)
 
+        # format entries for diff
+        def entries_to_diff(entries):
+            return '\n'.join('{0} {1} {2} {3}'.format(*e) for e in entries) + '\n' if entries else ''
+
         if module.params['state'] == 'present':
             # Build desired entries list
             desired_entries = [(e['name'], e['type'], e['path'], e['command']) for e in module.params['triggers']]
 
             # Compare current vs desired
             if current_entries != desired_entries:
+                before = entries_to_diff(current_entries)
+
                 if not module.check_mode:
                     p4_triggers_spec['Triggers'] = list_to_triggers(module.params['triggers'])
                     p4.save_triggers(p4_triggers_spec)
                 result['changed'] = True
 
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': entries_to_diff(desired_entries)}
+
         elif module.params['state'] == 'absent':
             # Clear triggers if it has entries
             if current_entries:
+                before = entries_to_diff(current_entries)
+
                 if not module.check_mode:
                     p4_triggers_spec['Triggers'] = []
                     p4.save_triggers(p4_triggers_spec)
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
 
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)

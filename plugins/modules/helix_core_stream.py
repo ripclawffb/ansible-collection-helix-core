@@ -145,7 +145,7 @@ changed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 
 
@@ -191,9 +191,28 @@ def run_module():
         if module.params['owner'] is None:
             module.params['owner'] = module.params['user']
 
+        # fields to track for diff
+        diff_fields = ['Description', 'Owner', 'Parent', 'Type', 'Options', 'Paths', 'Remapped', 'Ignored']
+
         if module.params['state'] == 'present':
+            # build after_spec once for diff (used in both update and create paths)
+            if module._diff:
+                after_spec = {
+                    'Description': module.params['description'], 'Owner': module.params['owner'],
+                    'Parent': module.params['parent'], 'Type': module.params['type'],
+                    'Options': module.params['options'], 'Paths': module.params['paths'],
+                }
+                if module.params['remapped'] is not None:
+                    after_spec['Remapped'] = module.params['remapped']
+                if module.params['ignored'] is not None:
+                    after_spec['Ignored'] = module.params['ignored']
+
             # check to see if any fields have changed
             if 'Access' in p4_stream_spec:
+
+                # capture before state for diff
+                if module._diff:
+                    before = spec_to_string(p4_stream_spec, diff_fields)
 
                 p4_stream_changes = []
                 p4_stream_changes.append(p4_stream_spec["Description"].rstrip() == module.params['description'])
@@ -248,6 +267,9 @@ def run_module():
 
                     result['changed'] = True
 
+                    if module._diff:
+                        result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
+
             # create new stream with specified values
             else:
                 if not module.check_mode:
@@ -268,13 +290,22 @@ def run_module():
 
                 result['changed'] = True
 
+                if module._diff:
+                    result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
         elif module.params['state'] == 'absent':
             # delete stream
             if 'Access' in p4_stream_spec:
+                if module._diff:
+                    before = spec_to_string(p4_stream_spec, diff_fields)
+
                 if not module.check_mode:
                     p4.delete_stream('-f', module.params['stream'])
 
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
             else:
                 result['changed'] = False
 

@@ -22,7 +22,7 @@ options:
             - p4port
     user:
         description:
-            - A user with super user access
+            - A user with access to perform this operation
             - Can also use 'P4USER' environment variable
         required: true
         type: str
@@ -30,7 +30,7 @@ options:
             - p4user
     password:
         description:
-            - The super user password
+            - The login password
             - Can also use 'P4PASSWD' environment variable
         required: true
         type: str

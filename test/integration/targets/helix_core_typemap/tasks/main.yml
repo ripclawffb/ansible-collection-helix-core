@@ -183,6 +183,74 @@
     that:
       - clear_typemap_idempotent is not changed
 
+# Diff mode tests
+- name: Set typemap with diff mode
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....zip
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_typemap
+  diff: true
+
+- name: Output diff_create_typemap
+  ansible.builtin.debug:
+    var: diff_create_typemap
+
+- name: Verify diff output on typemap set
+  ansible.builtin.assert:
+    that:
+      - diff_create_typemap is changed
+      - diff_create_typemap.diff is defined
+      - diff_create_typemap.diff.before is defined
+      - diff_create_typemap.diff.after is defined
+      - "'binary+l' in diff_create_typemap.diff.after"
+
+- name: Set typemap with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_typemap:
+    state: present
+    typemap:
+      - type: binary+l
+        path: //depot/....zip
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_typemap_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent typemap run
+  ansible.builtin.assert:
+    that:
+      - diff_create_typemap_idempotent is not changed
+      - diff_create_typemap_idempotent.diff is not defined
+
+- name: Clear typemap with diff mode
+  ripclawffb.helix_core.helix_core_typemap:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_clear_typemap
+  diff: true
+
+- name: Output diff_clear_typemap
+  ansible.builtin.debug:
+    var: diff_clear_typemap
+
+- name: Verify diff output on typemap clear
+  ansible.builtin.assert:
+    that:
+      - diff_clear_typemap is changed
+      - diff_clear_typemap.diff is defined
+      - "'binary+l' in diff_clear_typemap.diff.before"
+      - diff_clear_typemap.diff.after == ''
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_typemap:
     state: present

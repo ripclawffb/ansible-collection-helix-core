@@ -211,6 +211,7 @@ def run_module():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
+
         required_if=[
             ('state', 'present', ['protections']),
         ]
@@ -241,6 +242,10 @@ def run_module():
         p4_protect_spec = p4.fetch_protect()
         current_entries = protections_to_set(p4_protect_spec)
 
+        # format entries for diff
+        def entries_to_diff(entries):
+            return '\n'.join(sorted('{0} {1} {2} {3} {4}'.format(*e) for e in entries)) + '\n' if entries else ''
+
         if module.params['mode'] == 'entry':
             # Entry mode: add/remove individual entries
             desired_tuples = {entry_to_tuple(e) for e in module.params['protections']}
@@ -255,6 +260,12 @@ def run_module():
                         p4.save_protect(p4_protect_spec)
                     result['changed'] = True
 
+                    if module._diff:
+                        result['diff'] = {
+                            'before': entries_to_diff(current_entries),
+                            'after': entries_to_diff(current_entries | desired_tuples),
+                        }
+
             elif module.params['state'] == 'absent':
                 # Remove entries that exist
                 entries_to_remove = desired_tuples & current_entries
@@ -265,6 +276,12 @@ def run_module():
                         p4.save_protect(p4_protect_spec)
                     result['changed'] = True
 
+                    if module._diff:
+                        result['diff'] = {
+                            'before': entries_to_diff(current_entries),
+                            'after': entries_to_diff(current_entries - desired_tuples),
+                        }
+
         elif module.params['mode'] == 'replace':
             # Replace mode: replace entire table
             desired_tuples = {entry_to_tuple(e) for e in module.params['protections']}
@@ -274,6 +291,12 @@ def run_module():
                     p4_protect_spec['Protections'] = set_to_protections(desired_tuples)
                     p4.save_protect(p4_protect_spec)
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {
+                        'before': entries_to_diff(current_entries),
+                        'after': entries_to_diff(desired_tuples),
+                    }
 
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)

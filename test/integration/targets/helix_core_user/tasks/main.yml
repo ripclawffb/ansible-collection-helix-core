@@ -169,6 +169,98 @@
     that:
       - delete_user_check_mode_confirm is changed
 
+# Diff mode tests
+- name: Create user with diff mode
+  ripclawffb.helix_core.helix_core_user:
+    state: present
+    name: diff_test_user
+    email: diff_test@perforce.com
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_user
+  diff: true
+
+- name: Output diff_create_user
+  ansible.builtin.debug:
+    var: diff_create_user
+
+- name: Verify diff output on user create
+  ansible.builtin.assert:
+    that:
+      - diff_create_user is changed
+      - diff_create_user.diff is defined
+      - diff_create_user.diff.before is defined
+      - diff_create_user.diff.after is defined
+      - diff_create_user.diff.before == ''
+      - "'diff_test@perforce.com' in diff_create_user.diff.after"
+
+- name: Create user with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_user:
+    state: present
+    name: diff_test_user
+    email: diff_test@perforce.com
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_user_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent user run
+  ansible.builtin.assert:
+    that:
+      - diff_create_user_idempotent is not changed
+      - diff_create_user_idempotent.diff is not defined
+
+- name: Update user with diff mode
+  ripclawffb.helix_core.helix_core_user:
+    state: present
+    name: diff_test_user
+    email: diff_updated@perforce.com
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_update_user
+  diff: true
+
+- name: Output diff_update_user
+  ansible.builtin.debug:
+    var: diff_update_user
+
+- name: Verify diff output on user update
+  ansible.builtin.assert:
+    that:
+      - diff_update_user is changed
+      - diff_update_user.diff is defined
+      - "'diff_test@perforce.com' in diff_update_user.diff.before"
+      - "'diff_updated@perforce.com' in diff_update_user.diff.after"
+
+- name: Delete user with diff mode
+  ripclawffb.helix_core.helix_core_user:
+    state: absent
+    name: diff_test_user
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_delete_user
+  diff: true
+
+- name: Output diff_delete_user
+  ansible.builtin.debug:
+    var: diff_delete_user
+
+- name: Verify diff output on user delete
+  ansible.builtin.assert:
+    that:
+      - diff_delete_user is changed
+      - diff_delete_user.diff is defined
+      - "'diff_updated@perforce.com' in diff_delete_user.diff.before"
+      - diff_delete_user.diff.after == ''
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_user:
     state: present

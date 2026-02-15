@@ -161,7 +161,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The super user password
+      The login password
 
       Can also use 'P4PASSWD' environment variable
 
@@ -241,7 +241,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A user with super user access
+      A user with access to perform this operation
 
       Can also use 'P4USER' environment variable
 

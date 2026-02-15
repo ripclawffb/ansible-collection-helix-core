@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_protect
 
-short_description: This module will allow you to manage the protection table on Perforce Helix Core
+short_description: Manage the protection table on Perforce Helix Core
 
 description:
     - "Manage access control via the Perforce protection table."

@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_configurable
 
-short_description: This module will allow you to set config options on Perforce Helix Core
+short_description: Set configurables on Perforce Helix Core
 
 description:
     - "Configurables allow you to customize a Perforce service. Configurable settings might affect the server, the client, or a proxy."

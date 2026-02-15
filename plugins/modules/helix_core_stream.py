@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_stream
 
-short_description: This module will allow you to manage streams on Perforce Helix Core
+short_description: Manage streams on Perforce Helix Core
 
 description:
     - "Create or edit an instance of a stream (also known as a stream definition)."

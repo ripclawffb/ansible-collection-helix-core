@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_group
 
-short_description: This module will allow you to manage groups on Perforce Helix Core
+short_description: Manage groups on Perforce Helix Core
 
 description:
     - "Add or delete users from a group, or set the maxresults, maxscanrows, maxlocktime, and timeout limits for the members of a group"

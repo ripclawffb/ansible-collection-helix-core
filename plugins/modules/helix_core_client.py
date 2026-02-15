@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_client
 
-short_description: This module will allow you to manage client/workspace on Perforce Helix Core
+short_description: Manage client/workspace on Perforce Helix Core
 
 description:
     - "A client/workspace specification defines the portion of the depot that can be accessed from that

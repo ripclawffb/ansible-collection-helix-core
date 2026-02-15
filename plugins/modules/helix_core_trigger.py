@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_trigger
 
-short_description: This module will allow you to manage triggers on Perforce Helix Core
+short_description: Manage triggers on Perforce Helix Core
 
 description:
     - "Triggers are user-defined scripts executed by the Perforce server when specific operations occur."

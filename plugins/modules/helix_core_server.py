@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_server
 
-short_description: This module will allow you to manage server spec on Perforce Helix Core
+short_description: Manage server spec on Perforce Helix Core
 
 description:
     - "A server specification describes the high-level configuration and intended usage of a

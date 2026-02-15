@@ -351,6 +351,110 @@
     that:
       - delete_client_submitoptions is changed
 
+# Diff mode tests
+- name: Create client with diff mode
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: diff_test_client
+    description: 'Diff test client'
+    host: workstation01
+    root: /tmp/diff_test_client
+    view:
+      - //depot/... //diff_test_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_client
+  diff: true
+
+- name: Output diff_create_client
+  ansible.builtin.debug:
+    var: diff_create_client
+
+- name: Verify diff output on client create
+  ansible.builtin.assert:
+    that:
+      - diff_create_client is changed
+      - diff_create_client.diff is defined
+      - diff_create_client.diff.before is defined
+      - diff_create_client.diff.after is defined
+      - "'Diff test client' in diff_create_client.diff.after"
+
+- name: Create client with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: diff_test_client
+    description: 'Diff test client'
+    host: workstation01
+    root: /tmp/diff_test_client
+    view:
+      - //depot/... //diff_test_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_client_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent client run
+  ansible.builtin.assert:
+    that:
+      - diff_create_client_idempotent is not changed
+      - diff_create_client_idempotent.diff is not defined
+
+- name: Update client with diff mode
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: diff_test_client
+    description: 'Diff test client updated'
+    host: workstation01
+    root: /tmp/diff_test_client
+    view:
+      - //depot/... //diff_test_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_update_client
+  diff: true
+
+- name: Output diff_update_client
+  ansible.builtin.debug:
+    var: diff_update_client
+
+- name: Verify diff output on client update
+  ansible.builtin.assert:
+    that:
+      - diff_update_client is changed
+      - diff_update_client.diff is defined
+      - "'Diff test client' in diff_update_client.diff.before"
+      - "'Diff test client updated' in diff_update_client.diff.after"
+
+- name: Delete client with diff mode
+  ripclawffb.helix_core.helix_core_client:
+    state: absent
+    name: diff_test_client
+    view: []
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_delete_client
+  diff: true
+
+- name: Output diff_delete_client
+  ansible.builtin.debug:
+    var: diff_delete_client
+
+- name: Verify diff output on client delete
+  ansible.builtin.assert:
+    that:
+      - diff_delete_client is changed
+      - diff_delete_client.diff is defined
+      - "'Diff test client updated' in diff_delete_client.diff.before"
+      - diff_delete_client.diff.after == ''
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_client:
     state: present

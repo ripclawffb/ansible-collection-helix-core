@@ -139,7 +139,7 @@ changed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 from os import getcwd
 from socket import gethostname
@@ -189,9 +189,15 @@ def run_module():
         if module.params['root'] is None:
             module.params['root'] = getcwd()
 
+        # fields to track for diff
+        diff_fields = ['Description', 'Host', 'Root', 'View', 'LineEnd', 'Options', 'SubmitOptions', 'AltRoots']
+
         if module.params['state'] == 'present':
             # check to see if any fields have changed
             if 'Access' in p4_client_spec:
+
+                # capture before state for diff
+                before = spec_to_string(p4_client_spec, diff_fields)
 
                 # detect noaltsync option (available in Helix Core 23.1 and later)
                 # required for idempotency for Helix Core 23.1 or newer
@@ -237,6 +243,17 @@ def run_module():
 
                     result['changed'] = True
 
+                    if module._diff:
+                        after_spec = {
+                            'Description': module.params['description'], 'Host': module.params['host'],
+                            'Root': module.params['root'], 'View': module.params['view'],
+                            'LineEnd': module.params['lineend'], 'Options': module.params['options'],
+                            'SubmitOptions': module.params['submitoptions'],
+                        }
+                        if module.params['altroots'] is not None:
+                            after_spec['AltRoots'] = module.params['altroots']
+                        result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
+
             # create new client with specified values
             else:
                 if not module.check_mode:
@@ -255,13 +272,29 @@ def run_module():
 
                 result['changed'] = True
 
+                if module._diff:
+                    after_spec = {
+                        'Description': module.params['description'], 'Host': module.params['host'],
+                        'Root': module.params['root'], 'View': module.params['view'],
+                        'LineEnd': module.params['lineend'], 'Options': module.params['options'],
+                        'SubmitOptions': module.params['submitoptions'],
+                    }
+                    if module.params['altroots'] is not None:
+                        after_spec['AltRoots'] = module.params['altroots']
+                    result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
         elif module.params['state'] == 'absent':
             # delete client
             if 'Access' in p4_client_spec:
+                before = spec_to_string(p4_client_spec, diff_fields)
+
                 if not module.check_mode:
                     p4.delete_client('-f', module.params['name'])
 
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
             else:
                 result['changed'] = False
 

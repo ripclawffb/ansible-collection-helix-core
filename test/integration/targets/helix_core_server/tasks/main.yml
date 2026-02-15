@@ -258,6 +258,100 @@
     that:
       - delete_server_check_mode_confirm is changed
 
+# Diff mode tests
+- name: Create server with diff mode
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: diff_test_server
+    description: 'Diff test server.'
+    services: standard
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_server
+  diff: true
+
+- name: Output diff_create_server
+  ansible.builtin.debug:
+    var: diff_create_server
+
+- name: Verify diff output on server create
+  ansible.builtin.assert:
+    that:
+      - diff_create_server is changed
+      - diff_create_server.diff is defined
+      - diff_create_server.diff.before is defined
+      - diff_create_server.diff.after is defined
+      - "'Diff test server.' in diff_create_server.diff.after"
+
+- name: Create server with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: diff_test_server
+    description: 'Diff test server.'
+    services: standard
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_server_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent server run
+  ansible.builtin.assert:
+    that:
+      - diff_create_server_idempotent is not changed
+      - diff_create_server_idempotent.diff is not defined
+
+- name: Update server with diff mode
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: diff_test_server
+    description: 'Diff test server updated.'
+    services: standard
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_update_server
+  diff: true
+
+- name: Output diff_update_server
+  ansible.builtin.debug:
+    var: diff_update_server
+
+- name: Verify diff output on server update
+  ansible.builtin.assert:
+    that:
+      - diff_update_server is changed
+      - diff_update_server.diff is defined
+      - "'Diff test server.' in diff_update_server.diff.before"
+      - "'Diff test server updated.' in diff_update_server.diff.after"
+
+- name: Delete server with diff mode
+  ripclawffb.helix_core.helix_core_server:
+    state: absent
+    serverid: diff_test_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_delete_server
+  diff: true
+
+- name: Output diff_delete_server
+  ansible.builtin.debug:
+    var: diff_delete_server
+
+- name: Verify diff output on server delete
+  ansible.builtin.assert:
+    that:
+      - diff_delete_server is changed
+      - diff_delete_server.diff is defined
+      - "'Diff test server' in diff_delete_server.diff.before"
+      - diff_delete_server.diff.after == ''
+
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_server:
     state: present

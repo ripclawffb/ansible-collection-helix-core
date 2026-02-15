@@ -200,6 +200,83 @@
     that:
       - delete_search is changed
 
+# Diff mode tests
+- name: Create LDAP config with diff mode
+  ripclawffb.helix_core.helix_core_ldap:
+    name: diff_test_ldap
+    state: present
+    host: ldap.diff-test.com
+    port: 389
+    encryption: none
+    bind_method: simple
+    simple_pattern: "uid=%user%,ou=users,dc=diff-test,dc=com"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_ldap
+  diff: true
+
+- name: Output diff_create_ldap
+  ansible.builtin.debug:
+    var: diff_create_ldap
+
+- name: Verify diff output on LDAP create
+  ansible.builtin.assert:
+    that:
+      - diff_create_ldap is changed
+      - diff_create_ldap.diff is defined
+      - diff_create_ldap.diff.before is defined
+      - diff_create_ldap.diff.after is defined
+      - "'diff_test_ldap' in diff_create_ldap.diff.after"
+
+- name: Create LDAP config with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_ldap:
+    name: diff_test_ldap
+    state: present
+    host: ldap.diff-test.com
+    port: 389
+    encryption: none
+    bind_method: simple
+    simple_pattern: "uid=%user%,ou=users,dc=diff-test,dc=com"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_ldap_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent LDAP run
+  ansible.builtin.assert:
+    that:
+      - diff_create_ldap_idempotent is not changed
+      - diff_create_ldap_idempotent.diff is not defined
+
+- name: Delete LDAP config with diff mode
+  ripclawffb.helix_core.helix_core_ldap:
+    name: diff_test_ldap
+    state: absent
+    host: ldap.diff-test.com
+    port: 389
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_delete_ldap
+  diff: true
+
+- name: Output diff_delete_ldap
+  ansible.builtin.debug:
+    var: diff_delete_ldap
+
+- name: Verify diff output on LDAP delete
+  ansible.builtin.assert:
+    that:
+      - diff_delete_ldap is changed
+      - diff_delete_ldap.diff is defined
+      - "'diff_test_ldap' in diff_delete_ldap.diff.before"
+      - diff_delete_ldap.diff.after == ''
+
 # Test invalid login
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_ldap:

@@ -191,7 +191,7 @@ ldap_spec:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 
 
@@ -266,6 +266,7 @@ def run_module():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
+        
         required_if=[
             ('state', 'present', ['host', 'port']),
         ]
@@ -276,7 +277,13 @@ def run_module():
     try:
         ldap_name = module.params['name']
         state = module.params['state']
-        
+
+        # fields to track for diff
+        diff_fields = ['Name', 'Host', 'Port', 'Encryption', 'BindMethod',
+                       'SimplePattern', 'SearchBaseDN', 'SearchFilter', 'SearchBindDN',
+                       'GroupSearchFilter', 'GroupBaseDN', 'AttributeUid',
+                       'AttributeName', 'AttributeEmail', 'Options']
+
         # Check if LDAP config exists by iterating all ldaps
         try:
             exists = False
@@ -291,15 +298,21 @@ def run_module():
         if state == 'present':
             # Fields logic
             spec = p4.fetch_ldap(ldap_name) # start with fresh/current spec
-            
+
+            # capture before state for diff
+            if exists:
+                before = spec_to_string(spec, diff_fields)
+            else:
+                before = ''
+
             changes = []
-            
+
             # Helper to check and set fields only if they differ
             def check_set(field, param_name=None, value=None, type_conv=str):
                 # Determine value to set: either from module params or direct value
                 if value is None and param_name:
                     value = module.params.get(param_name)
-                
+
                 # If value is provided (even empty string), compare and set
                 if value is not None:
                     # If current spec value differs from desired value
@@ -311,7 +324,7 @@ def run_module():
             check_set('Port', 'port')
             check_set('Encryption', 'encryption')
             check_set('BindMethod', 'bind_method')
-            
+
             # Set relevant fields and clear irrelevant ones based on bind method
             if module.params['bind_method'] == 'simple':
                 check_set('SimplePattern', 'simple_pattern')
@@ -320,7 +333,7 @@ def run_module():
                 check_set('SearchFilter', value='')
                 check_set('SearchBindDN', value='')
                 check_set('SearchPasswd', value='')
-                
+
             elif module.params['bind_method'] == 'search':
                 # Clear simple pattern
                 check_set('SimplePattern', value='')
@@ -329,7 +342,7 @@ def run_module():
                 check_set('SearchFilter', 'search_filter')
                 check_set('SearchBindDN', 'search_bind_dn')
                 check_set('SearchPasswd', 'search_passwd')
-                
+
             elif module.params['bind_method'] == 'sasl':
                 # Clear both simple and search fields
                 check_set('SimplePattern', value='')
@@ -337,13 +350,13 @@ def run_module():
                 check_set('SearchFilter', value='')
                 check_set('SearchBindDN', value='')
                 check_set('SearchPasswd', value='')
-                
+
             check_set('GroupSearchFilter', 'group_search_filter')
             check_set('GroupBaseDN', 'group_base_dn')
             check_set('AttributeUid', 'attribute_uid')
             check_set('AttributeName', 'attribute_name')
             check_set('AttributeEmail', 'attribute_email')
-            
+
             # Handle Options
             if module.params['options'] is not None:
                 new_opts = sync_options(spec.get('Options', ''), module.params['options'])
@@ -353,20 +366,27 @@ def run_module():
                 if current_opts_set != new_opts_set:
                     changes.append('Options')
                     spec['Options'] = new_opts
-                    
+
             if not exists:
                 changes.append('Creation')
-            
+
             if changes:
                 if not module.check_mode:
                     p4.save_ldap(spec)
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': spec_to_string(spec, diff_fields)}
 
             # Always return the spec
             result['ldap_spec'] = spec
 
         elif state == 'absent':
             if exists:
+                if module._diff:
+                    spec = p4.fetch_ldap(ldap_name)
+                    result['diff'] = {'before': spec_to_string(spec, diff_fields), 'after': ''}
+
                 if not module.check_mode:
                     p4.delete_ldap(ldap_name)
                 result['changed'] = True

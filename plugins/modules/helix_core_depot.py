@@ -128,7 +128,7 @@ changed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 
 
@@ -167,6 +167,9 @@ def run_module():
         if module.params['map'] is None:
             module.params['map'] = "{0}/...".format(module.params['name'])
 
+        # fields to track for diff
+        diff_fields = ['Description', 'Type', 'Map', 'Address', 'SpecMap', 'StreamDepth', 'Suffix']
+
         if module.params['state'] == 'present':
             # get existing depot definition
             p4_depot_spec = p4.fetch_depot(module.params['name'])
@@ -176,6 +179,9 @@ def run_module():
             # look through the list of depot specs returned and see if any match the current depot
             # if a depot spec is found with the current depot name, let's look for any changes in attributes
             if any(depot_dict['name'] == module.params['name'] for depot_dict in depots_dict):
+
+                # capture before state for diff
+                before = spec_to_string(p4_depot_spec, diff_fields)
 
                 # check to see if any fields have changed
                 p4_depot_changes = []
@@ -241,6 +247,13 @@ def run_module():
 
                     result['changed'] = True
 
+                    if module._diff:
+                        after_spec = {'Description': module.params['description'], 'Type': module.params['type'], 'Map': module.params['map']}
+                        for f, p in [('Address', 'address'), ('SpecMap', 'specmap'), ('StreamDepth', 'streamdepth'), ('Suffix', 'suffix')]:
+                            if module.params[p] is not None:
+                                after_spec[f] = module.params[p]
+                        result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
+
             # create new depot with specified values
             else:
                 if not module.check_mode:
@@ -264,15 +277,28 @@ def run_module():
 
                 result['changed'] = True
 
+                if module._diff:
+                    after_spec = {'Description': module.params['description'], 'Type': module.params['type'], 'Map': module.params['map']}
+                    for f, p in [('Address', 'address'), ('SpecMap', 'specmap'), ('StreamDepth', 'streamdepth'), ('Suffix', 'suffix')]:
+                        if module.params[p] is not None:
+                            after_spec[f] = module.params[p]
+                    result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
         elif module.params['state'] == 'absent':
             depots_dict = p4.run('depots')
 
             # delete depot
             if any(depot_dict['name'] == module.params['name'] for depot_dict in depots_dict):
+                p4_depot_spec = p4.fetch_depot(module.params['name'])
+                before = spec_to_string(p4_depot_spec, diff_fields)
+
                 if not module.check_mode:
                     p4.delete_depot('-f', module.params['name'])
 
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
             else:
                 result['changed'] = False
 

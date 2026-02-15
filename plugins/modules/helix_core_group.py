@@ -146,7 +146,7 @@ changed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 
 
@@ -186,8 +186,16 @@ def run_module():
         # get existing group definition
         p4_group_spec = p4.fetch_group(module.params['name'])
 
+        # fields to track for diff
+        diff_fields = ['Group', 'MaxLockTime', 'MaxResults', 'MaxOpenFiles', 'MaxScanRows',
+                       'PasswordTimeout', 'Timeout', 'LdapConfig', 'LdapSearchQuery',
+                       'LdapUserAttribute', 'Owners', 'Subgroups', 'Users']
+
         if module.params['state'] == 'present':
             if 'Users' in p4_group_spec:
+
+                # capture before state for diff
+                before = spec_to_string(p4_group_spec, diff_fields)
 
                 # check to see if any fields have changed
                 p4_group_changes = []
@@ -287,6 +295,20 @@ def run_module():
 
                     result['changed'] = True
 
+                    if module._diff:
+                        after_spec = {
+                            'Group': module.params['name'], 'MaxLockTime': module.params['maxlocktime'],
+                            'MaxResults': module.params['maxresults'], 'MaxOpenFiles': module.params['maxopenfiles'],
+                            'MaxScanRows': module.params['maxscanrows'], 'PasswordTimeout': module.params['passwordtimeout'],
+                            'Timeout': module.params['timeout'],
+                        }
+                        for f, p in [('LdapConfig', 'ldapconfig'), ('LdapSearchQuery', 'ldapsearchquery'),
+                                     ('LdapUserAttribute', 'ldapuserattribute'), ('Owners', 'owners'),
+                                     ('Subgroups', 'subgroups'), ('Users', 'users')]:
+                            if module.params[p] is not None:
+                                after_spec[f] = module.params[p]
+                        result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
+
             # create new user with specified values
             else:
                 if not module.check_mode:
@@ -320,13 +342,32 @@ def run_module():
 
                 result['changed'] = True
 
+                if module._diff:
+                    after_spec = {
+                        'Group': module.params['name'], 'MaxLockTime': module.params['maxlocktime'],
+                        'MaxResults': module.params['maxresults'], 'MaxOpenFiles': module.params['maxopenfiles'],
+                        'MaxScanRows': module.params['maxscanrows'], 'PasswordTimeout': module.params['passwordtimeout'],
+                        'Timeout': module.params['timeout'],
+                    }
+                    for f, p in [('LdapConfig', 'ldapconfig'), ('LdapSearchQuery', 'ldapsearchquery'),
+                                 ('LdapUserAttribute', 'ldapuserattribute'), ('Owners', 'owners'),
+                                 ('Subgroups', 'subgroups'), ('Users', 'users')]:
+                        if module.params[p] is not None:
+                            after_spec[f] = module.params[p]
+                    result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
         elif module.params['state'] == 'absent':
             # delete group
             if 'Users' in p4_group_spec:
+                before = spec_to_string(p4_group_spec, diff_fields)
+
                 if not module.check_mode:
                     p4.delete_group(module.params['name'])
 
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
             else:
                 result['changed'] = False
 

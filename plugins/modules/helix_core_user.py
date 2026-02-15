@@ -104,7 +104,7 @@ changed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 from socket import gethostname
 
@@ -144,7 +144,20 @@ def run_module():
         if module.params['email'] is None:
             module.params['email'] = "{0}@{1}".format(module.params['name'], gethostname())
 
+        # capture before state for diff
+        diff_fields = ['AuthMethod', 'Email', 'FullName']
+        if 'Access' in p4_user_spec:
+            before = spec_to_string(p4_user_spec, diff_fields)
+        else:
+            before = ''
+
         if module.params['state'] == 'present':
+            after = spec_to_string({
+                'AuthMethod': module.params['authmethod'],
+                'Email': module.params['email'],
+                'FullName': module.params['fullname'],
+            }, diff_fields)
+
             if 'Access' in p4_user_spec:
                 # check to see if changes are detected in any of the fields
                 if (p4_user_spec["AuthMethod"] == module.params['authmethod']
@@ -163,6 +176,9 @@ def run_module():
 
                     result['changed'] = True
 
+                    if module._diff:
+                        result['diff'] = {'before': before, 'after': after}
+
             # create new user with specified values
             else:
                 if not module.check_mode:
@@ -173,7 +189,12 @@ def run_module():
 
                 result['changed'] = True
 
+                if module._diff:
+                    result['diff'] = {'before': '', 'after': after}
+
         elif module.params['state'] == 'absent':
+            after = ''
+
             # delete user
             if 'Access' in p4_user_spec:
                 if not module.check_mode:
@@ -182,6 +203,9 @@ def run_module():
                 result['changed'] = True
             else:
                 result['changed'] = False
+
+        if module._diff and result['changed']:
+            result['diff'] = {'before': before, 'after': after}
 
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)

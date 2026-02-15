@@ -372,6 +372,85 @@
   ansible.builtin.debug:
     var: cleanup
 
+# Diff mode tests
+- name: Add protection entry with diff mode
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: list
+        type: user
+        name: diff_test_user
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_add_protect
+  diff: true
+
+- name: Output diff_add_protect
+  ansible.builtin.debug:
+    var: diff_add_protect
+
+- name: Verify diff output on protect add
+  ansible.builtin.assert:
+    that:
+      - diff_add_protect is changed
+      - diff_add_protect.diff is defined
+      - diff_add_protect.diff.before is defined
+      - diff_add_protect.diff.after is defined
+      - "'diff_test_user' in diff_add_protect.diff.after"
+
+- name: Add protection entry with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: list
+        type: user
+        name: diff_test_user
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_add_protect_idempotent
+  diff: true
+
+- name: Verify no diff on idempotent protect run
+  ansible.builtin.assert:
+    that:
+      - diff_add_protect_idempotent is not changed
+      - diff_add_protect_idempotent.diff is not defined
+
+- name: Remove protection entry with diff mode
+  ripclawffb.helix_core.helix_core_protect:
+    state: absent
+    protections:
+      - access: list
+        type: user
+        name: diff_test_user
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_remove_protect
+  diff: true
+
+- name: Output diff_remove_protect
+  ansible.builtin.debug:
+    var: diff_remove_protect
+
+- name: Verify diff output on protect remove
+  ansible.builtin.assert:
+    that:
+      - diff_remove_protect is changed
+      - diff_remove_protect.diff is defined
+      - "'diff_test_user' in diff_remove_protect.diff.before"
+
 # Test invalid login
 - name: Fail when using invalid login
   ripclawffb.helix_core.helix_core_protect:

@@ -146,6 +146,7 @@ def run_module():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
+
         required_if=[
             ('state', 'present', ['typemap']),
         ]
@@ -159,24 +160,38 @@ def run_module():
         p4_typemap_spec = p4.fetch_typemap()
         current_entries = typemap_to_list(p4_typemap_spec)
 
+        # format entries for diff
+        def entries_to_diff(entries):
+            return '\n'.join('{0} {1}'.format(*e) for e in entries) + '\n' if entries else ''
+
         if module.params['state'] == 'present':
             # Build desired entries list
             desired_entries = [(e['type'], e['path']) for e in module.params['typemap']]
 
             # Compare current vs desired
             if current_entries != desired_entries:
+                before = entries_to_diff(current_entries)
+
                 if not module.check_mode:
                     p4_typemap_spec['TypeMap'] = list_to_typemap(module.params['typemap'])
                     p4.save_typemap(p4_typemap_spec)
                 result['changed'] = True
 
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': entries_to_diff(desired_entries)}
+
         elif module.params['state'] == 'absent':
             # Clear typemap if it has entries
             if current_entries:
+                before = entries_to_diff(current_entries)
+
                 if not module.check_mode:
                     p4_typemap_spec['TypeMap'] = []
                     p4.save_typemap(p4_typemap_spec)
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
 
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)

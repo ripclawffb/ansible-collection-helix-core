@@ -185,7 +185,7 @@ changed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
-    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
+    helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 
 
@@ -230,6 +230,22 @@ def run_module():
         if module.params['description'] is None:
             module.params['description'] = "Created by {0}.".format(module.params['user'])
 
+        # fields to track for diff
+        diff_fields = ['Description', 'Options', 'Services', 'Type', 'Address',
+                       'AllowedAddresses', 'ArchiveDataFilter', 'ClientDataFilter',
+                       'DistributedConfig', 'ExternalAddress', 'Name',
+                       'ReplicatingFrom', 'RevisionDataFilter', 'User', 'UpdatedCachedRepos']
+
+        # optional field mapping: spec_field -> module_param
+        optional_fields = [
+            ('Address', 'address'), ('AllowedAddresses', 'allowedaddresses'),
+            ('ArchiveDataFilter', 'archivedatafilter'), ('ClientDataFilter', 'clientdatafilter'),
+            ('DistributedConfig', 'distributedconfig'), ('ExternalAddress', 'externaladdress'),
+            ('Name', 'name'), ('ReplicatingFrom', 'replicatingfrom'),
+            ('RevisionDataFilter', 'revisiondatafilter'), ('User', 'serviceuser'),
+            ('UpdatedCachedRepos', 'updatedcachedrepos'),
+        ]
+
         if module.params['state'] == 'present':
             # get server definition
             p4_server_spec = p4.fetch_server(module.params['serverid'])
@@ -239,6 +255,9 @@ def run_module():
             # look through the list of servers specs returned and see if any match the current server id
             # if a server spec is found with the current server id, let's look for any changes in attributes
             if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
+
+                # capture before state for diff
+                before = spec_to_string(p4_server_spec, diff_fields)
 
                 # check to see if any fields have changed
                 p4_server_changes = []
@@ -375,6 +394,16 @@ def run_module():
 
                     result['changed'] = True
 
+                    if module._diff:
+                        after_spec = {
+                            'Description': module.params['description'], 'Options': module.params['options'],
+                            'Services': module.params['services'], 'Type': module.params['type'],
+                        }
+                        for f, p in optional_fields:
+                            if module.params[p] is not None:
+                                after_spec[f] = module.params[p]
+                        result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
+
             # create new server spec with specified values
             else:
                 if not module.check_mode:
@@ -421,15 +450,31 @@ def run_module():
 
                 result['changed'] = True
 
+                if module._diff:
+                    after_spec = {
+                        'Description': module.params['description'], 'Options': module.params['options'],
+                        'Services': module.params['services'], 'Type': module.params['type'],
+                    }
+                    for f, p in optional_fields:
+                        if module.params[p] is not None:
+                            after_spec[f] = module.params[p]
+                    result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
         elif module.params['state'] == 'absent':
             servers_dict = p4.run('servers')
 
             # delete server spec
             if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
+                p4_server_spec = p4.fetch_server(module.params['serverid'])
+                before = spec_to_string(p4_server_spec, diff_fields)
+
                 if not module.check_mode:
                     p4.delete_server(module.params['serverid'])
 
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
             else:
                 result['changed'] = False
 

@@ -139,6 +139,9 @@ def run_module():
         # get the current value of our specific configurable
         p4_current_value = next((item for item in p4_current_values if item["Name"] == module.params['name']), None)
 
+        # capture before value for diff
+        before_value = p4_current_value['Value'] if p4_current_value else ''
+
         if module.params['state'] == 'present':
             if p4_current_value is None or module.params['value'] != p4_current_value['Value']:
                 if not module.check_mode:
@@ -146,6 +149,12 @@ def run_module():
                         module.params['serverid'], module.params['name'], module.params['value'])
                     )
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {
+                        'before': '{0} = {1}\n'.format(module.params['name'], before_value),
+                        'after': '{0} = {1}\n'.format(module.params['name'], module.params['value']),
+                    }
         elif module.params['state'] == 'absent':
             if p4_current_value is not None:
                 if not module.check_mode:
@@ -153,6 +162,12 @@ def run_module():
                         module.params['serverid'], module.params['name'])
                     )
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {
+                        'before': '{0} = {1}\n'.format(module.params['name'], before_value),
+                        'after': '',
+                    }
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)
 

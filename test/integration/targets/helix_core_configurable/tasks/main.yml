@@ -60,14 +60,84 @@
     p4charset: auto
   register: auth_unset_configurable
 
-- name: Output auth_set_configurable
+- name: Output auth_unset_configurable
   ansible.builtin.debug:
-    var: auth_set_configurable
+    var: auth_unset_configurable
 
-- name: Verify auth_set_configurable is changed
+- name: Verify auth_unset_configurable is changed
   ansible.builtin.assert:
     that:
-      - auth_set_configurable is changed
+      - auth_unset_configurable is changed
+
+# Diff mode tests
+- name: Set auth.id with diff mode
+  ripclawffb.helix_core.helix_core_configurable:
+    state: present
+    name: auth.id
+    value: master.1
+    p4port: '1666'
+    p4user: bruno
+    p4passwd: ''
+    p4charset: auto
+  register: diff_set_result
+  diff: true
+
+- name: Output diff_set_result
+  ansible.builtin.debug:
+    var: diff_set_result
+
+- name: Verify diff output on create
+  ansible.builtin.assert:
+    that:
+      - diff_set_result is changed
+      - diff_set_result.diff is defined
+      - diff_set_result.diff.before is defined
+      - diff_set_result.diff.after is defined
+      - "'master.1' in diff_set_result.diff.after"
+
+- name: Set auth.id again with diff mode (idempotent)
+  ripclawffb.helix_core.helix_core_configurable:
+    state: present
+    name: auth.id
+    value: master.1
+    p4port: '1666'
+    p4user: bruno
+    p4passwd: ''
+    p4charset: auto
+  register: diff_idempotent_result
+  diff: true
+
+- name: Verify no diff on idempotent run
+  ansible.builtin.assert:
+    that:
+      - diff_idempotent_result is not changed
+      - diff_idempotent_result.diff is not defined
+
+- name: Unset auth.id with diff mode
+  ripclawffb.helix_core.helix_core_configurable:
+    state: absent
+    name: auth.id
+    value: master.1
+    p4port: '1666'
+    p4user: bruno
+    p4passwd: ''
+    p4charset: auto
+  register: diff_unset_result
+  diff: true
+
+- name: Output diff_unset_result
+  ansible.builtin.debug:
+    var: diff_unset_result
+
+- name: Verify diff output on removal
+  ansible.builtin.assert:
+    that:
+      - diff_unset_result is changed
+      - diff_unset_result.diff is defined
+      - diff_unset_result.diff.before is defined
+      - "'master.1' in diff_unset_result.diff.before"
+      - diff_unset_result.diff.after == ''
+
 
 - name: Set auth.id for specific server (check mode)
   ripclawffb.helix_core.helix_core_configurable:

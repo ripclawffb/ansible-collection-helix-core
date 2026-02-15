@@ -30,8 +30,6 @@ seealso:
       link: https://pypi.org/project/p4python/
 
 
-options:
-
 extends_documentation_fragment:
     - ripclawffb.helix_core.helix_core_connection
 

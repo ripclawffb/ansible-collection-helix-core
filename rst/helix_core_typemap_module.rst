@@ -16,8 +16,8 @@
 
 .. Title
 
-ripclawffb.helix_core.helix_core_typemap module -- This module will allow you to manage the typemap on Perforce Helix Core
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_typemap module -- Manage the typemap on Perforce Helix Core
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

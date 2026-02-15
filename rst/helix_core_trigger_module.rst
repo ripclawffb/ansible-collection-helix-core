@@ -16,8 +16,8 @@
 
 .. Title
 
-ripclawffb.helix_core.helix_core_trigger module -- This module will allow you to manage triggers on Perforce Helix Core
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_trigger module -- Manage triggers on Perforce Helix Core
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

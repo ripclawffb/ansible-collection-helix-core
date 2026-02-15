@@ -16,8 +16,8 @@
 
 .. Title
 
-ripclawffb.helix_core.helix_core_client module -- This module will allow you to manage client/workspace on Perforce Helix Core
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_client module -- Manage client/workspace on Perforce Helix Core
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

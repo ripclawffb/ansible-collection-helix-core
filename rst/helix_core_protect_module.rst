@@ -16,8 +16,8 @@
 
 .. Title
 
-ripclawffb.helix_core.helix_core_protect module -- This module will allow you to manage the protection table on Perforce Helix Core
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_protect module -- Manage the protection table on Perforce Helix Core
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

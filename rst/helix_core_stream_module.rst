@@ -16,8 +16,8 @@
 
 .. Title
 
-ripclawffb.helix_core.helix_core_stream module -- This module will allow you to manage streams on Perforce Helix Core
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_stream module -- Manage streams on Perforce Helix Core
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

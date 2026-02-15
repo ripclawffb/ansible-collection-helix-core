@@ -14,6 +14,8 @@ module: helix_core_protect_info
 
 short_description: Get the current protection table from Perforce Helix Core
 
+version_added: "1.1.0"
+
 description:
     - "Retrieves the current protection table entries from Perforce Helix Core."
     - "This is a read-only module that does not make any changes."
@@ -53,11 +55,32 @@ EXAMPLES = '''
 '''
 
 RETURN = r'''
-protections:
-    description: List of protection entries.
+changed:
+    description: Always False as this is a read-only module.
     returned: always
+    type: bool
+    sample: false
+protections:
+    description: List of protection entries found.
+    returned: success
     type: list
     elements: dict
+    contains:
+        access:
+            description: Access level (e.g., read, write, super).
+            type: str
+        type:
+            description: Type of entity (user or group).
+            type: str
+        name:
+            description: Name of the user or group.
+            type: str
+        host:
+            description: Host IP address or wildcard.
+            type: str
+        path:
+            description: Depot path for the protection entry.
+            type: str
     sample:
       - access: write
         type: user

@@ -14,6 +14,8 @@ module: helix_core_trigger
 
 short_description: Manage triggers on Perforce Helix Core
 
+version_added: "1.1.0"
+
 description:
     - "Triggers are user-defined scripts executed by the Perforce server when specific operations occur."
     - "This module manages the entire triggers table as a unit."
@@ -113,6 +115,17 @@ changed:
     returned: always
     type: bool
     sample: true
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 

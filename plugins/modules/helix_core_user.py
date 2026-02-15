@@ -14,6 +14,8 @@ module: helix_core_user
 
 short_description: Manage users on Perforce Helix Core
 
+version_added: "1.0.0"
+
 description:
     - "Create or edit Helix server user specifications and preferences"
     - "This module supports check mode."
@@ -99,6 +101,17 @@ changed:
     returned: always
     type: bool
     sample: true
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 

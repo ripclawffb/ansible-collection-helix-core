@@ -14,6 +14,8 @@ module: helix_core_configurable
 
 short_description: Set configurables on Perforce Helix Core
 
+version_added: "1.0.0"
+
 description:
     - "Configurables allow you to customize a Perforce service. Configurable settings might affect the server, the client, or a proxy."
     - "This module supports check mode."
@@ -94,6 +96,17 @@ changed:
     returned: always
     type: bool
     sample: true
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 

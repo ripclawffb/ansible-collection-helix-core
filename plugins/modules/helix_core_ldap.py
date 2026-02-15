@@ -14,6 +14,8 @@ module: helix_core_ldap
 
 short_description: Manage LDAP configurations on Perforce Helix Core
 
+version_added: "1.1.0"
+
 description:
     - "This module allows you to create, modify, or delete LDAP configurations on Perforce Helix Core."
     - "Supports various bind methods (simple, search, sasl) and encryption types."
@@ -187,6 +189,17 @@ ldap_spec:
         Port: 389
         Encryption: none
         BindMethod: simple
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 from ansible.module_utils.basic import AnsibleModule

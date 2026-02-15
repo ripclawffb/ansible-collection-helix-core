@@ -14,6 +14,8 @@ module: helix_core_client
 
 short_description: Manage client/workspace on Perforce Helix Core
 
+version_added: "1.0.0"
+
 description:
     - "A client/workspace specification defines the portion of the depot that can be accessed from that
        workspace and specifies where local copies of files in the depot are stored."
@@ -134,6 +136,17 @@ changed:
     returned: always
     type: bool
     sample: true
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 

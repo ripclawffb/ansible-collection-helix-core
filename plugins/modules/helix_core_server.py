@@ -14,6 +14,8 @@ module: helix_core_server
 
 short_description: Manage server spec on Perforce Helix Core
 
+version_added: "1.0.0"
+
 description:
     - "A server specification describes the high-level configuration and intended usage of a
        Helix Server. For installations with only one Helix Server, the server specification is optional."
@@ -180,6 +182,17 @@ changed:
     returned: always
     type: bool
     sample: true
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 

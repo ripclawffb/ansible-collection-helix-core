@@ -13,6 +13,7 @@ DOCUMENTATION = '''
 module: helix_core_protect
 
 short_description: Manage the protection table on Perforce Helix Core
+version_added: "1.1.0"
 
 description:
     - "Manage access control via the Perforce protection table."
@@ -155,6 +156,17 @@ changed:
     returned: always
     type: bool
     sample: true
+diff:
+    description: A dictionary containing 'before' and 'after' state of the resource.
+    returned: when diff mode is enabled
+    type: dict
+    contains:
+        before:
+            description: The state of the resource before the action.
+            type: str
+        after:
+            description: The state of the resource after the action.
+            type: str
 '''
 
 

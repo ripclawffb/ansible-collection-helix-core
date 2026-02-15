@@ -252,12 +252,23 @@ def run_module():
 
             servers_dict = p4.run('servers')
 
+            # build after_spec once for diff (used in both update and create paths)
+            if module._diff:
+                after_spec = {
+                    'Description': module.params['description'], 'Options': module.params['options'],
+                    'Services': module.params['services'], 'Type': module.params['type'],
+                }
+                for f, p in optional_fields:
+                    if module.params[p] is not None:
+                        after_spec[f] = module.params[p]
+
             # look through the list of servers specs returned and see if any match the current server id
             # if a server spec is found with the current server id, let's look for any changes in attributes
             if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
 
                 # capture before state for diff
-                before = spec_to_string(p4_server_spec, diff_fields)
+                if module._diff:
+                    before = spec_to_string(p4_server_spec, diff_fields)
 
                 # check to see if any fields have changed
                 p4_server_changes = []
@@ -395,13 +406,6 @@ def run_module():
                     result['changed'] = True
 
                     if module._diff:
-                        after_spec = {
-                            'Description': module.params['description'], 'Options': module.params['options'],
-                            'Services': module.params['services'], 'Type': module.params['type'],
-                        }
-                        for f, p in optional_fields:
-                            if module.params[p] is not None:
-                                after_spec[f] = module.params[p]
                         result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
 
             # create new server spec with specified values
@@ -451,13 +455,6 @@ def run_module():
                 result['changed'] = True
 
                 if module._diff:
-                    after_spec = {
-                        'Description': module.params['description'], 'Options': module.params['options'],
-                        'Services': module.params['services'], 'Type': module.params['type'],
-                    }
-                    for f, p in optional_fields:
-                        if module.params[p] is not None:
-                            after_spec[f] = module.params[p]
                     result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
 
         elif module.params['state'] == 'absent':
@@ -466,7 +463,8 @@ def run_module():
             # delete server spec
             if any(server_dict['ServerID'] == module.params['serverid'] for server_dict in servers_dict):
                 p4_server_spec = p4.fetch_server(module.params['serverid'])
-                before = spec_to_string(p4_server_spec, diff_fields)
+                if module._diff:
+                    before = spec_to_string(p4_server_spec, diff_fields)
 
                 if not module.check_mode:
                     p4.delete_server(module.params['serverid'])

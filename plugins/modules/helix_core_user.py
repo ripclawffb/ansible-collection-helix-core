@@ -146,17 +146,19 @@ def run_module():
 
         # capture before state for diff
         diff_fields = ['AuthMethod', 'Email', 'FullName']
-        if 'Access' in p4_user_spec:
-            before = spec_to_string(p4_user_spec, diff_fields)
-        else:
-            before = ''
+        if module._diff:
+            if 'Access' in p4_user_spec:
+                before = spec_to_string(p4_user_spec, diff_fields)
+            else:
+                before = ''
 
         if module.params['state'] == 'present':
-            after = spec_to_string({
-                'AuthMethod': module.params['authmethod'],
-                'Email': module.params['email'],
-                'FullName': module.params['fullname'],
-            }, diff_fields)
+            if module._diff:
+                after = spec_to_string({
+                    'AuthMethod': module.params['authmethod'],
+                    'Email': module.params['email'],
+                    'FullName': module.params['fullname'],
+                }, diff_fields)
 
             if 'Access' in p4_user_spec:
                 # check to see if changes are detected in any of the fields
@@ -193,19 +195,17 @@ def run_module():
                     result['diff'] = {'before': '', 'after': after}
 
         elif module.params['state'] == 'absent':
-            after = ''
-
             # delete user
             if 'Access' in p4_user_spec:
                 if not module.check_mode:
                     p4.delete_user('-f', module.params['name'])
 
                 result['changed'] = True
+
+                if module._diff:
+                    result['diff'] = {'before': before, 'after': ''}
             else:
                 result['changed'] = False
-
-        if module._diff and result['changed']:
-            result['diff'] = {'before': before, 'after': after}
 
     except Exception as e:
         module.fail_json(msg="Error: {0}".format(e), **result)

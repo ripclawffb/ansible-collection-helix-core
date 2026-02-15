@@ -74,7 +74,7 @@ def spec_to_string(spec, fields):
     for field in fields:
         val = spec.get(field, '')
         if isinstance(val, list):
-            val = ', '.join(val)
+            val = '\n\t'.join(val)
         if isinstance(val, str):
             val = val.rstrip()
         lines.append('{0}: {1}'.format(field, val))

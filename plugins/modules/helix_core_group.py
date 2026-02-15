@@ -192,10 +192,26 @@ def run_module():
                        'LdapUserAttribute', 'Owners', 'Subgroups', 'Users']
 
         if module.params['state'] == 'present':
+
+            # build after_spec once for diff (used in both update and create paths)
+            if module._diff:
+                after_spec = {
+                    'Group': module.params['name'], 'MaxLockTime': module.params['maxlocktime'],
+                    'MaxResults': module.params['maxresults'], 'MaxOpenFiles': module.params['maxopenfiles'],
+                    'MaxScanRows': module.params['maxscanrows'], 'PasswordTimeout': module.params['passwordtimeout'],
+                    'Timeout': module.params['timeout'],
+                }
+                for f, p in [('LdapConfig', 'ldapconfig'), ('LdapSearchQuery', 'ldapsearchquery'),
+                             ('LdapUserAttribute', 'ldapuserattribute'), ('Owners', 'owners'),
+                             ('Subgroups', 'subgroups'), ('Users', 'users')]:
+                    if module.params[p] is not None:
+                        after_spec[f] = module.params[p]
+
             if 'Users' in p4_group_spec:
 
                 # capture before state for diff
-                before = spec_to_string(p4_group_spec, diff_fields)
+                if module._diff:
+                    before = spec_to_string(p4_group_spec, diff_fields)
 
                 # check to see if any fields have changed
                 p4_group_changes = []
@@ -296,17 +312,6 @@ def run_module():
                     result['changed'] = True
 
                     if module._diff:
-                        after_spec = {
-                            'Group': module.params['name'], 'MaxLockTime': module.params['maxlocktime'],
-                            'MaxResults': module.params['maxresults'], 'MaxOpenFiles': module.params['maxopenfiles'],
-                            'MaxScanRows': module.params['maxscanrows'], 'PasswordTimeout': module.params['passwordtimeout'],
-                            'Timeout': module.params['timeout'],
-                        }
-                        for f, p in [('LdapConfig', 'ldapconfig'), ('LdapSearchQuery', 'ldapsearchquery'),
-                                     ('LdapUserAttribute', 'ldapuserattribute'), ('Owners', 'owners'),
-                                     ('Subgroups', 'subgroups'), ('Users', 'users')]:
-                            if module.params[p] is not None:
-                                after_spec[f] = module.params[p]
                         result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
 
             # create new user with specified values
@@ -343,23 +348,13 @@ def run_module():
                 result['changed'] = True
 
                 if module._diff:
-                    after_spec = {
-                        'Group': module.params['name'], 'MaxLockTime': module.params['maxlocktime'],
-                        'MaxResults': module.params['maxresults'], 'MaxOpenFiles': module.params['maxopenfiles'],
-                        'MaxScanRows': module.params['maxscanrows'], 'PasswordTimeout': module.params['passwordtimeout'],
-                        'Timeout': module.params['timeout'],
-                    }
-                    for f, p in [('LdapConfig', 'ldapconfig'), ('LdapSearchQuery', 'ldapsearchquery'),
-                                 ('LdapUserAttribute', 'ldapuserattribute'), ('Owners', 'owners'),
-                                 ('Subgroups', 'subgroups'), ('Users', 'users')]:
-                        if module.params[p] is not None:
-                            after_spec[f] = module.params[p]
                     result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
 
         elif module.params['state'] == 'absent':
             # delete group
             if 'Users' in p4_group_spec:
-                before = spec_to_string(p4_group_spec, diff_fields)
+                if module._diff:
+                    before = spec_to_string(p4_group_spec, diff_fields)
 
                 if not module.check_mode:
                     p4.delete_group(module.params['name'])

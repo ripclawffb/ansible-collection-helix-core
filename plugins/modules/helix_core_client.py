@@ -194,10 +194,23 @@ def run_module():
 
         if module.params['state'] == 'present':
             # check to see if any fields have changed
+
+            # build after_spec once for diff (used in both update and create paths)
+            if module._diff:
+                after_spec = {
+                    'Description': module.params['description'], 'Host': module.params['host'],
+                    'Root': module.params['root'], 'View': module.params['view'],
+                    'LineEnd': module.params['lineend'], 'Options': module.params['options'],
+                    'SubmitOptions': module.params['submitoptions'],
+                }
+                if module.params['altroots'] is not None:
+                    after_spec['AltRoots'] = module.params['altroots']
+
             if 'Access' in p4_client_spec:
 
                 # capture before state for diff
-                before = spec_to_string(p4_client_spec, diff_fields)
+                if module._diff:
+                    before = spec_to_string(p4_client_spec, diff_fields)
 
                 # detect noaltsync option (available in Helix Core 23.1 and later)
                 # required for idempotency for Helix Core 23.1 or newer
@@ -244,14 +257,6 @@ def run_module():
                     result['changed'] = True
 
                     if module._diff:
-                        after_spec = {
-                            'Description': module.params['description'], 'Host': module.params['host'],
-                            'Root': module.params['root'], 'View': module.params['view'],
-                            'LineEnd': module.params['lineend'], 'Options': module.params['options'],
-                            'SubmitOptions': module.params['submitoptions'],
-                        }
-                        if module.params['altroots'] is not None:
-                            after_spec['AltRoots'] = module.params['altroots']
                         result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
 
             # create new client with specified values
@@ -273,20 +278,13 @@ def run_module():
                 result['changed'] = True
 
                 if module._diff:
-                    after_spec = {
-                        'Description': module.params['description'], 'Host': module.params['host'],
-                        'Root': module.params['root'], 'View': module.params['view'],
-                        'LineEnd': module.params['lineend'], 'Options': module.params['options'],
-                        'SubmitOptions': module.params['submitoptions'],
-                    }
-                    if module.params['altroots'] is not None:
-                        after_spec['AltRoots'] = module.params['altroots']
                     result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
 
         elif module.params['state'] == 'absent':
             # delete client
             if 'Access' in p4_client_spec:
-                before = spec_to_string(p4_client_spec, diff_fields)
+                if module._diff:
+                    before = spec_to_string(p4_client_spec, diff_fields)
 
                 if not module.check_mode:
                     p4.delete_client('-f', module.params['name'])

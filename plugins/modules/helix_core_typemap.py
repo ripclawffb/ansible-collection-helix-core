@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_typemap
 
-short_description: This module will allow you to manage the typemap on Perforce Helix Core
+short_description: Manage the typemap on Perforce Helix Core
 
 description:
     - "The typemap table associates file type modifiers with file patterns."

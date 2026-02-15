@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_depot
 
-short_description: This module will allow you to manage depots on Perforce Helix Core
+short_description: Manage depots on Perforce Helix Core
 
 description:
     - "Create or edit a depot specification."

@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: helix_core_user
 
-short_description: This module will allow you to manage users on Perforce Helix Core
+short_description: Manage users on Perforce Helix Core
 
 description:
     - "Create or edit Helix server user specifications and preferences"

@@ -24,13 +24,13 @@ Added compatibility for Ubuntu 24\.04 and fixed P4Python installation issues\.
 <a id="minor-changes"></a>
 ### Minor Changes
 
-* Ubuntu 24\.04 support \- Added Molecule tests and Dockerfiles for Ubuntu 24\.04 with Perforce r23\.1, r23\.2, r24\.1, and r24\.2\.
+* Ubuntu 24\.04 support \- Added Molecule tests and Dockerfiles for Ubuntu 24\.04 with Perforce r23\.1\, r23\.2\, r24\.1\, and r24\.2\.
 
 <a id="bugfixes"></a>
 ### Bugfixes
 
-* Documentation generator \- Fixed `antsibull-docs` configuration in GitHub Actions to support newer versions and correct path structure\.
-* P4Python 3\.12 support \- Updated Molecule configuration to install `perforce-p4python3-python3.12` on Ubuntu 24\.04 (Noble Numbat)\.
+* Documentation generator \- Fixed <em class="title-reference">antsibull\-docs</em> configuration in GitHub Actions to support newer versions and correct path structure\.
+* P4Python 3\.12 support \- Updated Molecule configuration to install <em class="title-reference">perforce\-p4python3\-python3\.12</em> on Ubuntu 24\.04 \(Noble Numbat\)\.
 
 <a id="v1-0-6"></a>
 ## v1\.0\.6

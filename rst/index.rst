@@ -56,18 +56,18 @@ These are the plugins in the ripclawffb.helix_core collection:
 Modules
 ~~~~~~~
 
-* :ansplugin:`helix_core_client module <ripclawffb.helix_core.helix_core_client#module>` -- This module will allow you to manage client/workspace on Perforce Helix Core
-* :ansplugin:`helix_core_configurable module <ripclawffb.helix_core.helix_core_configurable#module>` -- This module will allow you to set config options on Perforce Helix Core
-* :ansplugin:`helix_core_depot module <ripclawffb.helix_core.helix_core_depot#module>` -- This module will allow you to manage depots on Perforce Helix Core
-* :ansplugin:`helix_core_group module <ripclawffb.helix_core.helix_core_group#module>` -- This module will allow you to manage groups on Perforce Helix Core
+* :ansplugin:`helix_core_client module <ripclawffb.helix_core.helix_core_client#module>` -- Manage client/workspace on Perforce Helix Core
+* :ansplugin:`helix_core_configurable module <ripclawffb.helix_core.helix_core_configurable#module>` -- Set configurables on Perforce Helix Core
+* :ansplugin:`helix_core_depot module <ripclawffb.helix_core.helix_core_depot#module>` -- Manage depots on Perforce Helix Core
+* :ansplugin:`helix_core_group module <ripclawffb.helix_core.helix_core_group#module>` -- Manage groups on Perforce Helix Core
 * :ansplugin:`helix_core_ldap module <ripclawffb.helix_core.helix_core_ldap#module>` -- Manage LDAP configurations on Perforce Helix Core
-* :ansplugin:`helix_core_protect module <ripclawffb.helix_core.helix_core_protect#module>` -- This module will allow you to manage the protection table on Perforce Helix Core
+* :ansplugin:`helix_core_protect module <ripclawffb.helix_core.helix_core_protect#module>` -- Manage the protection table on Perforce Helix Core
 * :ansplugin:`helix_core_protect_info module <ripclawffb.helix_core.helix_core_protect_info#module>` -- Get the current protection table from Perforce Helix Core
-* :ansplugin:`helix_core_server module <ripclawffb.helix_core.helix_core_server#module>` -- This module will allow you to manage server spec on Perforce Helix Core
-* :ansplugin:`helix_core_stream module <ripclawffb.helix_core.helix_core_stream#module>` -- This module will allow you to manage streams on Perforce Helix Core
-* :ansplugin:`helix_core_trigger module <ripclawffb.helix_core.helix_core_trigger#module>` -- This module will allow you to manage triggers on Perforce Helix Core
-* :ansplugin:`helix_core_typemap module <ripclawffb.helix_core.helix_core_typemap#module>` -- This module will allow you to manage the typemap on Perforce Helix Core
-* :ansplugin:`helix_core_user module <ripclawffb.helix_core.helix_core_user#module>` -- This module will allow you to manage users on Perforce Helix Core
+* :ansplugin:`helix_core_server module <ripclawffb.helix_core.helix_core_server#module>` -- Manage server spec on Perforce Helix Core
+* :ansplugin:`helix_core_stream module <ripclawffb.helix_core.helix_core_stream#module>` -- Manage streams on Perforce Helix Core
+* :ansplugin:`helix_core_trigger module <ripclawffb.helix_core.helix_core_trigger#module>` -- Manage triggers on Perforce Helix Core
+* :ansplugin:`helix_core_typemap module <ripclawffb.helix_core.helix_core_typemap#module>` -- Manage the typemap on Perforce Helix Core
+* :ansplugin:`helix_core_user module <ripclawffb.helix_core.helix_core_user#module>` -- Manage users on Perforce Helix Core
 
 .. toctree::
     :maxdepth: 1

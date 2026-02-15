@@ -62,7 +62,7 @@ Modules
 * :ansplugin:`helix_core_group module <ripclawffb.helix_core.helix_core_group#module>` -- This module will allow you to manage groups on Perforce Helix Core
 * :ansplugin:`helix_core_ldap module <ripclawffb.helix_core.helix_core_ldap#module>` -- Manage LDAP configurations on Perforce Helix Core
 * :ansplugin:`helix_core_protect module <ripclawffb.helix_core.helix_core_protect#module>` -- This module will allow you to manage the protection table on Perforce Helix Core
-* :ansplugin:`helix_core_protect_info module <ripclawffb.helix_core.helix_core_protect_info#module>` -- Get the current protection table from Perforce Helix Core
+* :ansplugin:`helix_core_protect_info module <ripclawffb.helix_core.helix_core_protect_info#module>` --
 * :ansplugin:`helix_core_server module <ripclawffb.helix_core.helix_core_server#module>` -- This module will allow you to manage server spec on Perforce Helix Core
 * :ansplugin:`helix_core_stream module <ripclawffb.helix_core.helix_core_stream#module>` -- This module will allow you to manage streams on Perforce Helix Core
 * :ansplugin:`helix_core_trigger module <ripclawffb.helix_core.helix_core_trigger#module>` -- This module will allow you to manage triggers on Perforce Helix Core

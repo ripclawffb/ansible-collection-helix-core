@@ -7,7 +7,7 @@
 <meta content="2.24.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ripclawffb.helix_core.helix_core_protect_info module – Get the current protection table from Perforce Helix Core &mdash; Ansible collections  documentation</title>
+  <title>ripclawffb.helix_core.helix_core_protect_info module &mdash; Ansible collections  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
       <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=b54c304f" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
@@ -80,19 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="helix_core_group_module.html">ripclawffb.helix_core.helix_core_group module – This module will allow you to manage groups on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_ldap_module.html">ripclawffb.helix_core.helix_core_ldap module – Manage LDAP configurations on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_protect_module.html">ripclawffb.helix_core.helix_core_protect module – This module will allow you to manage the protection table on Perforce Helix Core</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ripclawffb.helix_core.helix_core_protect_info module – Get the current protection table from Perforce Helix Core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#return-values">Return Values</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ripclawffb.helix_core.helix_core_protect_info module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_server_module.html">ripclawffb.helix_core.helix_core_server module – This module will allow you to manage server spec on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_stream_module.html">ripclawffb.helix_core.helix_core_stream module – This module will allow you to manage streams on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_trigger_module.html">ripclawffb.helix_core.helix_core_trigger module – This module will allow you to manage triggers on Perforce Helix Core</a></li>
@@ -115,7 +103,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ripclawffb.helix_core.helix_core_protect_info module – Get the current protection table from Perforce Helix Core</li>
+      <li class="breadcrumb-item active">ripclawffb.helix_core.helix_core_protect_info module</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -126,160 +114,17 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module"></span><section id="ripclawffb-helix-core-helix-core-protect-info-module-get-the-current-protection-table-from-perforce-helix-core">
-<h1>ripclawffb.helix_core.helix_core_protect_info module – Get the current protection table from Perforce Helix Core<a class="headerlink" href="#ripclawffb-helix-core-helix-core-protect-info-module-get-the-current-protection-table-from-perforce-helix-core" title="Link to this heading"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.0.7).</p>
-<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
-To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
-<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">ripclawffb.helix_core</span></code>.
-You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">ripclawffb.helix_core.helix_core_protect_info</span></code>.</p>
-</div>
-<nav class="contents local" id="contents">
-<ul class="simple">
-<li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#see-also" id="id4">See Also</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id5">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id6">Return Values</a></p></li>
-</ul>
-</nav>
-<section id="synopsis">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>Retrieves the current protection table entries from Perforce Helix Core.</p></li>
-<li><p>This is a read-only module that does not make any changes.</p></li>
-</ul>
-</section>
-<section id="requirements">
-<span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
-<p>The below requirements are needed on the host that executes this module.</p>
-<ul class="simple">
-<li><p>P4Python pip module is required</p></li>
-</ul>
-</section>
-<section id="parameters">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
-<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
-<thead>
-<tr class="row-odd"><th class="head"><p>Parameter</p></th>
-<th class="head"><p>Comments</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-charset"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4charset"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-p4charset"><span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-charset"></span><strong>charset</strong></p>
-<a class="ansibleOptionLink" href="#parameter-charset" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4charset</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Character set used for translation of unicode files</p>
-<p>Can also use ‘P4CHARSET’ environment variable</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-password"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4passwd"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-password"><span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-p4passwd"></span><strong>password</strong></p>
-<a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4passwd</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The super user password</p>
-<p>Can also use ‘P4PASSWD’ environment variable</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-server"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4port"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-server"><span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-p4port"></span><strong>server</strong></p>
-<a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4port</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The hostname/ip and port of the server (perforce:1666)</p>
-<p>Can also use ‘P4PORT’ environment variable</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-user"></div>
-<div class="ansibleOptionAnchor" id="parameter-p4user"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-user"><span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-parameter-p4user"></span><strong>user</strong></p>
-<a class="ansibleOptionLink" href="#parameter-user" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4user</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>A user with super user access</p>
-<p>Can also use ‘P4USER’ environment variable</p>
-</div></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="see-also">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">See Also</a><a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference external" href="https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_protect.html">Helix Core Protect</a></dt><dd><p>Manage access permissions</p>
-</dd>
-<dt><a class="reference external" href="https://pypi.org/project/p4python/">P4Python Pip Module</a></dt><dd><p>Python module to interact with Helix Core</p>
-</dd>
-</dl>
-</div>
-</section>
-<section id="examples">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the current protection table</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Get protection table</span>
-<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_protect_info</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
-<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
-<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">protect_info</span>
-
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Display protections</span>
-<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">protect_info.protections</span>
+  <span class="target" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module"></span><section id="ripclawffb-helix-core-helix-core-protect-info-module">
+<h1>ripclawffb.helix_core.helix_core_protect_info module<a class="headerlink" href="#ripclawffb-helix-core-helix-core-protect-info-module" title="Link to this heading"></a></h1>
+<p>The documentation for the module plugin, ripclawffb.helix_core.helix_core_protect_info,  was malformed.</p>
+<p>The errors were:</p>
+<ul>
+<li><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Missing documentation or could not parse documentation: ripclawffb.helix_core.helix_core_protect_info did not contain a DOCUMENTATION attribute (/home/runner/.ansible/collections/ansible_collections/ripclawffb/helix_core/plugins/modules/helix_core_protect_info.py). argument of type &#39;NoneType&#39; is not iterable options (ripclawffb.helix_core.helix_core_connection) of unknown type: /home/runner/.ansible/collections/ansible_collections/ripclawffb/helix_core/plugins/modules/helix_core_protect_info.py
 </pre></div>
 </div>
-</section>
-<section id="return-values">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
-<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/devel/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible vdevel)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
-<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
-<thead>
-<tr class="row-odd"><th class="head"><p>Key</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-protections"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections"><strong>protections</strong></p>
-<a class="ansibleOptionLink" href="#return-protections" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>List of protection entries.</p>
-<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
-<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;access&quot;:</span> <span class="pre">&quot;write&quot;,</span> <span class="pre">&quot;host&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;path&quot;:</span> <span class="pre">&quot;//...&quot;,</span> <span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;user&quot;},</span> <span class="pre">{&quot;access&quot;:</span> <span class="pre">&quot;super&quot;,</span> <span class="pre">&quot;host&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;bruno&quot;,</span> <span class="pre">&quot;path&quot;:</span> <span class="pre">&quot;//...&quot;,</span> <span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;user&quot;}]</span></code></p>
-</div></td>
-</tr>
-</tbody>
-</table>
-<section id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p>Asif Shaikh (&#64;ripclawffb)</p></li>
+</li>
 </ul>
-</section>
-<section id="collection-links">
-<h3>Collection links<a class="headerlink" href="#collection-links" title="Link to this heading"></a></h3>
-<ul class="ansible-links">
-<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ripclawffb/ansible-collection-helix-core/issues" rel="noopener external" target="_blank">Issue Tracker</a></span></li>
-<li><span><a aria-role="button" class="ansible-link reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/" rel="noopener external" target="_blank">Homepage</a></span></li>
-<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ripclawffb/ansible-collection-helix-core" rel="noopener external" target="_blank">Repository (Sources)</a></span></li>
-</ul>
-</section>
-</section>
+<p>File a bug with the <a class="reference external" href="https://github.com/ripclawffb/ansible-collection-helix-core/issues">ripclawffb.helix_core collection</a> in order to have it corrected.</p>
 </section>
 
 

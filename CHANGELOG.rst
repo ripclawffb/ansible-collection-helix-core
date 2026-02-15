@@ -4,7 +4,6 @@ Ripclawffb.Helix\_Core Release Notes
 
 .. contents:: Topics
 
-
 v1.0.7
 ======
 

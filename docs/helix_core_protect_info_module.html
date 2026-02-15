@@ -138,6 +138,7 @@ You need further requirements to be able to use this module,
 see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
 <p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">ripclawffb.helix_core.helix_core_protect_info</span></code>.</p>
 </div>
+<p class="ansible-version-added">New in ripclawffb.helix_core 1.1.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -255,12 +256,61 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-changed"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-changed"><strong>changed</strong></p>
+<a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Always False as this is a read-only module.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">false</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-protections"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections"><strong>protections</strong></p>
 <a class="ansibleOptionLink" href="#return-protections" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>List of protection entries.</p>
-<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<td><div class="ansible-option-cell"><p>List of protection entries found.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
 <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;access&quot;:</span> <span class="pre">&quot;write&quot;,</span> <span class="pre">&quot;host&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;path&quot;:</span> <span class="pre">&quot;//...&quot;,</span> <span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;user&quot;},</span> <span class="pre">{&quot;access&quot;:</span> <span class="pre">&quot;super&quot;,</span> <span class="pre">&quot;host&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;bruno&quot;,</span> <span class="pre">&quot;path&quot;:</span> <span class="pre">&quot;//...&quot;,</span> <span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;user&quot;}]</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-protections/access"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections-access"><strong>access</strong></p>
+<a class="ansibleOptionLink" href="#return-protections/access" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Access level (e.g., read, write, super).</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-protections/host"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections-host"><strong>host</strong></p>
+<a class="ansibleOptionLink" href="#return-protections/host" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Host IP address or wildcard.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-protections/name"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections-name"><strong>name</strong></p>
+<a class="ansibleOptionLink" href="#return-protections/name" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Name of the user or group.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-protections/path"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections-path"><strong>path</strong></p>
+<a class="ansibleOptionLink" href="#return-protections/path" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Depot path for the protection entry.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-protections/type"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-info-module-return-protections-type"><strong>type</strong></p>
+<a class="ansibleOptionLink" href="#return-protections/type" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Type of entity (user or group).</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
 </div></td>
 </tr>
 </tbody>

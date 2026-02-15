@@ -35,6 +35,9 @@ ripclawffb.helix_core.helix_core_ldap module -- Manage LDAP configurations on Pe
 
 .. version_added
 
+.. rst-class:: ansible-version-added
+
+New in ripclawffb.helix\_core 1.1.0
 
 .. contents::
    :local:
@@ -1006,6 +1009,143 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. raw:: html
 
         </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-diff"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_ldap_module__return-diff:
+
+      .. rst-class:: ansible-option-title
+
+      **diff**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-diff" title="Permalink to this return value"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      A dictionary containing 'before' and 'after' state of the resource.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` when diff mode is enabled
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-diff/after"></div>
+
+      .. raw:: latex
+
+        \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_ldap_module__return-diff/after:
+
+      .. rst-class:: ansible-option-title
+
+      **after**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-diff/after" title="Permalink to this return value"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+      .. raw:: latex
+
+        \end{minipage}
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The state of the resource after the action.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` success
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-diff/before"></div>
+
+      .. raw:: latex
+
+        \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_ldap_module__return-diff/before:
+
+      .. rst-class:: ansible-option-title
+
+      **before**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-diff/before" title="Permalink to this return value"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+      .. raw:: latex
+
+        \end{minipage}
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The state of the resource before the action.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` success
+
+
+      .. raw:: html
+
+        </div>
+
 
 
   * - .. raw:: html

@@ -138,6 +138,7 @@ You need further requirements to be able to use this module,
 see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-core-helix-core-stream-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
 <p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">ripclawffb.helix_core.helix_core_stream</span></code>.</p>
 </div>
+<p class="ansible-version-added">New in ripclawffb.helix_core 1.0.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -374,6 +375,30 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <td><div class="ansible-option-cell"><p>Whether any changes were made to the stream.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
 <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">true</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-diff"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-return-diff"><strong>diff</strong></p>
+<a class="ansibleOptionLink" href="#return-diff" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>A dictionary containing ‘before’ and ‘after’ state of the resource.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> when diff mode is enabled</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-diff/after"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-return-diff-after"><strong>after</strong></p>
+<a class="ansibleOptionLink" href="#return-diff/after" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The state of the resource after the action.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-diff/before"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-stream-module-return-diff-before"><strong>before</strong></p>
+<a class="ansibleOptionLink" href="#return-diff/before" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The state of the resource before the action.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
 </div></td>
 </tr>
 </tbody>

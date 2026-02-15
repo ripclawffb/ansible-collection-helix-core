@@ -375,10 +375,10 @@
     parent: //stream1/main
     paths:
       - share ...
-    p4port: '1666'
-    p4user: 'bruno'
-    p4passwd: ''
-    p4charset: auto
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
   register: diff_create_stream
   diff: true
 
@@ -393,6 +393,7 @@
       - diff_create_stream.diff is defined
       - diff_create_stream.diff.before is defined
       - diff_create_stream.diff.after is defined
+      - diff_create_stream.diff.before == ''
       - "'Diff test stream' in diff_create_stream.diff.after"
 
 - name: Create stream with diff mode (idempotent)
@@ -403,10 +404,10 @@
     parent: //stream1/main
     paths:
       - share ...
-    p4port: '1666'
-    p4user: 'bruno'
-    p4passwd: ''
-    p4charset: auto
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
   register: diff_create_stream_idempotent
   diff: true
 
@@ -424,10 +425,10 @@
     parent: //stream1/main
     paths:
       - share ...
-    p4port: '1666'
-    p4user: 'bruno'
-    p4passwd: ''
-    p4charset: auto
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
   register: diff_update_stream
   diff: true
 
@@ -447,10 +448,10 @@
   ripclawffb.helix_core.helix_core_stream:
     state: absent
     stream: //stream1/diff_test
-    p4port: '1666'
-    p4user: 'bruno'
-    p4passwd: ''
-    p4charset: auto
+    server: '1666'
+    user: 'bruno'
+    password: ''
+    charset: auto
   register: diff_delete_stream
   diff: true
 

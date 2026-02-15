@@ -450,6 +450,7 @@
       - diff_remove_protect is changed
       - diff_remove_protect.diff is defined
       - "'diff_test_user' in diff_remove_protect.diff.before"
+      - "'diff_test_user' not in diff_remove_protect.diff.after"
 
 # Test invalid login
 - name: Fail when using invalid login

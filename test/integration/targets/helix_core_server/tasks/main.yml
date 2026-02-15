@@ -283,6 +283,7 @@
       - diff_create_server.diff is defined
       - diff_create_server.diff.before is defined
       - diff_create_server.diff.after is defined
+      - diff_create_server.diff.before == ''
       - "'Diff test server.' in diff_create_server.diff.after"
 
 - name: Create server with diff mode (idempotent)

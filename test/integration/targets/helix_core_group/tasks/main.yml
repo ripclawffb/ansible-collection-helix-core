@@ -309,6 +309,7 @@
       - diff_create_group.diff is defined
       - diff_create_group.diff.before is defined
       - diff_create_group.diff.after is defined
+      - diff_create_group.diff.before == ''
       - "'diff_test_group' in diff_create_group.diff.after"
 
 - name: Create group with diff mode (idempotent)
@@ -329,6 +330,32 @@
     that:
       - diff_create_group_idempotent is not changed
       - diff_create_group_idempotent.diff is not defined
+
+- name: Update group with diff mode
+  ripclawffb.helix_core.helix_core_group:
+    state: present
+    name: diff_test_group
+    timeout: 7200
+    users:
+      - bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_update_group
+  diff: true
+
+- name: Output diff_update_group
+  ansible.builtin.debug:
+    var: diff_update_group
+
+- name: Verify diff output on group update
+  ansible.builtin.assert:
+    that:
+      - diff_update_group is changed
+      - diff_update_group.diff is defined
+      - "'Timeout: 43200' in diff_update_group.diff.before"
+      - "'Timeout: 7200' in diff_update_group.diff.after"
 
 - name: Delete group with diff mode
   ripclawffb.helix_core.helix_core_group:

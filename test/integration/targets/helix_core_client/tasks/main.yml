@@ -379,6 +379,7 @@
       - diff_create_client.diff is defined
       - diff_create_client.diff.before is defined
       - diff_create_client.diff.after is defined
+      - diff_create_client.diff.before == ''
       - "'Diff test client' in diff_create_client.diff.after"
 
 - name: Create client with diff mode (idempotent)

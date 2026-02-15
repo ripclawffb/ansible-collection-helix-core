@@ -415,7 +415,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The user password
+      The super user password
 
       Can also use 'P4PASSWD' environment variable
 
@@ -688,7 +688,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A user with access to create streams
+      A user with super user access
 
       Can also use 'P4USER' environment variable
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-cd /root/github/ripclawffb/ansible_collections/ripclawffb/helix_core
+cd "$(dirname "$0")"
 
 # Create collection documentation into temporary directory
 rm -rf temp-rst

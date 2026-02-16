@@ -158,31 +158,27 @@ def run_module():
         if module.params['state'] == 'present':
             if p4_current_value is None or module.params['value'] != p4_current_value['Value']:
                 if not module.check_mode:
-                    p4.run('configure', 'set', "{0}#{1}={2}".format(
-                        module.params['serverid'], module.params['name'], module.params['value'])
-                    )
+                    p4.run('configure', 'set', f"{module.params['serverid']}#{module.params['name']}={module.params['value']}")
                 result['changed'] = True
 
                 if module._diff:
                     result['diff'] = {
-                        'before': '{0} = {1}\n'.format(module.params['name'], before_value),
-                        'after': '{0} = {1}\n'.format(module.params['name'], module.params['value']),
+                        'before': f"{module.params['name']} = {before_value}\n",
+                        'after': f"{module.params['name']} = {module.params['value']}\n",
                     }
         elif module.params['state'] == 'absent':
             if p4_current_value is not None:
                 if not module.check_mode:
-                    p4.run('configure', 'unset', "{0}#{1}".format(
-                        module.params['serverid'], module.params['name'])
-                    )
+                    p4.run('configure', 'unset', f"{module.params['serverid']}#{module.params['name']}")
                 result['changed'] = True
 
                 if module._diff:
                     result['diff'] = {
-                        'before': '{0} = {1}\n'.format(module.params['name'], before_value),
+                        'before': f"{module.params['name']} = {before_value}\n",
                         'after': '',
                     }
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
 

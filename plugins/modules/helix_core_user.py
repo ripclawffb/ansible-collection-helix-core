@@ -155,7 +155,7 @@ def run_module():
 
         # if email is not given, set a default
         if module.params['email'] is None:
-            module.params['email'] = "{0}@{1}".format(module.params['name'], gethostname())
+            module.params['email'] = f"{module.params['name']}@{gethostname()}"
 
         # capture before state for diff
         diff_fields = ['AuthMethod', 'Email', 'FullName']
@@ -221,7 +221,7 @@ def run_module():
                 result['changed'] = False
 
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
 

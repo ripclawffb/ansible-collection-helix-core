@@ -405,7 +405,7 @@ def run_module():
                 result['changed'] = True
 
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
     module.exit_json(**result)

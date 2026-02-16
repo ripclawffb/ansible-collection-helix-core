@@ -193,7 +193,7 @@ def protections_to_set(protect_spec):
 
 def set_to_protections(entries):
     """Convert a set/list of tuples to protection format."""
-    return ["{0} {1} {2} {3} {4}".format(e[0], e[1], e[2], e[3], e[4]) for e in entries]
+    return [f"{e[0]} {e[1]} {e[2]} {e[3]} {e[4]}" for e in entries]
 
 
 def entry_to_tuple(entry):
@@ -256,7 +256,7 @@ def run_module():
 
         # format entries for diff
         def entries_to_diff(entries):
-            return '\n'.join(sorted('{0} {1} {2} {3} {4}'.format(*e) for e in entries)) + '\n' if entries else ''
+            return '\n'.join(sorted(f"{e[0]} {e[1]} {e[2]} {e[3]} {e[4]}" for e in entries)) + '\n' if entries else ''
 
         if module.params['mode'] == 'entry':
             # Entry mode: add/remove individual entries
@@ -311,7 +311,7 @@ def run_module():
                     }
 
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
 

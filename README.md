@@ -1,133 +1,100 @@
 # Ansible Collection - Perforce Helix Core
 
 [![Build Status](https://github.com/ripclawffb/ansible-collection-helix-core/actions/workflows/github-actions-ansible.yml/badge.svg)](https://github.com/ripclawffb/ansible-collection-helix-core/actions/workflows/github-actions-ansible.yml)
+[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-ripclawffb.helix__core-blue.svg)](https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
-This collection contains modules to install and configure Perforce Helix Core.
+This collection contains Ansible modules to install and configure Perforce Helix Core.
 
-## Documentation
+[Documentation](https://ripclawffb.github.io/ansible-collection-helix-core/) | [Issue Tracker](https://github.com/ripclawffb/ansible-collection-helix-core/issues) | [Galaxy Page](https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/)
 
-You can find the documentation for this collection [here](https://ripclawffb.github.io/ansible-collection-helix-core/).
+## Requirements
+
+- **Ansible**: 2.9+
+- **Python**: 3.6+
+- **P4Python**: The `p4python` pip package must be installed on the target host.
+
+## Compatibility
+
+This collection is tested via Molecule on the following platforms and Perforce versions:
+
+| OS | Perforce Versions |
+|----|-------------------|
+| Rocky Linux 9 | 23.1, 23.2, 24.1, 24.2 |
+| Ubuntu 20.04 | 23.1, 23.2 |
+| Ubuntu 22.04 | 23.1, 23.2, 24.1, 24.2 |
+| Ubuntu 24.04 | 23.1, 23.2, 24.1, 24.2 |
+
+## Included Modules
+
+| Module | Description |
+|--------|-------------|
+| `helix_core_client` | Manage clients/workspaces |
+| `helix_core_configurable` | Manage server configurables |
+| `helix_core_depot` | Manage depots |
+| `helix_core_group` | Manage user groups |
+| `helix_core_ldap` | Manage LDAP configurations |
+| `helix_core_protect` | Manage protections table |
+| `helix_core_protect_info` | Get protection table info |
+| `helix_core_server` | Manage server specifications |
+| `helix_core_stream` | Manage streams |
+| `helix_core_trigger` | Manage triggers table |
+| `helix_core_typemap` | Manage typemap table |
+| `helix_core_user` | Manage users |
+
+## Installation
+
+### Ansible Galaxy
+
+```bash
+ansible-galaxy collection install ripclawffb.helix_core
+```
+
+### requirements.yml
+
+```yaml
+collections:
+  - name: ripclawffb.helix_core
+```
 
 ## Usage
 
-Install the collection:
-
-    ansible-galaxy collection install ripclawffb.helix_core -p ./collections
-
-Then you can use the modules from the collection in your playbooks:
+Example playbook:
 
 ```yaml
 ---
 - hosts: all
-
   collections:
     - ripclawffb.helix_core
 
   tasks:
-    - name: Set auth.id for any server id
-      helix_core_configurable:
-        state: present
-        name: auth.id
-        value: master.1
-        p4port: '1666'
-        p4user: 'p4admin'
-        p4passwd: 'changeme'
-        p4charset: auto
-
-    - name: Create new client
-      helix_core_client:
-        state: present
-        name: bruno_new_client
-        description: 'New client for Bruno'
-        host: workstation01
-        root: /tmp/bruno_new_client
-        view:
-          - //depot/... //bruno_new_client/depot/...
-        server: '1666'
-        user: bruno
-        charset: auto
-        password: ''
-
-    - name: Create new user
-      helix_core_user:
-        state: present
-        name: new_user
-        email: new_user@perforce.com
-        server: '1666'
-        user: bruno
-        charset: auto
-        password: ''
-
-    - name: Create new group
-      helix_core_group:
-        state: present
-        name: new_group
-        users:
-          - new_user
-        maxlocktime: '300'
-        timeout: '86400'
-        server: '1666'
-        user: bruno
-        charset: auto
-        password: ''
-
-    - name: Create a new server spec
-      helix_core_server:
-        state: present
-        serverid: commit
-        description: 'Commit server'
-        services: standard
-        server: '1666'
-        user: bruno
-        charset: auto
-        password: ''
-
-    - name: Create filtered edge server spec
-      helix_core_server:
-        state: present
-        serverid: edge_replica
-        description: 'Created by root.'
-        archivedatafilter:
-          - //depot1/...
-          - -//depot2/...
-        clientdatafilter:
-          - -//workstation1/...
-        revisiondatafilter:
-          - //depot1/...
-          - -//depot2/...
-        services: edge-server
-        server: '1666'
-        user: bruno
-        charset: auto
-        password: ''
-
     - name: Create a new depot
       helix_core_depot:
         state: present
-        depot: bruno
+        depot: projects
         type: local
-        description: Bruno's depot
-        p4port: '1666'
-        p4user: 'bruno'
-        p4passwd: ''
-        p4charset: auto
+        description: "Main projects depot"
+        server: '1666'
+        user: 'p4admin'
+        password: 'changeme'
 
-    - name: Create new mainline stream
-      helix_core_stream:
+    - name: Create a user
+      helix_core_user:
         state: present
-        stream: //stream1/main
-        description: 'Mainline Stream'
-        type: mainline
-        paths:
-          - share ...
-        p4port: '1666'
-        p4user: 'bruno'
-        p4passwd: ''
-        p4charset: auto
+        name: jdoe
+        email: jdoe@example.com
+        fullname: "John Doe"
+        server: '1666'
+        user: 'p4admin'
+        password: 'changeme'
 ```
 
-Additional examples can be found under `test/integration/targets/`.
+See the [Documentation](https://ripclawffb.github.io/ansible-collection-helix-core/) for detailed usage and examples for every module.
 
-## Author
+## Contributing
 
-This collection was created in 2019 by Asif Shaikh
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
+
+## License
+
+MIT

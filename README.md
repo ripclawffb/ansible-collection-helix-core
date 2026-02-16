@@ -12,7 +12,7 @@ This collection contains Ansible modules to install and configure Perforce Helix
 
 - **Ansible**: 2.9+
 - **Python**: 3.6+
-- **P4Python**: The `p4python` pip package must be installed on the target host.
+- **P4Python**: The `p4python` pip package must be installed.
 
 ## Compatibility
 

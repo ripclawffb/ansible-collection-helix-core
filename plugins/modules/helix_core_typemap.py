@@ -138,7 +138,7 @@ def typemap_to_list(typemap_spec):
 
 def list_to_typemap(entries):
     """Convert a list of dicts to typemap format."""
-    return ["{0} {1}".format(e['type'], e['path']) for e in entries]
+    return [f"{e['type']} {e['path']}" for e in entries]
 
 
 def run_module():
@@ -175,7 +175,7 @@ def run_module():
 
         # format entries for diff
         def entries_to_diff(entries):
-            return '\n'.join('{0} {1}'.format(*e) for e in entries) + '\n' if entries else ''
+            return '\n'.join(f"{e[0]} {e[1]}" for e in entries) + '\n' if entries else ''
 
         if module.params['state'] == 'present':
             # Build desired entries list
@@ -207,7 +207,7 @@ def run_module():
                     result['diff'] = {'before': before, 'after': ''}
 
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
 

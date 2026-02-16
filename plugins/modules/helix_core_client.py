@@ -192,7 +192,7 @@ def run_module():
 
         # if description is not given, set a default
         if module.params['description'] is None:
-            module.params['description'] = "Created by {0}.".format(module.params['user'])
+            module.params['description'] = f"Created by {module.params['user']}."
 
         # if host is not given, set a default
         if module.params['host'] is None:
@@ -310,7 +310,7 @@ def run_module():
                 result['changed'] = False
 
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
 

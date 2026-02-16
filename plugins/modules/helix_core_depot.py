@@ -175,10 +175,10 @@ def run_module():
     try:
         # if description is not given, set a default
         if module.params['description'] is None:
-            module.params['description'] = "Created by {0}.".format(module.params['user'])
+            module.params['description'] = f"Created by {module.params['user']}."
 
         if module.params['map'] is None:
-            module.params['map'] = "{0}/...".format(module.params['name'])
+            module.params['map'] = f"{module.params['name']}/..."
 
         # fields to track for diff
         diff_fields = ['Description', 'Type', 'Map', 'Address', 'SpecMap', 'StreamDepth', 'Suffix']
@@ -317,7 +317,7 @@ def run_module():
                 result['changed'] = False
 
     except Exception as e:
-        module.fail_json(msg="Error: {0}".format(e), **result)
+        module.fail_json(msg=f"Error: {e}", **result)
 
     helix_core_disconnect(module, p4)
 

@@ -89,6 +89,14 @@ options:
                     - The depot path pattern (e.g., //..., //depot/...)
                 type: str
                 required: true
+    position:
+        description:
+            - Where to insert new entries in the protections table.
+            - Only applies when I(state=present) and I(mode=entry).
+            - Can be C(beginning), C(end), or a zero-based integer index.
+            - If the active protection entry already exists exactly, its position will not be changed. We only insert new entries at C(position).
+        type: str
+        default: end
 
 extends_documentation_fragment:
     - ripclawffb.helix_core.helix_core_connection
@@ -148,6 +156,38 @@ EXAMPLES = '''
     user: bruno
     charset: auto
     password: ''
+
+# Add a base rule at the beginning of the table
+- name: Add base rule at beginning
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: beginning
+    protections:
+      - access: read
+        type: group
+        name: everyone
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+# Insert a rule at a specific index
+- name: Insert rule at index 2
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: '2'
+    protections:
+      - access: write
+        type: group
+        name: qa_team
+        host: "*"
+        path: //depot/qa/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
 '''
 
 RETURN = r'''
@@ -176,23 +216,23 @@ from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_c
 )
 
 
-def protections_to_set(protect_spec):
-    """Convert protection spec to a set of tuples for comparison."""
+def protections_to_list(protect_spec):
+    """Convert protection spec to a list of tuples for comparison."""
     if 'Protections' not in protect_spec or protect_spec['Protections'] is None:
-        return set()
-    entries = set()
+        return []
+    entries = []
     for entry in protect_spec['Protections']:
         # Each entry is a string like "access type name host path"
         parts = entry.split()
         if len(parts) >= 5:
             # Rejoin path in case it has spaces (though unusual)
             path = ' '.join(parts[4:])
-            entries.add((parts[0], parts[1], parts[2], parts[3], path))
+            entries.append((parts[0], parts[1], parts[2], parts[3], path))
     return entries
 
 
-def set_to_protections(entries):
-    """Convert a set/list of tuples to protection format."""
+def list_to_protections(entries):
+    """Convert a list of tuples to protection format."""
     return [f"{e[0]} {e[1]} {e[2]} {e[3]} {e[4]}" for e in entries]
 
 
@@ -206,6 +246,7 @@ def run_module():
     module_args = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
         mode=dict(type='str', default='entry', choices=['entry', 'replace']),
+        position=dict(type='str', default='end'),
         protections=dict(type='list', elements='dict', default=None, options=dict(
             access=dict(type='str', required=True),
             type=dict(type='str', required=True, choices=['user', 'group']),
@@ -246,61 +287,89 @@ def run_module():
                 **result
             )
 
+    # Warn if position is set but won't have any effect
+    if module.params['position'] != 'end':
+        if module.params['state'] != 'present' or module.params['mode'] != 'entry':
+            module.warn("The 'position' parameter only applies when state=present and mode=entry. It will be ignored.")
+
     # connect to helix
     p4 = helix_core_connect(module, 'ansible')
 
     try:
         # get existing protection table
         p4_protect_spec = p4.fetch_protect()
-        current_entries = protections_to_set(p4_protect_spec)
+        current_entries = protections_to_list(p4_protect_spec)
 
         # format entries for diff
         def entries_to_diff(entries):
-            return '\n'.join(sorted(f"{e[0]} {e[1]} {e[2]} {e[3]} {e[4]}" for e in entries)) + '\n' if entries else ''
+            return '\n'.join(f"{e[0]} {e[1]} {e[2]} {e[3]} {e[4]}" for e in entries) + '\n' if entries else ''
 
         if module.params['mode'] == 'entry':
             # Entry mode: add/remove individual entries
-            desired_tuples = {entry_to_tuple(e) for e in module.params['protections']}
+            desired_tuples = [entry_to_tuple(e) for e in module.params['protections']]
 
             if module.params['state'] == 'present':
                 # Add entries that don't exist
-                new_entries = desired_tuples - current_entries
+                # Parse position
+                pos_str = module.params['position']
+                insert_idx = len(current_entries)
+                if pos_str == 'beginning':
+                    insert_idx = 0
+                elif pos_str == 'end':
+                    pass
+                elif pos_str.isdigit():
+                    idx = int(pos_str)
+                    insert_idx = min(idx, len(current_entries))
+                else:
+                    module.fail_json(msg=f"Invalid position value: {pos_str}. Must be 'beginning', 'end', or an integer.", **result)
+
+                updated_entries = list(current_entries)
+                current_set = set(current_entries)
+                seen = set()
+                new_entries = []
+                for t in desired_tuples:
+                    if t not in current_set and t not in seen:
+                        new_entries.append(t)
+                        seen.add(t)
+
                 if new_entries:
+                    # Insert all new entries starting at insert_idx
+                    updated_entries = updated_entries[:insert_idx] + new_entries + updated_entries[insert_idx:]
                     if not module.check_mode:
-                        updated_entries = current_entries | desired_tuples
-                        p4_protect_spec['Protections'] = set_to_protections(updated_entries)
+                        p4_protect_spec['Protections'] = list_to_protections(updated_entries)
                         p4.save_protect(p4_protect_spec)
                     result['changed'] = True
-
                     if module._diff:
                         result['diff'] = {
                             'before': entries_to_diff(current_entries),
-                            'after': entries_to_diff(current_entries | desired_tuples),
+                            'after': entries_to_diff(updated_entries),
                         }
 
             elif module.params['state'] == 'absent':
                 # Remove entries that exist
-                entries_to_remove = desired_tuples & current_entries
-                if entries_to_remove:
+                # desired_tuples does not have order that matters for removal, we process current_entries
+                desired_set = set(desired_tuples)
+                updated_entries = [e for e in current_entries if e not in desired_set]
+
+                if len(updated_entries) != len(current_entries):
                     if not module.check_mode:
-                        updated_entries = current_entries - desired_tuples
-                        p4_protect_spec['Protections'] = set_to_protections(updated_entries)
+                        p4_protect_spec['Protections'] = list_to_protections(updated_entries)
                         p4.save_protect(p4_protect_spec)
                     result['changed'] = True
 
                     if module._diff:
                         result['diff'] = {
                             'before': entries_to_diff(current_entries),
-                            'after': entries_to_diff(current_entries - desired_tuples),
+                            'after': entries_to_diff(updated_entries),
                         }
 
         elif module.params['mode'] == 'replace':
             # Replace mode: replace entire table
-            desired_tuples = {entry_to_tuple(e) for e in module.params['protections']}
+            desired_tuples = [entry_to_tuple(e) for e in module.params['protections']]
 
             if current_entries != desired_tuples:
                 if not module.check_mode:
-                    p4_protect_spec['Protections'] = set_to_protections(desired_tuples)
+                    p4_protect_spec['Protections'] = list_to_protections(desired_tuples)
                     p4.save_protect(p4_protect_spec)
                 result['changed'] = True
 

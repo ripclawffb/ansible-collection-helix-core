@@ -22,3 +22,18 @@ releases:
       bugfixes:
         - Documentation generator - Fixed `antsibull-docs` configuration in GitHub Actions to support newer versions and correct path structure.
         - P4Python 3.12 support - Updated Molecule configuration to install `perforce-p4python3-python3.12` on Ubuntu 24.04 (Noble Numbat).
+  1.1.0:
+    release_date: '2026-02-21'
+    changes:
+      release_summary: Added new modules (typemap, triggers, protect, protect_info, ldap) and added diff mode support to all modules.
+      minor_changes:
+        - helix_core_typemap - Manage Perforce Helix Core typemap table (#105)
+        - helix_core_trigger - Manage Perforce Helix Core triggers table (#107)
+        - helix_core_protect - Manage Perforce Helix Core protections table (#109)
+        - helix_core_protect_info - Get protection table info (#111)
+        - helix_core_ldap - Manage LDAP configurations (#114)
+        - diff mode - Added diff mode support to all modules (#124)
+      bugfixes:
+        - README.md - Fixed documentation links (#100)
+        - 'helix_core_protect_info - Fixed documentation issues (#112, #122)'
+        - Documentation - Fixed P4Python installation requirements in docs (#133)

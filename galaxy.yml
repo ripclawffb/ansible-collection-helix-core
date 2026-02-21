@@ -17,7 +17,7 @@ tags:
   - perforce
   - p4
   - p4d
-version: 1.0.7
+version: 1.1.0
 homepage: 'https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/'
 build_ignore:
   - '.cache'

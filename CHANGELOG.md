@@ -2,31 +2,60 @@
 
 **Topics**
 
-- <a href="#v1-0-7">v1\.0\.7</a>
+- <a href="#v1-1-0">v1\.1\.0</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#minor-changes">Minor Changes</a>
     - <a href="#bugfixes">Bugfixes</a>
-- <a href="#v1-0-6">v1\.0\.6</a>
+- <a href="#v1-0-7">v1\.0\.7</a>
     - <a href="#release-summary-1">Release Summary</a>
     - <a href="#minor-changes-1">Minor Changes</a>
-- <a href="#v1-0-5">v1\.0\.5</a>
+    - <a href="#bugfixes-1">Bugfixes</a>
+- <a href="#v1-0-6">v1\.0\.6</a>
     - <a href="#release-summary-2">Release Summary</a>
     - <a href="#minor-changes-2">Minor Changes</a>
+- <a href="#v1-0-5">v1\.0\.5</a>
+    - <a href="#release-summary-3">Release Summary</a>
+    - <a href="#minor-changes-3">Minor Changes</a>
 
-<a id="v1-0-7"></a>
-## v1\.0\.7
+<a id="v1-1-0"></a>
+## v1\.1\.0
 
 <a id="release-summary"></a>
 ### Release Summary
 
-Added compatibility for Ubuntu 24\.04 and fixed P4Python installation issues\.
+Added new modules \(typemap\, triggers\, protect\, protect\_info\, ldap\) and added diff mode support to all modules\.
 
 <a id="minor-changes"></a>
 ### Minor Changes
 
-* Ubuntu 24\.04 support \- Added Molecule tests and Dockerfiles for Ubuntu 24\.04 with Perforce r23\.1\, r23\.2\, r24\.1\, and r24\.2\.
+* diff mode \- Added diff mode support to all modules \(\#124\)
+* helix\_core\_ldap \- Manage LDAP configurations \(\#114\)
+* helix\_core\_protect \- Manage Perforce Helix Core protections table \(\#109\)
+* helix\_core\_protect\_info \- Get protection table info \(\#111\)
+* helix\_core\_trigger \- Manage Perforce Helix Core triggers table \(\#107\)
+* helix\_core\_typemap \- Manage Perforce Helix Core typemap table \(\#105\)
 
 <a id="bugfixes"></a>
+### Bugfixes
+
+* Documentation \- Fixed P4Python installation requirements in docs \(\#133\)
+* README\.md \- Fixed documentation links \(\#100\)
+* helix\_core\_protect\_info \- Fixed documentation issues \(\#112\, \#122\)
+
+<a id="v1-0-7"></a>
+## v1\.0\.7
+
+<a id="release-summary-1"></a>
+### Release Summary
+
+Added compatibility for Ubuntu 24\.04 and fixed P4Python installation issues\.
+
+<a id="minor-changes-1"></a>
+### Minor Changes
+
+* Ubuntu 24\.04 support \- Added Molecule tests and Dockerfiles for Ubuntu 24\.04 with Perforce r23\.1\, r23\.2\, r24\.1\, and r24\.2\.
+
+<a id="bugfixes-1"></a>
 ### Bugfixes
 
 * Documentation generator \- Fixed <em class="title-reference">antsibull\-docs</em> configuration in GitHub Actions to support newer versions and correct path structure\.
@@ -35,12 +64,12 @@ Added compatibility for Ubuntu 24\.04 and fixed P4Python installation issues\.
 <a id="v1-0-6"></a>
 ## v1\.0\.6
 
-<a id="release-summary-1"></a>
+<a id="release-summary-2"></a>
 ### Release Summary
 
 Fix helix\_core\_client idempotency for 23\.1 or newer
 
-<a id="minor-changes-1"></a>
+<a id="minor-changes-2"></a>
 ### Minor Changes
 
 * helix\_core\_client \- Check for noaltsync option when creating clients on Helix Core 23\.1 or newer
@@ -48,12 +77,12 @@ Fix helix\_core\_client idempotency for 23\.1 or newer
 <a id="v1-0-5"></a>
 ## v1\.0\.5
 
-<a id="release-summary-2"></a>
+<a id="release-summary-3"></a>
 ### Release Summary
 
 Updated the collection metadata URLs and added docs
 
-<a id="minor-changes-2"></a>
+<a id="minor-changes-3"></a>
 ### Minor Changes
 
 * docs \- Generated HTML documentation for modules

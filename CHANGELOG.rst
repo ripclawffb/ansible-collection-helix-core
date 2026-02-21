@@ -4,6 +4,31 @@ Ripclawffb.Helix\_Core Release Notes
 
 .. contents:: Topics
 
+v1.1.0
+======
+
+Release Summary
+---------------
+
+Added new modules (typemap, triggers, protect, protect_info, ldap) and added diff mode support to all modules.
+
+Minor Changes
+-------------
+
+- diff mode - Added diff mode support to all modules (#124)
+- helix_core_ldap - Manage LDAP configurations (#114)
+- helix_core_protect - Manage Perforce Helix Core protections table (#109)
+- helix_core_protect_info - Get protection table info (#111)
+- helix_core_trigger - Manage Perforce Helix Core triggers table (#107)
+- helix_core_typemap - Manage Perforce Helix Core typemap table (#105)
+
+Bugfixes
+--------
+
+- Documentation - Fixed P4Python installation requirements in docs (#133)
+- README.md - Fixed documentation links (#100)
+- helix_core_protect_info - Fixed documentation issues (#112, #122)
+
 v1.0.7
 ======
 

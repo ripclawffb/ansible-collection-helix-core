@@ -200,6 +200,9 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection import (
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
+    build_after_spec, check_spec, update_spec
+)
 
 
 def run_module():
@@ -243,21 +246,34 @@ def run_module():
         if module.params['description'] is None:
             module.params['description'] = f"Created by {module.params['user']}."
 
+        # field mapping for comparison (excludes DistributedConfig, which is intentionally
+        # not compared — see ToDo comment in original code)
+        check_mapping = {
+            'Description': 'description',
+            'Options': 'options',
+            'Services': 'services',
+            'Type': 'type',
+            'Address': 'address',
+            'AllowedAddresses': 'allowedaddresses',
+            'ArchiveDataFilter': 'archivedatafilter',
+            'ClientDataFilter': 'clientdatafilter',
+            'ExternalAddress': 'externaladdress',
+            'Name': 'name',
+            'ReplicatingFrom': 'replicatingfrom',
+            'RevisionDataFilter': 'revisiondatafilter',
+            'User': 'serviceuser',
+            'UpdatedCachedRepos': 'updatedcachedrepos',
+        }
+
+        # full mapping for updates (includes DistributedConfig)
+        update_mapping = dict(check_mapping)
+        update_mapping['DistributedConfig'] = 'distributedconfig'
+
         # fields to track for diff
         diff_fields = ['Description', 'Options', 'Services', 'Type', 'Address',
                        'AllowedAddresses', 'ArchiveDataFilter', 'ClientDataFilter',
                        'DistributedConfig', 'ExternalAddress', 'Name',
                        'ReplicatingFrom', 'RevisionDataFilter', 'User', 'UpdatedCachedRepos']
-
-        # optional field mapping: spec_field -> module_param
-        optional_fields = [
-            ('Address', 'address'), ('AllowedAddresses', 'allowedaddresses'),
-            ('ArchiveDataFilter', 'archivedatafilter'), ('ClientDataFilter', 'clientdatafilter'),
-            ('DistributedConfig', 'distributedconfig'), ('ExternalAddress', 'externaladdress'),
-            ('Name', 'name'), ('ReplicatingFrom', 'replicatingfrom'),
-            ('RevisionDataFilter', 'revisiondatafilter'), ('User', 'serviceuser'),
-            ('UpdatedCachedRepos', 'updatedcachedrepos'),
-        ]
 
         if module.params['state'] == 'present':
             # get server definition
@@ -267,13 +283,7 @@ def run_module():
 
             # build after_spec once for diff (used in both update and create paths)
             if module._diff:
-                after_spec = {
-                    'Description': module.params['description'], 'Options': module.params['options'],
-                    'Services': module.params['services'], 'Type': module.params['type'],
-                }
-                for f, p in optional_fields:
-                    if module.params[p] is not None:
-                        after_spec[f] = module.params[p]
+                after_spec = build_after_spec(module.params, update_mapping)
 
             # look through the list of servers specs returned and see if any match the current server id
             # if a server spec is found with the current server id, let's look for any changes in attributes
@@ -284,136 +294,13 @@ def run_module():
                     before = spec_to_string(p4_server_spec, diff_fields)
 
                 # check to see if any fields have changed
-                p4_server_changes = []
-                p4_server_changes.append(p4_server_spec["Description"].rstrip() == module.params['description'])
-                p4_server_changes.append(p4_server_spec["Options"] == module.params['options'])
-                p4_server_changes.append(p4_server_spec["Services"] == module.params['services'])
-                p4_server_changes.append(p4_server_spec["Type"] == module.params['type'])
-
-                if module.params['address'] is not None:
-                    p4_server_changes.append(p4_server_spec["Address"] == module.params['address'])
-                elif 'Address' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['allowedaddresses'] is not None:
-                    p4_server_changes.append(p4_server_spec["AllowedAddresses"] == module.params['allowedaddresses'])
-                elif 'AllowedAddresses' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['archivedatafilter'] is not None:
-                    p4_server_changes.append(p4_server_spec["ArchiveDataFilter"] == module.params['archivedatafilter'])
-                elif 'ArchiveDataFilter' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['clientdatafilter'] is not None:
-                    p4_server_changes.append(p4_server_spec["ClientDataFilter"] == module.params['clientdatafilter'])
-                elif 'ClientDataFilter' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                # ToDo - figure out how to get current configurables for this server id and compare to this if not provided
-                # if module.params['distributedconfig'] is not None:
-                #    p4_server_changes.append(p4_server_spec["DistributedConfig"] == module.params['distributedconfig'])
-                # elif 'DistributedConfig' in p4_server_spec:
-                #     p4_server_changes.append(False)
-
-                if module.params['externaladdress'] is not None:
-                    p4_server_changes.append(p4_server_spec["ExternalAddress"] == module.params['externaladdress'])
-                elif 'ExternalAddress' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['name'] is not None:
-                    p4_server_changes.append(p4_server_spec["Name"] == module.params['name'])
-                elif 'Name' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['replicatingfrom'] is not None:
-                    p4_server_changes.append(p4_server_spec["ReplicatingFrom"] == module.params['replicatingfrom'])
-                elif 'ReplicatingFrom' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['revisiondatafilter'] is not None:
-                    p4_server_changes.append(p4_server_spec["RevisionDataFilter"] == module.params['revisiondatafilter'])
-                elif 'RevisionDataFilter' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['updatedcachedrepos'] is not None:
-                    p4_server_changes.append(p4_server_spec["UpdatedCachedRepos"] == module.params['updatedcachedrepos'])
-                elif 'UpdatedCachedRepos' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                if module.params['serviceuser'] is not None:
-                    p4_server_changes.append(p4_server_spec["User"] == module.params['serviceuser'])
-                elif 'User' in p4_server_spec:
-                    p4_server_changes.append(False)
-
-                # check to see if changes are detected in any of the fields
-                if (all(p4_server_changes)):
-
+                if not check_spec(p4_server_spec, module.params, check_mapping, rstrip_fields=['Description']):
                     result['changed'] = False
 
                 # if changes are detected, update server spec with new values
                 else:
                     if not module.check_mode:
-                        p4_server_spec["Description"] = module.params['description']
-                        p4_server_spec["Options"] = module.params['options']
-                        p4_server_spec["Services"] = module.params['services']
-                        p4_server_spec["Type"] = module.params['type']
-
-                        if module.params['address'] is not None:
-                            p4_server_spec["Address"] = module.params['address']
-                        elif 'Address' in p4_server_spec:
-                            del p4_server_spec["Address"]
-
-                        if module.params['allowedaddresses'] is not None:
-                            p4_server_spec["AllowedAddresses"] = module.params['allowedaddresses']
-                        elif 'AllowedAddresses' in p4_server_spec:
-                            del p4_server_spec["AllowedAddresses"]
-
-                        if module.params['archivedatafilter'] is not None:
-                            p4_server_spec["ArchiveDataFilter"] = module.params['archivedatafilter']
-                        elif 'ArchiveDataFilter' in p4_server_spec:
-                            del p4_server_spec["ArchiveDataFilter"]
-
-                        if module.params['clientdatafilter'] is not None:
-                            p4_server_spec["ClientDataFilter"] = module.params['clientdatafilter']
-                        elif 'ClientDataFilter' in p4_server_spec:
-                            del p4_server_spec["ClientDataFilter"]
-
-                        if module.params['distributedconfig'] is not None:
-                            p4_server_spec["DistributedConfig"] = module.params['distributedconfig']
-                        elif 'DistributedConfig' in p4_server_spec:
-                            del p4_server_spec["DistributedConfig"]
-
-                        if module.params['externaladdress'] is not None:
-                            p4_server_spec["ExternalAddress"] = module.params['externaladdress']
-                        elif 'ExternalAddress' in p4_server_spec:
-                            del p4_server_spec["ExternalAddress"]
-
-                        if module.params['name'] is not None:
-                            p4_server_spec["Name"] = module.params['name']
-                        elif 'Name' in p4_server_spec:
-                            del p4_server_spec["Name"]
-
-                        if module.params['replicatingfrom'] is not None:
-                            p4_server_spec["ReplicatingFrom"] = module.params['replicatingfrom']
-                        elif 'ReplicatingFrom' in p4_server_spec:
-                            del p4_server_spec["ReplicatingFrom"]
-
-                        if module.params['revisiondatafilter'] is not None:
-                            p4_server_spec["RevisionDataFilter"] = module.params['revisiondatafilter']
-                        elif 'RevisionDataFilter' in p4_server_spec:
-                            del p4_server_spec["RevisionDataFilter"]
-
-                        if module.params['serviceuser'] is not None:
-                            p4_server_spec["User"] = module.params['serviceuser']
-                        elif 'User' in p4_server_spec:
-                            del p4_server_spec["User"]
-
-                        if module.params['updatedcachedrepos'] is not None:
-                            p4_server_spec["UpdatedCachedRepos"] = module.params['updatedcachedrepos']
-                        elif 'UpdatedCachedRepos' in p4_server_spec:
-                            del p4_server_spec["UpdatedCachedRepos"]
-
+                        update_spec(p4_server_spec, module.params, update_mapping)
                         p4.save_server(p4_server_spec)
 
                     result['changed'] = True
@@ -425,44 +312,7 @@ def run_module():
             else:
                 if not module.check_mode:
                     p4_server_spec["ServerID"] = module.params['serverid']
-                    p4_server_spec["Description"] = module.params['description']
-                    p4_server_spec["Options"] = module.params['options']
-                    p4_server_spec["Services"] = module.params['services']
-                    p4_server_spec["Type"] = module.params['type']
-
-                    if module.params['address'] is not None:
-                        p4_server_spec["Address"] = module.params['address']
-
-                    if module.params['allowedaddresses'] is not None:
-                        p4_server_spec["AllowedAddresses"] = module.params['allowedaddresses']
-
-                    if module.params['archivedatafilter'] is not None:
-                        p4_server_spec["ArchiveDataFilter"] = module.params['archivedatafilter']
-
-                    if module.params['clientdatafilter'] is not None:
-                        p4_server_spec["ClientDataFilter"] = module.params['clientdatafilter']
-
-                    if module.params['distributedconfig'] is not None:
-                        p4_server_spec["DistributedConfig"] = module.params['distributedconfig']
-
-                    if module.params['externaladdress'] is not None:
-                        p4_server_spec["ExternalAddress"] = module.params['externaladdress']
-
-                    if module.params['name'] is not None:
-                        p4_server_spec["Name"] = module.params['name']
-
-                    if module.params['replicatingfrom'] is not None:
-                        p4_server_spec["ReplicatingFrom"] = module.params['replicatingfrom']
-
-                    if module.params['revisiondatafilter'] is not None:
-                        p4_server_spec["RevisionDataFilter"] = module.params['revisiondatafilter']
-
-                    if module.params['serviceuser'] is not None:
-                        p4_server_spec["User"] = module.params['serviceuser']
-
-                    if module.params['updatedcachedrepos'] is not None:
-                        p4_server_spec["UpdatedCachedRepos"] = module.params['updatedcachedrepos']
-
+                    update_spec(p4_server_spec, module.params, update_mapping)
                     p4.save_server(p4_server_spec)
 
                 result['changed'] = True

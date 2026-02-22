@@ -160,6 +160,9 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection import (
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
+    build_after_spec, check_spec, update_spec
+)
 
 
 def run_module():
@@ -204,21 +207,25 @@ def run_module():
         if module.params['owner'] is None:
             module.params['owner'] = module.params['user']
 
+        # field mapping: spec key -> module param key
+        mapping = {
+            'Description': 'description',
+            'Owner': 'owner',
+            'Parent': 'parent',
+            'Type': 'type',
+            'Options': 'options',
+            'Paths': 'paths',
+            'Remapped': 'remapped',
+            'Ignored': 'ignored',
+        }
+
         # fields to track for diff
-        diff_fields = ['Description', 'Owner', 'Parent', 'Type', 'Options', 'Paths', 'Remapped', 'Ignored']
+        diff_fields = list(mapping.keys())
 
         if module.params['state'] == 'present':
             # build after_spec once for diff (used in both update and create paths)
             if module._diff:
-                after_spec = {
-                    'Description': module.params['description'], 'Owner': module.params['owner'],
-                    'Parent': module.params['parent'], 'Type': module.params['type'],
-                    'Options': module.params['options'], 'Paths': module.params['paths'],
-                }
-                if module.params['remapped'] is not None:
-                    after_spec['Remapped'] = module.params['remapped']
-                if module.params['ignored'] is not None:
-                    after_spec['Ignored'] = module.params['ignored']
+                after_spec = build_after_spec(module.params, mapping)
 
             # check to see if any fields have changed
             if 'Access' in p4_stream_spec:
@@ -227,55 +234,14 @@ def run_module():
                 if module._diff:
                     before = spec_to_string(p4_stream_spec, diff_fields)
 
-                p4_stream_changes = []
-                p4_stream_changes.append(p4_stream_spec["Description"].rstrip() == module.params['description'])
-                p4_stream_changes.append(p4_stream_spec["Owner"] == module.params['owner'])
-                p4_stream_changes.append(p4_stream_spec["Parent"] == module.params['parent'])
-                p4_stream_changes.append(p4_stream_spec["Type"] == module.params['type'])
-                p4_stream_changes.append(p4_stream_spec["Options"] == module.params['options'])
-                p4_stream_changes.append(p4_stream_spec["Paths"] == module.params['paths'])
-
-                if module.params['remapped'] is not None:
-                    if 'Remapped' in p4_stream_spec:
-                        p4_stream_changes.append(p4_stream_spec["Remapped"] == module.params['remapped'])
-                    else:
-                        p4_stream_changes.append(False)  # Remapped is being added
-                elif 'Remapped' in p4_stream_spec:
-                    p4_stream_changes.append(False)
-
-                if module.params['ignored'] is not None:
-                    if 'Ignored' in p4_stream_spec:
-                        p4_stream_changes.append(p4_stream_spec["Ignored"] == module.params['ignored'])
-                    else:
-                        p4_stream_changes.append(False)  # Ignored is being added
-                elif 'Ignored' in p4_stream_spec:
-                    p4_stream_changes.append(False)
-
                 # check to see if changes are detected in any of the fields
-                if (all(p4_stream_changes)):
-
+                if not check_spec(p4_stream_spec, module.params, mapping, rstrip_fields=['Description']):
                     result['changed'] = False
 
                 # if changes are detected, update stream with new values
                 else:
                     if not module.check_mode:
-                        p4_stream_spec["Description"] = module.params['description']
-                        p4_stream_spec["Owner"] = module.params['owner']
-                        p4_stream_spec["Parent"] = module.params['parent']
-                        p4_stream_spec["Type"] = module.params['type']
-                        p4_stream_spec["Options"] = module.params['options']
-                        p4_stream_spec["Paths"] = module.params['paths']
-
-                        if module.params['remapped'] is not None:
-                            p4_stream_spec["Remapped"] = module.params['remapped']
-                        elif 'Remapped' in p4_stream_spec:
-                            del p4_stream_spec["Remapped"]
-
-                        if module.params['ignored'] is not None:
-                            p4_stream_spec["Ignored"] = module.params['ignored']
-                        elif 'Ignored' in p4_stream_spec:
-                            del p4_stream_spec["Ignored"]
-
+                        update_spec(p4_stream_spec, module.params, mapping)
                         p4.save_stream(p4_stream_spec)
 
                     result['changed'] = True
@@ -286,19 +252,7 @@ def run_module():
             # create new stream with specified values
             else:
                 if not module.check_mode:
-                    p4_stream_spec["Description"] = module.params['description']
-                    p4_stream_spec["Owner"] = module.params['owner']
-                    p4_stream_spec["Parent"] = module.params['parent']
-                    p4_stream_spec["Type"] = module.params['type']
-                    p4_stream_spec["Options"] = module.params['options']
-                    p4_stream_spec["Paths"] = module.params['paths']
-
-                    if module.params['remapped'] is not None:
-                        p4_stream_spec["Remapped"] = module.params['remapped']
-
-                    if module.params['ignored'] is not None:
-                        p4_stream_spec["Ignored"] = module.params['ignored']
-
+                    update_spec(p4_stream_spec, module.params, mapping)
                     p4.save_stream(p4_stream_spec)
 
                 result['changed'] = True

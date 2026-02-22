@@ -258,6 +258,86 @@
     that:
       - delete_server_check_mode_confirm is changed
 
+# Optional field lifecycle tests (add/remove ExternalAddress)
+- name: Create server with optional externaladdress
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: optional_test_server
+    description: 'Optional field test.'
+    services: standard
+    externaladdress: 'ssl:1666'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_server_optional
+
+- name: Verify create_server_optional is changed
+  ansible.builtin.assert:
+    that:
+      - create_server_optional is changed
+
+- name: Create server with optional externaladdress (idempotent)
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: optional_test_server
+    description: 'Optional field test.'
+    services: standard
+    externaladdress: 'ssl:1666'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_server_optional_idempotent
+
+- name: Verify create_server_optional_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_server_optional_idempotent is not changed
+
+- name: Remove optional externaladdress (omit param)
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: optional_test_server
+    description: 'Optional field test.'
+    services: standard
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_server_optional
+
+- name: Verify remove_server_optional is changed
+  ansible.builtin.assert:
+    that:
+      - remove_server_optional is changed
+
+- name: Remove optional externaladdress (idempotent)
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: optional_test_server
+    description: 'Optional field test.'
+    services: standard
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_server_optional_idempotent
+
+- name: Verify remove_server_optional_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - remove_server_optional_idempotent is not changed
+
+- name: Delete optional test server
+  ripclawffb.helix_core.helix_core_server:
+    state: absent
+    serverid: optional_test_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
 # Diff mode tests
 - name: Create server with diff mode
   ripclawffb.helix_core.helix_core_server:

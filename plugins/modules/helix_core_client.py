@@ -154,6 +154,9 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection import (
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
+    build_after_spec, check_spec, update_spec
+)
 from os import getcwd
 from socket import gethostname
 
@@ -202,22 +205,25 @@ def run_module():
         if module.params['root'] is None:
             module.params['root'] = getcwd()
 
+        # field mapping: spec key -> module param key
+        mapping = {
+            'Description': 'description',
+            'Host': 'host',
+            'Root': 'root',
+            'View': 'view',
+            'LineEnd': 'lineend',
+            'Options': 'options',
+            'SubmitOptions': 'submitoptions',
+            'AltRoots': 'altroots',
+        }
+
         # fields to track for diff
-        diff_fields = ['Description', 'Host', 'Root', 'View', 'LineEnd', 'Options', 'SubmitOptions', 'AltRoots']
+        diff_fields = list(mapping.keys())
 
         if module.params['state'] == 'present':
-            # check to see if any fields have changed
-
             # build after_spec once for diff (used in both update and create paths)
             if module._diff:
-                after_spec = {
-                    'Description': module.params['description'], 'Host': module.params['host'],
-                    'Root': module.params['root'], 'View': module.params['view'],
-                    'LineEnd': module.params['lineend'], 'Options': module.params['options'],
-                    'SubmitOptions': module.params['submitoptions'],
-                }
-                if module.params['altroots'] is not None:
-                    after_spec['AltRoots'] = module.params['altroots']
+                after_spec = build_after_spec(module.params, mapping)
 
             if 'Access' in p4_client_spec:
 
@@ -230,41 +236,14 @@ def run_module():
                 if 'noaltsync' in p4_client_spec["Options"]:
                     module.params['options'] = f'{module.params["options"]} noaltsync'
 
-                p4_client_changes = []
-                p4_client_changes.append(p4_client_spec["Description"].rstrip() == module.params['description'])
-                p4_client_changes.append(p4_client_spec["Host"] == module.params['host'])
-                p4_client_changes.append(p4_client_spec["Root"] == module.params['root'])
-                p4_client_changes.append(p4_client_spec["View"] == module.params['view'])
-                p4_client_changes.append(p4_client_spec["LineEnd"] == module.params['lineend'])
-                p4_client_changes.append(p4_client_spec["Options"] == module.params['options'])
-                p4_client_changes.append(p4_client_spec["SubmitOptions"] == module.params['submitoptions'])
-
-                if module.params['altroots'] is not None:
-                    p4_client_changes.append(p4_client_spec["AltRoots"] == module.params['altroots'])
-                elif 'AltRoots' in p4_client_spec:
-                    p4_client_changes.append(False)
-
                 # check to see if changes are detected in any of the fields
-                if (all(p4_client_changes)):
-
+                if not check_spec(p4_client_spec, module.params, mapping, rstrip_fields=['Description']):
                     result['changed'] = False
 
                 # if changes are detected, update client with new values
                 else:
                     if not module.check_mode:
-                        p4_client_spec["Root"] = module.params['root']
-                        p4_client_spec["Host"] = module.params['host']
-                        p4_client_spec["Description"] = module.params['description']
-                        p4_client_spec["View"] = module.params['view']
-                        p4_client_spec["LineEnd"] = module.params['lineend']
-                        p4_client_spec["Options"] = module.params['options']
-                        p4_client_spec["SubmitOptions"] = module.params['submitoptions']
-
-                        if module.params['altroots'] is not None:
-                            p4_client_spec["AltRoots"] = module.params['altroots']
-                        elif 'AltRoots' in p4_client_spec:
-                            del p4_client_spec["AltRoots"]
-
+                        update_spec(p4_client_spec, module.params, mapping)
                         p4.save_client(p4_client_spec)
 
                     result['changed'] = True
@@ -275,17 +254,7 @@ def run_module():
             # create new client with specified values
             else:
                 if not module.check_mode:
-                    p4_client_spec["Root"] = module.params['root']
-                    p4_client_spec["Host"] = module.params['host']
-                    p4_client_spec["Description"] = module.params['description']
-                    p4_client_spec["View"] = module.params['view']
-                    p4_client_spec["LineEnd"] = module.params['lineend']
-                    p4_client_spec["Options"] = module.params['options']
-                    p4_client_spec["SubmitOptions"] = module.params['submitoptions']
-
-                    if module.params['altroots'] is not None:
-                        p4_client_spec["AltRoots"] = module.params['altroots']
-
+                    update_spec(p4_client_spec, module.params, mapping)
                     p4.save_client(p4_client_spec)
 
                 result['changed'] = True

@@ -169,6 +169,67 @@
     that:
       - delete_user_check_mode_confirm is changed
 
+- name: Create user for update test
+  ripclawffb.helix_core.helix_core_user:
+    state: present
+    name: update_test_user
+    email: update_test@perforce.com
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_update_user
+
+- name: Verify create_update_user is changed
+  ansible.builtin.assert:
+    that:
+      - create_update_user is changed
+
+- name: Update user email
+  ripclawffb.helix_core.helix_core_user:
+    state: present
+    name: update_test_user
+    email: updated@perforce.com
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_user_email
+
+- name: Output update_user_email
+  ansible.builtin.debug:
+    var: update_user_email
+
+- name: Verify update_user_email is changed
+  ansible.builtin.assert:
+    that:
+      - update_user_email is changed
+
+- name: Update user email (idempotent)
+  ripclawffb.helix_core.helix_core_user:
+    state: present
+    name: update_test_user
+    email: updated@perforce.com
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_user_email_idempotent
+
+- name: Verify update_user_email_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_user_email_idempotent is not changed
+
+- name: Delete update test user
+  ripclawffb.helix_core.helix_core_user:
+    state: absent
+    name: update_test_user
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
 # Diff mode tests
 - name: Create user with diff mode
   ripclawffb.helix_core.helix_core_user:

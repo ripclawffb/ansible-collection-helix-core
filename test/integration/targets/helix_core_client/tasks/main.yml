@@ -351,6 +351,107 @@
     that:
       - delete_client_submitoptions is changed
 
+# AltRoots optional field tests
+- name: Create client with altroots
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: altroots_test_client
+    description: 'AltRoots test client'
+    host: workstation01
+    root: /tmp/altroots_test_client
+    view:
+      - //depot/... //altroots_test_client/depot/...
+    altroots:
+      - /tmp/altroot1
+      - /tmp/altroot2
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_altroots
+
+- name: Output create_client_altroots
+  ansible.builtin.debug:
+    var: create_client_altroots
+
+- name: Verify create_client_altroots is changed
+  ansible.builtin.assert:
+    that:
+      - create_client_altroots is changed
+
+- name: Create client with altroots (idempotent)
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: altroots_test_client
+    description: 'AltRoots test client'
+    host: workstation01
+    root: /tmp/altroots_test_client
+    view:
+      - //depot/... //altroots_test_client/depot/...
+    altroots:
+      - /tmp/altroot1
+      - /tmp/altroot2
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_client_altroots_idempotent
+
+- name: Verify create_client_altroots_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_client_altroots_idempotent is not changed
+
+- name: Remove altroots from client (omit param to trigger delete)
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: altroots_test_client
+    description: 'AltRoots test client'
+    host: workstation01
+    root: /tmp/altroots_test_client
+    view:
+      - //depot/... //altroots_test_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_client_altroots
+
+- name: Verify remove_client_altroots is changed
+  ansible.builtin.assert:
+    that:
+      - remove_client_altroots is changed
+
+- name: Remove altroots from client (idempotent)
+  ripclawffb.helix_core.helix_core_client:
+    state: present
+    name: altroots_test_client
+    description: 'AltRoots test client'
+    host: workstation01
+    root: /tmp/altroots_test_client
+    view:
+      - //depot/... //altroots_test_client/depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: remove_client_altroots_idempotent
+
+- name: Verify remove_client_altroots_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - remove_client_altroots_idempotent is not changed
+
+- name: Delete altroots test client
+  ripclawffb.helix_core.helix_core_client:
+    state: absent
+    name: altroots_test_client
+    view: []
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
 # Diff mode tests
 - name: Create client with diff mode
   ripclawffb.helix_core.helix_core_client:

@@ -143,6 +143,9 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection import (
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
+    build_after_spec, check_spec, update_spec
+)
 
 
 def run_module():
@@ -180,8 +183,19 @@ def run_module():
         if module.params['map'] is None:
             module.params['map'] = f"{module.params['name']}/..."
 
+        # field mapping: spec key -> module param key
+        mapping = {
+            'Description': 'description',
+            'Type': 'type',
+            'Map': 'map',
+            'Address': 'address',
+            'SpecMap': 'specmap',
+            'StreamDepth': 'streamdepth',
+            'Suffix': 'suffix',
+        }
+
         # fields to track for diff
-        diff_fields = ['Description', 'Type', 'Map', 'Address', 'SpecMap', 'StreamDepth', 'Suffix']
+        diff_fields = list(mapping.keys())
 
         if module.params['state'] == 'present':
             # get existing depot definition
@@ -191,10 +205,7 @@ def run_module():
 
             # build after_spec once for diff (used in both update and create paths)
             if module._diff:
-                after_spec = {'Description': module.params['description'], 'Type': module.params['type'], 'Map': module.params['map']}
-                for f, p in [('Address', 'address'), ('SpecMap', 'specmap'), ('StreamDepth', 'streamdepth'), ('Suffix', 'suffix')]:
-                    if module.params[p] is not None:
-                        after_spec[f] = module.params[p]
+                after_spec = build_after_spec(module.params, mapping)
 
             # look through the list of depot specs returned and see if any match the current depot
             # if a depot spec is found with the current depot name, let's look for any changes in attributes
@@ -205,65 +216,13 @@ def run_module():
                     before = spec_to_string(p4_depot_spec, diff_fields)
 
                 # check to see if any fields have changed
-                p4_depot_changes = []
-                p4_depot_changes.append(p4_depot_spec["Description"].rstrip() == module.params['description'])
-                p4_depot_changes.append(p4_depot_spec["Type"] == module.params['type'])
-                p4_depot_changes.append(p4_depot_spec["Map"] == module.params['map'])
-
-                if module.params['address'] is not None:
-                    p4_depot_changes.append(p4_depot_spec["Address"] == module.params['address'])
-                elif 'Address' in p4_depot_spec:
-                    p4_depot_changes.append(False)
-
-                if module.params['specmap'] is not None:
-                    p4_depot_changes.append(p4_depot_spec["SpecMap"] == module.params['specmap'])
-                elif 'SpecMap' in p4_depot_spec:
-                    p4_depot_changes.append(False)
-
-                if module.params['streamdepth'] is not None:
-                    p4_depot_changes.append(p4_depot_spec["StreamDepth"] == module.params['streamdepth'])
-                elif 'StreamDepth' in p4_depot_spec:
-                    p4_depot_changes.append(False)
-
-                if module.params['suffix'] is not None:
-                    if 'Suffix' in p4_depot_spec:
-                        p4_depot_changes.append(p4_depot_spec["Suffix"] == module.params['suffix'])
-                    else:
-                        p4_depot_changes.append(False)  # Suffix is being added
-                elif 'Suffix' in p4_depot_spec:
-                    p4_depot_changes.append(False)
-
-                # check to see if changes are detected in any of the fields
-                if (all(p4_depot_changes)):
+                if not check_spec(p4_depot_spec, module.params, mapping, rstrip_fields=['Description']):
                     result['changed'] = False
 
                 # if changes are detected, update depot with new values
                 else:
                     if not module.check_mode:
-                        p4_depot_spec["Description"] = module.params['description']
-                        p4_depot_spec["Type"] = module.params['type']
-                        p4_depot_spec["Map"] = module.params['map']
-
-                        if module.params['address'] is not None:
-                            p4_depot_spec["Address"] = module.params['address']
-                        elif 'Address' in p4_depot_spec:
-                            del p4_depot_spec["Address"]
-
-                        if module.params['specmap'] is not None:
-                            p4_depot_spec["SpecMap"] = module.params['specmap']
-                        elif 'SpecMap' in p4_depot_spec:
-                            del p4_depot_spec["SpecMap"]
-
-                        if module.params['streamdepth'] is not None:
-                            p4_depot_spec["StreamDepth"] = module.params['streamdepth']
-                        elif 'StreamDepth' in p4_depot_spec:
-                            del p4_depot_spec["StreamDepth"]
-
-                        if module.params['suffix'] is not None:
-                            p4_depot_spec["Suffix"] = module.params['suffix']
-                        elif 'Suffix' in p4_depot_spec:
-                            del p4_depot_spec["Suffix"]
-
+                        update_spec(p4_depot_spec, module.params, mapping)
                         p4.save_depot(p4_depot_spec)
 
                     result['changed'] = True
@@ -274,22 +233,7 @@ def run_module():
             # create new depot with specified values
             else:
                 if not module.check_mode:
-                    p4_depot_spec["Description"] = module.params['description']
-                    p4_depot_spec["Type"] = module.params['type']
-                    p4_depot_spec["Map"] = module.params['map']
-
-                    if module.params['address'] is not None:
-                        p4_depot_spec["Address"] = module.params['address']
-
-                    if module.params['specmap'] is not None:
-                        p4_depot_spec["SpecMap"] = module.params['specmap']
-
-                    if module.params['streamdepth'] is not None:
-                        p4_depot_spec["StreamDepth"] = module.params['streamdepth']
-
-                    if module.params['suffix'] is not None:
-                        p4_depot_spec["Suffix"] = module.params['suffix']
-
+                    update_spec(p4_depot_spec, module.params, mapping)
                     p4.save_depot(p4_depot_spec)
 
                 result['changed'] = True

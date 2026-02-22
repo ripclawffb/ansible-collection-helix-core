@@ -6,6 +6,27 @@
     - ripclawffb.helix_core
 
   tasks:
+    - name: Install pytest
+      ansible.builtin.pip:
+        name: pytest
+      delegate_to: localhost
+      run_once: true
+
+    - name: Run unit tests
+      ansible.builtin.command:
+        cmd: python3 -m pytest test/unit/ -v
+        chdir: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATHS').split(':')[0] }}/ansible_collections/ripclawffb/helix_core"
+      register: pytest_result
+      changed_when: false
+      delegate_to: localhost
+      run_once: true
+
+    - name: Output pytest results
+      ansible.builtin.debug:
+        var: pytest_result.stdout_lines
+      run_once: true
+
+
     - name: Add perforce yum repo
       ansible.builtin.yum_repository:
         name: Perforce

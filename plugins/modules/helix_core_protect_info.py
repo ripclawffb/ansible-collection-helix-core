@@ -96,7 +96,7 @@ protections:
 
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.ripclawffb.helix_core.plugins.module_utils.helix_core_connection import (
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection import (
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec
 )
 

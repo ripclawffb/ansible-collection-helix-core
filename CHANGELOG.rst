@@ -4,6 +4,25 @@ Ripclawffb.Helix\_Core Release Notes
 
 .. contents:: Topics
 
+v1.1.1
+======
+
+Release Summary
+---------------
+
+Added position parameter to the protect module and fixed ordering issues.
+
+Minor Changes
+-------------
+
+- helix_core_protect - Add ``position`` parameter to control where new entries are inserted in the protections table (beginning, end, or specific index) when using ``mode=entry``.
+
+Bugfixes
+--------
+
+- helix_core_protect - Fixed duplicate playbook entries being inserted multiple times into the protections table.
+- helix_core_protect - Fixed protections table ordering. The module now preserves entry order instead of using unordered sets, which previously caused unpredictable entry placement.
+
 v1.1.0
 ======
 

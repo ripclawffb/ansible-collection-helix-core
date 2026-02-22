@@ -139,6 +139,363 @@
     that:
       - add_multiple_idempotent is not changed
 
+# ===== Position parameter tests =====
+# Set up a known 5-entry base table for position testing
+# Expected table after this:
+#   [0] super  user  bruno         *  //...
+#   [1] write  group developers    *  //depot/dev/...
+#   [2] read   group qa_team       *  //depot/qa/...
+#   [3] list   group interns       *  //depot/docs/...
+#   [4] read   group contractors   *  //depot/shared/...
+- name: Set up base table for position tests
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    mode: replace
+    protections:
+      - access: super
+        type: user
+        name: bruno
+        host: "*"
+        path: //...
+      - access: write
+        type: group
+        name: developers
+        host: "*"
+        path: //depot/dev/...
+      - access: read
+        type: group
+        name: qa_team
+        host: "*"
+        path: //depot/qa/...
+      - access: list
+        type: group
+        name: interns
+        host: "*"
+        path: //depot/docs/...
+      - access: read
+        type: group
+        name: contractors
+        host: "*"
+        path: //depot/shared/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: setup_base_table
+
+- name: Get base table
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: base_table_info
+
+- name: Verify base table has 5 entries
+  ansible.builtin.assert:
+    that:
+      - "(base_table_info.protections | length) == 5"
+      - "base_table_info.protections[0].name == 'bruno'"
+      - "base_table_info.protections[1].name == 'developers'"
+      - "base_table_info.protections[2].name == 'qa_team'"
+      - "base_table_info.protections[3].name == 'interns'"
+      - "base_table_info.protections[4].name == 'contractors'"
+
+# Test position=beginning: insert at index 0
+# Expected: [security_team, bruno, developers, qa_team, interns, contractors]
+- name: Add entry at beginning of 5-entry table
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: beginning
+    protections:
+      - access: admin
+        type: group
+        name: security_team
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_beginning
+
+- name: Get protections after beginning insert
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: info_after_beginning
+
+- name: Verify beginning insert placed entry at index 0
+  ansible.builtin.assert:
+    that:
+      - pos_beginning is changed
+      - "(info_after_beginning.protections | length) == 6"
+      - "info_after_beginning.protections[0].name == 'security_team'"
+      - "info_after_beginning.protections[1].name == 'bruno'"
+      - "info_after_beginning.protections[5].name == 'contractors'"
+
+- name: Add entry at beginning (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: beginning
+    protections:
+      - access: admin
+        type: group
+        name: security_team
+        host: "*"
+        path: //...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_beginning_idempotent
+
+- name: Verify beginning insert is idempotent
+  ansible.builtin.assert:
+    that:
+      - pos_beginning_idempotent is not changed
+
+# Test position=end: append after last entry
+# Expected: [..., contractors, monitoring]
+- name: Add entry at end of table (explicit)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: end
+    protections:
+      - access: read
+        type: user
+        name: monitoring
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_end
+
+- name: Get protections after end insert
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: info_after_end
+
+- name: Verify end insert placed entry at last index
+  ansible.builtin.assert:
+    that:
+      - pos_end is changed
+      - "(info_after_end.protections | length) == 7"
+      - "info_after_end.protections[6].name == 'monitoring'"
+      - "info_after_end.protections[5].name == 'contractors'"
+
+- name: Add entry at end (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: end
+    protections:
+      - access: read
+        type: user
+        name: monitoring
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_end_idempotent
+
+- name: Verify end insert is idempotent
+  ansible.builtin.assert:
+    that:
+      - pos_end_idempotent is not changed
+
+# Test position=3: insert in the middle of the table
+# Current table: [security_team, bruno, developers, qa_team, interns, contractors, monitoring]
+# After insert at 3: [security_team, bruno, developers, release_mgr, qa_team, interns, contractors, monitoring]
+- name: Add entry at index 3 (middle of table)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: '3'
+    protections:
+      - access: write
+        type: user
+        name: release_mgr
+        host: "*"
+        path: //depot/release/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_middle
+
+- name: Get protections after middle insert
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: info_after_middle
+
+- name: Verify middle insert placed entry at index 3
+  ansible.builtin.assert:
+    that:
+      - pos_middle is changed
+      - "(info_after_middle.protections | length) == 8"
+      - "info_after_middle.protections[2].name == 'developers'"
+      - "info_after_middle.protections[3].name == 'release_mgr'"
+      - "info_after_middle.protections[4].name == 'qa_team'"
+
+- name: Add entry at index 3 (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: '3'
+    protections:
+      - access: write
+        type: user
+        name: release_mgr
+        host: "*"
+        path: //depot/release/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_middle_idempotent
+
+- name: Verify middle insert is idempotent
+  ansible.builtin.assert:
+    that:
+      - pos_middle_idempotent is not changed
+
+# Test inserting multiple entries at a specific position
+# Current table (8 entries): [security_team, bruno, developers, release_mgr, qa_team, interns, contractors, monitoring]
+# Insert 2 entries at index 1: [security_team, build_bot, deploy_svc, bruno, developers, ...]
+- name: Add multiple entries at index 1
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: '1'
+    protections:
+      - access: write
+        type: user
+        name: build_bot
+        host: "*"
+        path: //depot/build/...
+      - access: read
+        type: user
+        name: deploy_svc
+        host: "*"
+        path: //depot/deploy/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_multi
+
+- name: Get protections after multi insert
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: info_after_multi
+
+- name: Verify multiple entries inserted at index 1 in order
+  ansible.builtin.assert:
+    that:
+      - pos_multi is changed
+      - "(info_after_multi.protections | length) == 10"
+      - "info_after_multi.protections[0].name == 'security_team'"
+      - "info_after_multi.protections[1].name == 'build_bot'"
+      - "info_after_multi.protections[2].name == 'deploy_svc'"
+      - "info_after_multi.protections[3].name == 'bruno'"
+
+- name: Add multiple entries at index 1 (idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: '1'
+    protections:
+      - access: write
+        type: user
+        name: build_bot
+        host: "*"
+        path: //depot/build/...
+      - access: read
+        type: user
+        name: deploy_svc
+        host: "*"
+        path: //depot/deploy/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_multi_idempotent
+
+- name: Verify multi insert is idempotent
+  ansible.builtin.assert:
+    that:
+      - pos_multi_idempotent is not changed
+
+# Test position with index beyond table length (should append at end)
+- name: Add entry at index 999 (beyond table length)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    position: '999'
+    protections:
+      - access: list
+        type: user
+        name: overflow_test
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: pos_overflow
+
+- name: Get protections after overflow insert
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: info_after_overflow
+
+- name: Verify overflow index appends at end
+  ansible.builtin.assert:
+    that:
+      - pos_overflow is changed
+      - "info_after_overflow.protections[-1].name == 'overflow_test'"
+
+# ===== End position parameter tests =====
+
+# Re-add entries needed by downstream remove/check-mode tests
+# (position tests used mode=replace which wiped the table)
+- name: Re-add entries for remove tests
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: read
+        type: group
+        name: test_readers
+        host: "*"
+        path: //depot/...
+      - access: write
+        type: group
+        name: test_writers
+        host: "*"
+        path: //depot/...
+      - access: admin
+        type: user
+        name: test_admin
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
 # Test removing individual entries
 - name: Remove protection entry
   ripclawffb.helix_core.helix_core_protect:
@@ -320,6 +677,135 @@
     that:
       - check_mode_confirm is changed
 
+# Test duplicate entries in playbook are only inserted once
+- name: Add duplicate entries (should only insert one)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    protections:
+      - access: read
+        type: user
+        name: test_dup
+        host: "*"
+        path: //depot/...
+      - access: read
+        type: user
+        name: test_dup
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: add_dup
+
+- name: Get protections after add dup
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_after_add_dup
+
+- name: Verify duplicate entry was only added once
+  ansible.builtin.assert:
+    that:
+      - "add_dup is changed"
+      - "(protect_info_after_add_dup.protections | selectattr('name', 'equalto', 'test_dup') | list | length) == 1"
+
+# Test replace mode enforces order
+- name: Set table with replace mode (A then B)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    mode: replace
+    protections:
+      - access: super
+        type: user
+        name: bruno
+        host: "*"
+        path: //...
+      - access: write
+        type: user
+        name: order_test_a
+        host: "*"
+        path: //depot/...
+      - access: read
+        type: user
+        name: order_test_b
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: replace_order_ab
+
+- name: Verify replace_order_ab is changed
+  ansible.builtin.assert:
+    that:
+      - replace_order_ab is changed
+
+- name: Replace table with swapped order (B then A)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    mode: replace
+    protections:
+      - access: super
+        type: user
+        name: bruno
+        host: "*"
+        path: //...
+      - access: read
+        type: user
+        name: order_test_b
+        host: "*"
+        path: //depot/...
+      - access: write
+        type: user
+        name: order_test_a
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: replace_order_ba
+
+- name: Verify replace detects reorder as changed
+  ansible.builtin.assert:
+    that:
+      - replace_order_ba is changed
+
+- name: Replace table with same order (B then A, idempotent)
+  ripclawffb.helix_core.helix_core_protect:
+    state: present
+    mode: replace
+    protections:
+      - access: super
+        type: user
+        name: bruno
+        host: "*"
+        path: //...
+      - access: read
+        type: user
+        name: order_test_b
+        host: "*"
+        path: //depot/...
+      - access: write
+        type: user
+        name: order_test_a
+        host: "*"
+        path: //depot/...
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: replace_order_ba_idempotent
+
+- name: Verify replace with same order is idempotent
+  ansible.builtin.assert:
+    that:
+      - replace_order_ba_idempotent is not changed
+
 # Test security block - should fail
 - name: Attempt to clear protection table (should fail)
   ripclawffb.helix_core.helix_core_protect:
@@ -362,6 +848,71 @@
         name: check_mode_user
         host: "*"
         path: //...
+      - access: admin
+        type: group
+        name: security_team
+        host: "*"
+        path: //...
+      - access: read
+        type: user
+        name: monitoring
+        host: "*"
+        path: //depot/...
+      - access: write
+        type: user
+        name: release_mgr
+        host: "*"
+        path: //depot/release/...
+      - access: write
+        type: user
+        name: build_bot
+        host: "*"
+        path: //depot/build/...
+      - access: read
+        type: user
+        name: deploy_svc
+        host: "*"
+        path: //depot/deploy/...
+      - access: list
+        type: user
+        name: overflow_test
+        host: "*"
+        path: //depot/...
+      - access: write
+        type: group
+        name: developers
+        host: "*"
+        path: //depot/dev/...
+      - access: read
+        type: group
+        name: qa_team
+        host: "*"
+        path: //depot/qa/...
+      - access: list
+        type: group
+        name: interns
+        host: "*"
+        path: //depot/docs/...
+      - access: read
+        type: group
+        name: contractors
+        host: "*"
+        path: //depot/shared/...
+      - access: read
+        type: user
+        name: test_dup
+        host: "*"
+        path: //depot/...
+      - access: write
+        type: user
+        name: order_test_a
+        host: "*"
+        path: //depot/...
+      - access: read
+        type: user
+        name: order_test_b
+        host: "*"
+        path: //depot/...
     server: '1666'
     user: bruno
     charset: auto

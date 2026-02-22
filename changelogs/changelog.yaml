@@ -37,3 +37,12 @@ releases:
         - README.md - Fixed documentation links (#100)
         - 'helix_core_protect_info - Fixed documentation issues (#112, #122)'
         - Documentation - Fixed P4Python installation requirements in docs (#133)
+  1.1.1:
+    release_date: '2026-02-21'
+    changes:
+      release_summary: Added position parameter to the protect module and fixed ordering issues.
+      minor_changes:
+        - helix_core_protect - Add ``position`` parameter to control where new entries are inserted in the protections table (beginning, end, or specific index) when using ``mode=entry``.
+      bugfixes:
+        - helix_core_protect - Fixed protections table ordering. The module now preserves entry order instead of using unordered sets, which previously caused unpredictable entry placement.
+        - helix_core_protect - Fixed duplicate playbook entries being inserted multiple times into the protections table.

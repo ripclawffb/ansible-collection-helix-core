@@ -20,10 +20,11 @@ This collection is tested via Molecule on the following platforms and Perforce v
 
 | OS | Perforce Versions |
 |----|-------------------|
-| Rocky Linux 9 | 23.1, 23.2, 24.1, 24.2 |
+| Rocky Linux 8 | 23.1, 23.2, 24.1, 24.2, 25.1, 25.2 |
+| Rocky Linux 9 | 23.1, 23.2, 24.1, 24.2, 25.1, 25.2 |
 | Ubuntu 20.04 | 23.1, 23.2 |
-| Ubuntu 22.04 | 23.1, 23.2, 24.1, 24.2 |
-| Ubuntu 24.04 | 23.1, 23.2, 24.1, 24.2 |
+| Ubuntu 22.04 | 23.1, 23.2, 24.1, 24.2, 25.1, 25.2 |
+| Ubuntu 24.04 | 23.1, 23.2, 24.1, 24.2, 25.1, 25.2 |
 
 ## Included Modules
 

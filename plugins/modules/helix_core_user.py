@@ -119,6 +119,9 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection import (
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
+from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
+    build_after_spec, check_spec, update_spec
+)
 from socket import gethostname
 
 
@@ -157,8 +160,17 @@ def run_module():
         if module.params['email'] is None:
             module.params['email'] = f"{module.params['name']}@{gethostname()}"
 
+        # field mapping: spec key -> module param key
+        mapping = {
+            'AuthMethod': 'authmethod',
+            'Email': 'email',
+            'FullName': 'fullname',
+        }
+
+        # fields to track for diff
+        diff_fields = list(mapping.keys())
+
         # capture before state for diff
-        diff_fields = ['AuthMethod', 'Email', 'FullName']
         if module._diff:
             if 'Access' in p4_user_spec:
                 before = spec_to_string(p4_user_spec, diff_fields)
@@ -167,26 +179,17 @@ def run_module():
 
         if module.params['state'] == 'present':
             if module._diff:
-                after = spec_to_string({
-                    'AuthMethod': module.params['authmethod'],
-                    'Email': module.params['email'],
-                    'FullName': module.params['fullname'],
-                }, diff_fields)
+                after = spec_to_string(build_after_spec(module.params, mapping), diff_fields)
 
             if 'Access' in p4_user_spec:
                 # check to see if changes are detected in any of the fields
-                if (p4_user_spec["AuthMethod"] == module.params['authmethod']
-                   and p4_user_spec["Email"] == module.params['email']
-                   and p4_user_spec["FullName"] == module.params['fullname']):
-
+                if not check_spec(p4_user_spec, module.params, mapping):
                     result['changed'] = False
 
                 # update user with new values
                 else:
                     if not module.check_mode:
-                        p4_user_spec["AuthMethod"] = module.params['authmethod']
-                        p4_user_spec["Email"] = module.params['email']
-                        p4_user_spec["FullName"] = module.params['fullname']
+                        update_spec(p4_user_spec, module.params, mapping)
                         p4.save_user(p4_user_spec, "-f")
 
                     result['changed'] = True
@@ -197,9 +200,7 @@ def run_module():
             # create new user with specified values
             else:
                 if not module.check_mode:
-                    p4_user_spec["AuthMethod"] = module.params['authmethod']
-                    p4_user_spec["Email"] = module.params['email']
-                    p4_user_spec["FullName"] = module.params['fullname']
+                    update_spec(p4_user_spec, module.params, mapping)
                     p4.save_user(p4_user_spec, "-f")
 
                 result['changed'] = True

@@ -130,7 +130,7 @@
 <h1>ripclawffb.helix_core.helix_core_protect module – Manage the protection table on Perforce Helix Core<a class="headerlink" href="#ripclawffb-helix-core-helix-core-protect-module-manage-the-protection-table-on-perforce-helix-core" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.0.7).</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.1.1).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">ripclawffb.helix_core</span></code>.
@@ -209,6 +209,17 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-position"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-position"><strong>position</strong></p>
+<a class="ansibleOptionLink" href="#parameter-position" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Where to insert new entries in the protections table.</p>
+<p>Only applies when <em>state=present</em> and <em>mode=entry</em>.</p>
+<p>Can be <code class="docutils literal notranslate"><span class="pre">beginning</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code>, or a zero-based integer index.</p>
+<p>If the active protection entry already exists exactly, its position will not be changed. We only insert new entries at <code class="docutils literal notranslate"><span class="pre">position</span></code>.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;end&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-protections"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-protections"><strong>protections</strong></p>
 <a class="ansibleOptionLink" href="#parameter-protections" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
@@ -217,35 +228,35 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <p>Required when state is <code class="docutils literal notranslate"><span class="pre">present</span></code></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-protections/access"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-protections-access"><strong>access</strong></p>
 <a class="ansibleOptionLink" href="#parameter-protections/access" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The access level (list, read, open, write, admin, super, review, =read, =open, =write, =branch)</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-protections/host"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-protections-host"><strong>host</strong></p>
 <a class="ansibleOptionLink" href="#parameter-protections/host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The host IP/pattern, or * for any host</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-protections/name"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-protections-name"><strong>name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-protections/name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The user or group name, or * for all</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-protections/path"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-protections-path"><strong>path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-protections/path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The depot path pattern (e.g., //…, //depot/…)</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-protections/type"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-protections-type"><strong>type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-protections/type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
@@ -257,7 +268,7 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-server"></div>
 <div class="ansibleOptionAnchor" id="parameter-p4port"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-server"><span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-p4port"></span><strong>server</strong></p>
 <a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4port</span></p>
@@ -267,7 +278,7 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <p>Can also use ‘P4PORT’ environment variable</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -281,7 +292,7 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-user"></div>
 <div class="ansibleOptionAnchor" id="parameter-p4user"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-user"><span id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-parameter-p4user"></span><strong>user</strong></p>
 <a class="ansibleOptionLink" href="#parameter-user" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: p4user</span></p>
@@ -354,6 +365,38 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">developers</span>
 <span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
 <span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depot/...</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
+<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+
+<span class="c1"># Add a base rule at the beginning of the table</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add base rule at beginning</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_protect</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beginning</span>
+<span class="w">    </span><span class="nt">protections</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">everyone</span>
+<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//...</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
+<span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+
+<span class="c1"># Insert a rule at a specific index</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Insert rule at index 2</span>
+<span class="w">  </span><span class="nt">ripclawffb.helix_core.helix_core_protect</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">position</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;2&#39;</span>
+<span class="w">    </span><span class="nt">protections</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qa_team</span>
+<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">//depot/qa/...</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1666&#39;</span>
 <span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruno</span>
 <span class="w">    </span><span class="nt">charset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>

@@ -7,7 +7,7 @@
 Ripclawffb.Helix_Core
 =====================
 
-Collection version 1.0.7
+Collection version 1.1.1
 
 .. contents::
    :local:

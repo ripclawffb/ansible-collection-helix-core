@@ -7,6 +7,42 @@ dependency:
 driver:
   name: docker
 platforms:
+  - name: rockylinux8-23.1
+    dockerfile: Dockerfile.rockylinux.8-23.1.j2
+    image: rockylinux.8-23.1
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-23.2
+    dockerfile: Dockerfile.rockylinux.8-23.2.j2
+    image: rockylinux.8-23.2
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-24.1
+    dockerfile: Dockerfile.rockylinux.8-24.1.j2
+    image: rockylinux.8-24.1
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-24.2
+    dockerfile: Dockerfile.rockylinux.8-24.2.j2
+    image: rockylinux.8-24.2
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-25.1
+    dockerfile: Dockerfile.rockylinux.8-25.1.j2
+    image: rockylinux.8-25.1
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-25.2
+    dockerfile: Dockerfile.rockylinux.8-25.2.j2
+    image: rockylinux.8-25.2
+    command: '-r .'
+    groups:
+      - rocky8
   - name: rockylinux9-23.1
     dockerfile: Dockerfile.rockylinux.9-23.1.j2
     image: rockylinux.9-23.1
@@ -22,6 +58,14 @@ platforms:
   - name: rockylinux9-24.2
     dockerfile: Dockerfile.rockylinux.9-24.2.j2
     image: rockylinux.9-24.2
+    command: '-r .'
+  - name: rockylinux9-25.1
+    dockerfile: Dockerfile.rockylinux.9-25.1.j2
+    image: rockylinux.9-25.1
+    command: '-r .'
+  - name: rockylinux9-25.2
+    dockerfile: Dockerfile.rockylinux.9-25.2.j2
+    image: rockylinux.9-25.2
     command: '-r .'
   - name: ubuntu2004-23.1
     dockerfile: Dockerfile.ubuntu.20.04-23.1.j2
@@ -47,6 +91,14 @@ platforms:
     dockerfile: Dockerfile.ubuntu.22.04-24.2.j2
     image: ubuntu:22.04-24.2
     command: '-r .'
+  - name: ubuntu2204-25.1
+    dockerfile: Dockerfile.ubuntu.22.04-25.1.j2
+    image: ubuntu:22.04-25.1
+    command: '-r .'
+  - name: ubuntu2204-25.2
+    dockerfile: Dockerfile.ubuntu.22.04-25.2.j2
+    image: ubuntu:22.04-25.2
+    command: '-r .'
   - name: ubuntu2404-23.1
     dockerfile: Dockerfile.ubuntu.24.04-23.1.j2
     image: ubuntu:24.04-23.1
@@ -63,6 +115,14 @@ platforms:
     dockerfile: Dockerfile.ubuntu.24.04-24.2.j2
     image: ubuntu:24.04-24.2
     command: '-r .'
+  - name: ubuntu2404-25.1
+    dockerfile: Dockerfile.ubuntu.24.04-25.1.j2
+    image: ubuntu:24.04-25.1
+    command: '-r .'
+  - name: ubuntu2404-25.2
+    dockerfile: Dockerfile.ubuntu.24.04-25.2.j2
+    image: ubuntu:24.04-25.2
+    command: '-r .'
 provisioner:
   name: ansible
   log: true
@@ -74,6 +134,8 @@ provisioner:
     group_vars:
       all:
         ansible_python_interpreter: "/usr/bin/python3"
+      rocky8:
+        ansible_python_interpreter: "/usr/bin/python3.9"
 scenario:
   name: default
   test_sequence:

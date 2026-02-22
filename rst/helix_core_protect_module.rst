@@ -22,7 +22,7 @@ ripclawffb.helix_core.helix_core_protect module -- Manage the protection table o
 .. Collection note
 
 .. note::
-    This module is part of the `ripclawffb.helix_core collection <https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/>`_ (version 1.0.7).
+    This module is part of the `ripclawffb.helix_core collection <https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/>`_ (version 1.1.1).
 
     It is not included in ``ansible-core``.
     To check whether it is installed, run :code:`ansible-galaxy collection list`.
@@ -215,6 +215,50 @@ Parameters
 
       Can also use 'P4PASSWD' environment variable
 
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-position"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_protect_module__parameter-position:
+
+      .. rst-class:: ansible-option-title
+
+      **position**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-position" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Where to insert new entries in the protections table.
+
+      Only applies when :emphasis:`state=present` and :emphasis:`mode=entry`.
+
+      Can be :literal:`beginning`\ , :literal:`end`\ , or a zero\-based integer index.
+
+      If the active protection entry already exists exactly, its position will not be changed. We only insert new entries at :literal:`position`.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"end"`
 
       .. raw:: html
 
@@ -675,6 +719,38 @@ Examples
             name: developers
             host: "*"
             path: //depot/...
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
+
+    # Add a base rule at the beginning of the table
+    - name: Add base rule at beginning
+      ripclawffb.helix_core.helix_core_protect:
+        state: present
+        position: beginning
+        protections:
+          - access: read
+            type: group
+            name: everyone
+            host: "*"
+            path: //...
+        server: '1666'
+        user: bruno
+        charset: auto
+        password: ''
+
+    # Insert a rule at a specific index
+    - name: Insert rule at index 2
+      ripclawffb.helix_core.helix_core_protect:
+        state: present
+        position: '2'
+        protections:
+          - access: write
+            type: group
+            name: qa_team
+            host: "*"
+            path: //depot/qa/...
         server: '1666'
         user: bruno
         charset: auto

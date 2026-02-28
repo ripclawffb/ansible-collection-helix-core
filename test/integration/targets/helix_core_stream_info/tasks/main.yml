@@ -1,0 +1,47 @@
+# Test code for the Helix stream_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# List all streams
+- name: List all streams
+  ripclawffb.helix_core.helix_core_stream_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_streams
+
+- name: Output all_streams
+  ansible.builtin.debug:
+    var: all_streams
+
+- name: Verify all_streams returns a list
+  ansible.builtin.assert:
+    that:
+      - all_streams.info is defined
+      - all_streams.info | type_debug == 'list'
+      - all_streams is not changed
+
+# Get specific stream (//stream1/main is created by stream integration tests)
+- name: Get specific stream info
+  ripclawffb.helix_core.helix_core_stream_info:
+    name: //stream1/main
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: stream_info
+
+- name: Output stream_info
+  ansible.builtin.debug:
+    var: stream_info
+
+- name: Verify stream_info returns a dict
+  ansible.builtin.assert:
+    that:
+      - stream_info.info is defined
+      - stream_info.info | type_debug == 'dict'
+      - stream_info.info.Type is defined
+      - stream_info is not changed

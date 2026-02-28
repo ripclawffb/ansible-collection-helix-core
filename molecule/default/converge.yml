@@ -133,3 +133,35 @@
 
     - name: Import helix_core_ldap tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_ldap/tasks/main.yml
+
+    # Info modules
+    - name: Import helix_core_client_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_client_info/tasks/main.yml
+
+    - name: Import helix_core_depot_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_depot_info/tasks/main.yml
+
+    - name: Import helix_core_group_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_group_info/tasks/main.yml
+
+    - name: Import helix_core_server_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_server_info/tasks/main.yml
+
+    - name: Import helix_core_stream_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_stream_info/tasks/main.yml
+
+    - name: Import helix_core_user_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_user_info/tasks/main.yml
+
+    - name: Import helix_core_ldap_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_ldap_info/tasks/main.yml
+
+    - name: Import helix_core_trigger_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_trigger_info/tasks/main.yml
+
+    - name: Import helix_core_typemap_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_typemap_info/tasks/main.yml
+
+    - name: Import helix_core_configurable_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_configurable_info/tasks/main.yml
+

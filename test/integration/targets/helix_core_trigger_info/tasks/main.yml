@@ -1,0 +1,40 @@
+# Test code for the Helix trigger_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Get current trigger table
+- name: Get trigger table info
+  ripclawffb.helix_core.helix_core_trigger_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: trigger_info
+
+- name: Output trigger_info
+  ansible.builtin.debug:
+    var: trigger_info
+
+- name: Verify trigger_info has triggers list
+  ansible.builtin.assert:
+    that:
+      - trigger_info.triggers is defined
+      - trigger_info.triggers | type_debug == 'list'
+      - trigger_info is not changed
+
+# Check mode
+- name: Get trigger info (check mode)
+  ripclawffb.helix_core.helix_core_trigger_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: trigger_info_check
+  check_mode: true
+
+- name: Verify check mode returns same data
+  ansible.builtin.assert:
+    that:
+      - trigger_info_check.triggers is defined

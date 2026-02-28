@@ -1,0 +1,67 @@
+# Test code for the Helix group_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Create a group first so we have something to query
+- name: Create test group for info query
+  ripclawffb.helix_core.helix_core_group:
+    state: present
+    name: info_test_group
+    maxresults: unset
+    maxscanrows: unset
+    maxlocktime: unset
+    timeout: 43200
+    users:
+      - bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+# List all groups
+- name: List all groups
+  ripclawffb.helix_core.helix_core_group_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_groups
+
+- name: Verify all_groups returns a list
+  ansible.builtin.assert:
+    that:
+      - all_groups.info is defined
+      - all_groups.info | type_debug == 'list'
+      - all_groups.info | length > 0
+      - all_groups is not changed
+
+# Get specific group
+- name: Get specific group info
+  ripclawffb.helix_core.helix_core_group_info:
+    name: info_test_group
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: group_info
+
+- name: Verify group_info returns a dict with expected keys
+  ansible.builtin.assert:
+    that:
+      - group_info.info is defined
+      - group_info.info | type_debug == 'dict'
+      - group_info.info.Timeout is defined
+      - group_info.info.Users is defined
+      - group_info is not changed
+
+# Cleanup
+- name: Delete test group
+  ripclawffb.helix_core.helix_core_group:
+    state: absent
+    name: info_test_group
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''

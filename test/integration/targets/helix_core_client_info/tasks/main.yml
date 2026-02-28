@@ -1,0 +1,63 @@
+# Test code for the Helix client_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# List all clients
+- name: List all clients
+  ripclawffb.helix_core.helix_core_client_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_clients
+
+- name: Output all_clients
+  ansible.builtin.debug:
+    var: all_clients
+
+- name: Verify all_clients returns a list
+  ansible.builtin.assert:
+    that:
+      - all_clients.info is defined
+      - all_clients.info | type_debug == 'list'
+      - all_clients is not changed
+
+# Get a specific client by name (using the bruno client that exists by default)
+- name: Get specific client info
+  ripclawffb.helix_core.helix_core_client_info:
+    name: bruno_ws
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: client_info
+
+- name: Output client_info
+  ansible.builtin.debug:
+    var: client_info
+
+- name: Verify client_info returns a dict with expected keys
+  ansible.builtin.assert:
+    that:
+      - client_info.info is defined
+      - client_info.info | type_debug == 'dict'
+      - client_info.info.Root is defined
+      - client_info.info.Owner is defined
+      - client_info is not changed
+
+# Check mode
+- name: Get client info (check mode)
+  ripclawffb.helix_core.helix_core_client_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: client_info_check
+  check_mode: true
+
+- name: Verify check mode returns same data
+  ansible.builtin.assert:
+    that:
+      - client_info_check.info is defined

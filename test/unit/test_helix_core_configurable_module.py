@@ -254,3 +254,23 @@ class TestConfigurableDiff:
         # Should only call 'configure show', not 'configure set'
         assert mock_p4.run.call_count == 1
 
+
+class TestConfigurableUnsetErrors:
+    def test_unset_p4_error(self, mock_module, mock_p4):
+        mock_module.params['state'] = 'absent'
+        mock_p4.run.side_effect = [
+            [{'ServerName': 'any', 'Name': 'auth.id', 'Value': 'master.1'}],
+            Exception('Permission denied'),
+        ]
+
+        with patch('plugins.modules.helix_core_configurable.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_configurable.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_configurable.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_configurable import run_module
+                    with pytest.raises(AnsibleFailJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'Permission denied' in result['msg']
+
+

@@ -305,3 +305,21 @@ class TestGroupDiff:
         assert 'diff' in result
         mock_p4.save_group.assert_not_called()
 
+
+class TestGroupDeleteErrors:
+    def test_delete_p4_error(self, mock_module, mock_p4, existing_group_spec):
+        mock_module.params['state'] = 'absent'
+        mock_p4.fetch_group.return_value = existing_group_spec
+        mock_p4.delete_group.side_effect = Exception('Group has active users')
+
+        with patch('plugins.modules.helix_core_group.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_group.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_group.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_group import run_module
+                    with pytest.raises(AnsibleFailJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'Group has active users' in result['msg']
+
+

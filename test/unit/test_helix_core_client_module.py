@@ -349,3 +349,21 @@ class TestClientDiff:
         assert 'Updated' in result['diff']['after']
         mock_p4.save_client.assert_not_called()
 
+
+class TestClientDeleteErrors:
+    def test_delete_p4_error(self, mock_module, mock_p4, existing_client_spec):
+        mock_module.params['state'] = 'absent'
+        mock_p4.fetch_client.return_value = existing_client_spec
+        mock_p4.delete_client.side_effect = Exception('Client has open files')
+
+        with patch('plugins.modules.helix_core_client.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_client.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_client.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_client import run_module
+                    with pytest.raises(AnsibleFailJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'Client has open files' in result['msg']
+
+

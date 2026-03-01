@@ -236,14 +236,13 @@ class TestDepotDiff:
                         run_module()
 
         result = exc_info.value.args[0]
-        assert result['changed'] is True
         assert 'diff' in result
         assert result['diff']['before'] == ''
         assert 'Description' in result['diff']['after']
 
     def test_update_with_diff(self, mock_module, mock_p4, existing_depot_spec):
         mock_module._diff = True
-        mock_module.params['description'] = 'Updated'
+        mock_module.params['description'] = 'Updated depot'
         mock_p4.fetch_depot.return_value = existing_depot_spec
         mock_p4.run.return_value = [{'name': 'test_depot'}]
 
@@ -257,4 +256,79 @@ class TestDepotDiff:
         result = exc_info.value.args[0]
         assert 'diff' in result
         assert 'Test depot' in result['diff']['before']
-        assert 'Updated' in result['diff']['after']
+        assert 'Updated depot' in result['diff']['after']
+
+    def test_delete_with_diff(self, mock_module, mock_p4, existing_depot_spec):
+        mock_module._diff = True
+        mock_module.params['state'] = 'absent'
+        mock_p4.fetch_depot.return_value = existing_depot_spec
+        mock_p4.run.return_value = [{'name': 'test_depot'}]
+
+        with patch('plugins.modules.helix_core_depot.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_depot.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_depot.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_depot import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'diff' in result
+        assert 'Description' in result['diff']['before']
+        assert result['diff']['after'] == ''
+
+    def test_no_diff_when_disabled(self, mock_module, mock_p4, existing_depot_spec):
+        mock_module._diff = False
+        mock_p4.fetch_depot.return_value = existing_depot_spec
+        mock_p4.run.return_value = []
+
+        with patch('plugins.modules.helix_core_depot.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_depot.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_depot.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_depot import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' not in result
+
+    def test_check_mode_create_with_diff(self, mock_module, mock_p4, existing_depot_spec):
+        mock_module._diff = True
+        mock_module.check_mode = True
+        mock_p4.fetch_depot.return_value = existing_depot_spec
+        mock_p4.run.return_value = []
+
+        with patch('plugins.modules.helix_core_depot.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_depot.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_depot.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_depot import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' in result
+        assert result['diff']['before'] == ''
+        mock_p4.save_depot.assert_not_called()
+
+    def test_check_mode_update_with_diff(self, mock_module, mock_p4, existing_depot_spec):
+        mock_module._diff = True
+        mock_module.check_mode = True
+        mock_module.params['description'] = 'Updated depot'
+        mock_p4.fetch_depot.return_value = existing_depot_spec
+        mock_p4.run.return_value = [{'name': 'test_depot'}]
+
+        with patch('plugins.modules.helix_core_depot.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_depot.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_depot.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_depot import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' in result
+        assert 'Test depot' in result['diff']['before']
+        assert 'Updated depot' in result['diff']['after']
+        mock_p4.save_depot.assert_not_called()
+

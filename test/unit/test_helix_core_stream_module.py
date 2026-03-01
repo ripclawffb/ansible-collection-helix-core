@@ -201,3 +201,109 @@ class TestStreamDelete:
         assert result['changed'] is True
         assert result['action'] == 'deleted'
         mock_p4.delete_stream.assert_not_called()
+
+
+class TestStreamDiff:
+    def test_create_with_diff(self, mock_module, mock_p4, new_stream_spec):
+        mock_module._diff = True
+        mock_p4.fetch_stream.return_value = new_stream_spec
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'diff' in result
+        assert result['diff']['before'] == ''
+        assert 'Description' in result['diff']['after']
+
+    def test_update_with_diff(self, mock_module, mock_p4, existing_stream_spec):
+        mock_module._diff = True
+        mock_module.params['description'] = 'Updated branch'
+        mock_p4.fetch_stream.return_value = existing_stream_spec
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'diff' in result
+        assert 'Main branch' in result['diff']['before']
+        assert 'Updated branch' in result['diff']['after']
+
+    def test_delete_with_diff(self, mock_module, mock_p4, existing_stream_spec):
+        mock_module._diff = True
+        mock_module.params['state'] = 'absent'
+        mock_p4.fetch_stream.return_value = existing_stream_spec
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'diff' in result
+        assert 'Description' in result['diff']['before']
+        assert result['diff']['after'] == ''
+
+    def test_no_diff_when_disabled(self, mock_module, mock_p4, new_stream_spec):
+        mock_module._diff = False
+        mock_p4.fetch_stream.return_value = new_stream_spec
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' not in result
+
+    def test_check_mode_create_with_diff(self, mock_module, mock_p4, new_stream_spec):
+        mock_module._diff = True
+        mock_module.check_mode = True
+        mock_p4.fetch_stream.return_value = new_stream_spec
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' in result
+        assert result['diff']['before'] == ''
+        mock_p4.save_stream.assert_not_called()
+
+    def test_check_mode_update_with_diff(self, mock_module, mock_p4, existing_stream_spec):
+        mock_module._diff = True
+        mock_module.check_mode = True
+        mock_module.params['description'] = 'Updated branch'
+        mock_p4.fetch_stream.return_value = existing_stream_spec
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' in result
+        assert 'Main branch' in result['diff']['before']
+        assert 'Updated branch' in result['diff']['after']
+        mock_p4.save_stream.assert_not_called()
+

@@ -37,7 +37,7 @@ ripclawffb.helix_core.helix_core_server_info module -- Get server specification 
 
 .. rst-class:: ansible-version-added
 
-New in ripclawffb.helix\_core 1.1.0
+New in ripclawffb.helix\_core 1.2.0
 
 .. contents::
    :local:

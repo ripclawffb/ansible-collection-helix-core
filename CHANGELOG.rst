@@ -4,6 +4,31 @@ Ripclawffb.Helix\_Core Release Notes
 
 .. contents:: Topics
 
+v1.2.0
+======
+
+Release Summary
+---------------
+
+Added info modules for all resources, Rocky Linux 8 support, and Perforce 25.x compatibility.
+
+Minor Changes
+-------------
+
+- Perforce 25.x support - Added Molecule tests for Perforce r25.1 and r25.2 across all supported platforms.
+- README.md - Updated compatibility matrix and included modules table.
+- Rocky Linux 8 support - Added Molecule tests and Dockerfiles for Rocky Linux 8 with Perforce r23.1, r23.2, r24.1, r24.2, r25.1, and r25.2.
+- helix_core_client_info - New module to fetch client/workspace information.
+- helix_core_configurable_info - New module to fetch server configurable information.
+- helix_core_depot_info - New module to fetch depot information.
+- helix_core_group_info - New module to fetch group information.
+- helix_core_ldap_info - New module to fetch LDAP configuration information.
+- helix_core_server_info - New module to fetch server specification information.
+- helix_core_stream_info - New module to fetch stream information.
+- helix_core_trigger_info - New module to fetch triggers table information.
+- helix_core_typemap_info - New module to fetch typemap table information.
+- helix_core_user_info - New module to fetch user information.
+
 v1.1.1
 ======
 

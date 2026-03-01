@@ -31,17 +31,27 @@ This collection is tested via Molecule on the following platforms and Perforce v
 | Module | Description |
 |--------|-------------|
 | `helix_core_client` | Manage clients/workspaces |
+| `helix_core_client_info` | Get client/workspace info |
 | `helix_core_configurable` | Manage server configurables |
+| `helix_core_configurable_info` | Get server configurable info |
 | `helix_core_depot` | Manage depots |
+| `helix_core_depot_info` | Get depot info |
 | `helix_core_group` | Manage user groups |
+| `helix_core_group_info` | Get group info |
 | `helix_core_ldap` | Manage LDAP configurations |
+| `helix_core_ldap_info` | Get LDAP configuration info |
 | `helix_core_protect` | Manage protections table |
 | `helix_core_protect_info` | Get protection table info |
 | `helix_core_server` | Manage server specifications |
+| `helix_core_server_info` | Get server specification info |
 | `helix_core_stream` | Manage streams |
+| `helix_core_stream_info` | Get stream info |
 | `helix_core_trigger` | Manage triggers table |
+| `helix_core_trigger_info` | Get triggers table info |
 | `helix_core_typemap` | Manage typemap table |
+| `helix_core_typemap_info` | Get typemap table info |
 | `helix_core_user` | Manage users |
+| `helix_core_user_info` | Get user info |
 
 ## Installation
 

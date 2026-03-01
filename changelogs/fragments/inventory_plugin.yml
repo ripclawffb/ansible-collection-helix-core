@@ -1,0 +1,2 @@
+minor_changes:
+  - Added dynamic inventory plugin ``helix_core`` that discovers Perforce server topology via ``p4 servers``. Hosts are grouped by server type (commit, edge, replica). Supports filtering and Constructable features.

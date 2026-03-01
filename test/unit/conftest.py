@@ -25,10 +25,12 @@ sys.modules['P4'] = MagicMock()
 
 # Import real module_utils so they're available under the ansible_collections path
 from plugins.module_utils import _helix_core_connection  # noqa: E402
+from plugins.module_utils import _helix_core_spec  # noqa: E402
 
 # Mock the ansible_collections import chain, pointing to our real modules
 ac_mock = MagicMock()
 ac_mock.ripclawffb.helix_core.plugins.module_utils._helix_core_connection = _helix_core_connection
+ac_mock.ripclawffb.helix_core.plugins.module_utils._helix_core_spec = _helix_core_spec
 
 sys.modules['ansible_collections'] = ac_mock
 sys.modules['ansible_collections.ripclawffb'] = ac_mock.ripclawffb
@@ -36,3 +38,4 @@ sys.modules['ansible_collections.ripclawffb.helix_core'] = ac_mock.ripclawffb.he
 sys.modules['ansible_collections.ripclawffb.helix_core.plugins'] = ac_mock.ripclawffb.helix_core.plugins
 sys.modules['ansible_collections.ripclawffb.helix_core.plugins.module_utils'] = ac_mock.ripclawffb.helix_core.plugins.module_utils
 sys.modules['ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_connection'] = _helix_core_connection
+sys.modules['ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec'] = _helix_core_spec

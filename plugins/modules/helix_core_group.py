@@ -143,6 +143,38 @@ changed:
     returned: always
     type: bool
     sample: true
+group_spec:
+    description: The group specification after the operation.
+    returned: always
+    type: dict
+    sample:
+        Group: developers
+        MaxResults: unset
+        Users:
+            - alice
+            - bob
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: created
+    choices:
+        - created
+        - updated
+        - deleted
+        - unchanged
+changes:
+    description: List of fields that were changed.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - field: Users
+          before:
+              - alice
+          after:
+              - alice
+              - bob
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -162,7 +194,7 @@ from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
-    build_after_spec, check_spec, update_spec
+    build_after_spec, changed_fields, update_spec
 )
 
 
@@ -188,6 +220,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        group_spec={},
+        action='unchanged',
+        changes=[],
     )
 
     module = AnsibleModule(
@@ -234,8 +269,10 @@ def run_module():
                 if module._diff:
                     before = spec_to_string(p4_group_spec, diff_fields)
 
-                # check to see if changes are detected in any of the fields
-                if not check_spec(p4_group_spec, module.params, mapping, rstrip_fields=['MaxResults']):
+                # detect per-field changes
+                field_changes = changed_fields(p4_group_spec, module.params, mapping, rstrip_fields=['MaxResults'])
+
+                if not field_changes:
                     result['changed'] = False
 
                 # if changes are detected, update group with new values
@@ -245,20 +282,26 @@ def run_module():
                         p4.save_group(p4_group_spec)
 
                     result['changed'] = True
+                    result['action'] = 'updated'
+                    result['changes'] = field_changes
 
                     if module._diff:
                         result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
 
-            # create new user with specified values
+            # create new group with specified values
             else:
                 if not module.check_mode:
                     update_spec(p4_group_spec, module.params, mapping)
                     p4.save_group(p4_group_spec)
 
                 result['changed'] = True
+                result['action'] = 'created'
 
                 if module._diff:
                     result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
+            # always return the spec for present state
+            result['group_spec'] = p4_group_spec
 
         elif module.params['state'] == 'absent':
             # delete group
@@ -270,6 +313,7 @@ def run_module():
                     p4.delete_group(module.params['name'])
 
                 result['changed'] = True
+                result['action'] = 'deleted'
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': ''}

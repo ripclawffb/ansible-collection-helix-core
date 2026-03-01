@@ -94,6 +94,8 @@ class TestServerCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['server_spec'] is not None
         mock_p4.save_server.assert_called_once()
 
     def test_create_check_mode(self, mock_module, mock_p4, existing_server_spec):
@@ -110,6 +112,7 @@ class TestServerCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         mock_p4.save_server.assert_not_called()
 
 
@@ -127,6 +130,9 @@ class TestServerUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['server_spec'] == existing_server_spec
 
     def test_with_changes(self, mock_module, mock_p4, existing_server_spec):
         mock_module.params['description'] = 'Updated server'
@@ -142,6 +148,9 @@ class TestServerUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
+        assert result['changes'][0]['field'] == 'Description'
         mock_p4.save_server.assert_called_once()
 
 
@@ -160,6 +169,7 @@ class TestServerDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_server.assert_called_once_with('commit')
 
     def test_delete_nonexistent(self, mock_module, mock_p4):
@@ -175,6 +185,7 @@ class TestServerDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
 
     def test_delete_check_mode(self, mock_module, mock_p4, existing_server_spec):
         mock_module.params['state'] = 'absent'
@@ -191,4 +202,5 @@ class TestServerDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_server.assert_not_called()

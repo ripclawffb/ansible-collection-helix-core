@@ -115,6 +115,33 @@ changed:
     returned: always
     type: bool
     sample: true
+triggers:
+    description: The trigger table entries after the operation.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - name: check_submit
+          type: change-submit
+          path: //depot/...
+          command: /scripts/validate.sh %changelist%
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: updated
+    choices:
+        - updated
+        - cleared
+        - unchanged
+changes:
+    description: Entries that were added or removed.
+    returned: always
+    type: dict
+    sample:
+        added:
+            - { name: check_submit, type: change-submit, path: "//depot/...", command: "/scripts/validate.sh %changelist%" }
+        removed: []
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -183,6 +210,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        triggers=[],
+        action='unchanged',
+        changes={'added': [], 'removed': []},
     )
 
     module = AnsibleModule(
@@ -214,13 +244,27 @@ def run_module():
             if current_entries != desired_entries:
                 before = entries_to_diff(current_entries)
 
+                # Compute added/removed
+                current_set = set(current_entries)
+                desired_set = set(desired_entries)
+                added = [e for e in desired_entries if e not in current_set]
+                removed = [e for e in current_entries if e not in desired_set]
+
                 if not module.check_mode:
                     p4_triggers_spec['Triggers'] = list_to_triggers(module.params['triggers'])
                     p4.save_triggers(p4_triggers_spec)
                 result['changed'] = True
+                result['action'] = 'updated'
+                result['changes'] = {
+                    'added': [{'name': e[0], 'type': e[1], 'path': e[2], 'command': e[3]} for e in added],
+                    'removed': [{'name': e[0], 'type': e[1], 'path': e[2], 'command': e[3]} for e in removed],
+                }
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': entries_to_diff(desired_entries)}
+
+            # return resulting table
+            result['triggers'] = [{'name': e[0], 'type': e[1], 'path': e[2], 'command': e[3]} for e in (desired_entries if result['changed'] else current_entries)]
 
         elif module.params['state'] == 'absent':
             # Clear triggers if it has entries
@@ -231,6 +275,11 @@ def run_module():
                     p4_triggers_spec['Triggers'] = []
                     p4.save_triggers(p4_triggers_spec)
                 result['changed'] = True
+                result['action'] = 'cleared'
+                result['changes'] = {
+                    'added': [],
+                    'removed': [{'name': e[0], 'type': e[1], 'path': e[2], 'command': e[3]} for e in current_entries],
+                }
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': ''}

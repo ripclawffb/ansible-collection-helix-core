@@ -69,6 +69,10 @@ class TestConfigurableSet:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['configurable'] == {'name': 'auth.id', 'value': 'master.1', 'serverid': 'any'}
+        assert len(result['changes']) == 1
+        assert result['changes'][0]['field'] == 'value'
 
     def test_set_same_value_idempotent(self, mock_module, mock_p4):
         mock_p4.run.return_value = [
@@ -84,6 +88,9 @@ class TestConfigurableSet:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['configurable'] == {'name': 'auth.id', 'value': 'master.1', 'serverid': 'any'}
 
     def test_set_different_value(self, mock_module, mock_p4):
         mock_p4.run.return_value = [
@@ -99,6 +106,10 @@ class TestConfigurableSet:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) == 1
+        assert result['changes'][0]['before'] == 'old_value'
+        assert result['changes'][0]['after'] == 'master.1'
 
     def test_set_check_mode(self, mock_module, mock_p4):
         mock_module.check_mode = True
@@ -113,6 +124,7 @@ class TestConfigurableSet:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         # p4.run should only be called once (for 'configure show'), not for 'configure set'
         assert mock_p4.run.call_count == 1
 
@@ -133,6 +145,10 @@ class TestConfigurableUnset:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
+        assert len(result['changes']) == 1
+        assert result['changes'][0]['before'] == 'master.1'
+        assert result['changes'][0]['after'] is None
 
     def test_unset_nonexistent(self, mock_module, mock_p4):
         mock_module.params['state'] = 'absent'
@@ -147,6 +163,8 @@ class TestConfigurableUnset:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
 
     def test_unset_check_mode(self, mock_module, mock_p4):
         mock_module.params['state'] = 'absent'
@@ -164,6 +182,7 @@ class TestConfigurableUnset:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         assert mock_p4.run.call_count == 1
 
 

@@ -189,6 +189,25 @@ ldap_spec:
         Port: 389
         Encryption: none
         BindMethod: simple
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: created
+    choices:
+        - created
+        - updated
+        - deleted
+        - unchanged
+changes:
+    description: List of fields that were changed.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - field: Host
+          before: old.ldap.com
+          after: new.ldap.com
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -273,7 +292,9 @@ def run_module():
 
     result = dict(
         changed=False,
-        ldap_spec={}
+        ldap_spec={},
+        action='unchanged',
+        changes=[],
     )
 
     module = AnsibleModule(
@@ -328,9 +349,10 @@ def run_module():
 
                 # If value is provided (even empty string), compare and set
                 if value is not None:
+                    before_val = spec.get(field, '')
                     # If current spec value differs from desired value
-                    if str(spec.get(field, '')) != str(value):
-                        changes.append(field)
+                    if str(before_val) != str(value):
+                        changes.append({'field': field, 'before': before_val, 'after': value})
                         spec[field] = type_conv(value)
 
             check_set('Host', 'host')
@@ -377,16 +399,18 @@ def run_module():
                 current_opts_set = set(spec.get('Options', '').split()) if spec.get('Options', '') else set()
                 new_opts_set = set(new_opts.split()) if new_opts else set()
                 if current_opts_set != new_opts_set:
-                    changes.append('Options')
+                    changes.append({'field': 'Options', 'before': spec.get('Options', ''), 'after': new_opts})
                     spec['Options'] = new_opts
 
             if not exists:
-                changes.append('Creation')
+                changes.append({'field': 'Name', 'before': None, 'after': ldap_name})
 
             if changes:
                 if not module.check_mode:
                     p4.save_ldap(spec)
                 result['changed'] = True
+                result['action'] = 'created' if not exists else 'updated'
+                result['changes'] = changes
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': spec_to_string(spec, diff_fields)}
@@ -403,6 +427,7 @@ def run_module():
                 if not module.check_mode:
                     p4.delete_ldap(ldap_name)
                 result['changed'] = True
+                result['action'] = 'deleted'
 
     except Exception as e:
         module.fail_json(msg=f"Error: {e}", **result)

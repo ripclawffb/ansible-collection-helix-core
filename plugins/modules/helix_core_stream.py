@@ -142,6 +142,33 @@ changed:
     returned: always
     type: bool
     sample: true
+stream_spec:
+    description: The stream specification after the operation.
+    returned: always
+    type: dict
+    sample:
+        Stream: //depot/main
+        Description: Main stream
+        Type: mainline
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: created
+    choices:
+        - created
+        - updated
+        - deleted
+        - unchanged
+changes:
+    description: List of fields that were changed.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - field: Description
+          before: Old description
+          after: New description
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -161,7 +188,7 @@ from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
-    build_after_spec, check_spec, update_spec
+    build_after_spec, changed_fields, update_spec
 )
 
 
@@ -185,6 +212,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        stream_spec={},
+        action='unchanged',
+        changes=[],
     )
 
     module = AnsibleModule(
@@ -234,8 +264,10 @@ def run_module():
                 if module._diff:
                     before = spec_to_string(p4_stream_spec, diff_fields)
 
-                # check to see if changes are detected in any of the fields
-                if not check_spec(p4_stream_spec, module.params, mapping, rstrip_fields=['Description']):
+                # detect per-field changes
+                field_changes = changed_fields(p4_stream_spec, module.params, mapping, rstrip_fields=['Description'])
+
+                if not field_changes:
                     result['changed'] = False
 
                 # if changes are detected, update stream with new values
@@ -245,6 +277,8 @@ def run_module():
                         p4.save_stream(p4_stream_spec)
 
                     result['changed'] = True
+                    result['action'] = 'updated'
+                    result['changes'] = field_changes
 
                     if module._diff:
                         result['diff'] = {'before': before, 'after': spec_to_string(after_spec, diff_fields)}
@@ -256,9 +290,13 @@ def run_module():
                     p4.save_stream(p4_stream_spec)
 
                 result['changed'] = True
+                result['action'] = 'created'
 
                 if module._diff:
                     result['diff'] = {'before': '', 'after': spec_to_string(after_spec, diff_fields)}
+
+            # always return the spec for present state
+            result['stream_spec'] = p4_stream_spec
 
         elif module.params['state'] == 'absent':
             # delete stream
@@ -270,6 +308,7 @@ def run_module():
                     p4.delete_stream('-f', module.params['stream'])
 
                 result['changed'] = True
+                result['action'] = 'deleted'
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': ''}

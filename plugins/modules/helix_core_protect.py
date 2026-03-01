@@ -196,6 +196,33 @@ changed:
     returned: always
     type: bool
     sample: true
+protections:
+    description: The protection table entries after the operation.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - access: super
+          type: user
+          name: admin
+          host: "*"
+          path: //...
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: updated
+    choices:
+        - updated
+        - unchanged
+changes:
+    description: Entries that were added or removed.
+    returned: always
+    type: dict
+    sample:
+        added:
+            - { access: write, type: group, name: devs, host: "*", path: "//..." }
+        removed: []
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -259,6 +286,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        protections=[],
+        action='unchanged',
+        changes={'added': [], 'removed': []},
     )
 
     module = AnsibleModule(
@@ -339,45 +369,77 @@ def run_module():
                         p4_protect_spec['Protections'] = list_to_protections(updated_entries)
                         p4.save_protect(p4_protect_spec)
                     result['changed'] = True
+                    result['action'] = 'updated'
+                    result['changes'] = {
+                        'added': [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in new_entries],
+                        'removed': [],
+                    }
                     if module._diff:
                         result['diff'] = {
                             'before': entries_to_diff(current_entries),
                             'after': entries_to_diff(updated_entries),
                         }
+                    # return updated table
+                    result['protections'] = [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in updated_entries]
+                else:
+                    # no changes, return current table
+                    result['protections'] = [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in current_entries]
 
             elif module.params['state'] == 'absent':
                 # Remove entries that exist
-                # desired_tuples does not have order that matters for removal, we process current_entries
                 desired_set = set(desired_tuples)
                 updated_entries = [e for e in current_entries if e not in desired_set]
+                removed_entries = [e for e in current_entries if e in desired_set]
 
-                if len(updated_entries) != len(current_entries):
+                if removed_entries:
                     if not module.check_mode:
                         p4_protect_spec['Protections'] = list_to_protections(updated_entries)
                         p4.save_protect(p4_protect_spec)
                     result['changed'] = True
+                    result['action'] = 'updated'
+                    result['changes'] = {
+                        'added': [],
+                        'removed': [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in removed_entries],
+                    }
 
                     if module._diff:
                         result['diff'] = {
                             'before': entries_to_diff(current_entries),
                             'after': entries_to_diff(updated_entries),
                         }
+
+                # return resulting table
+                result['protections'] = [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in updated_entries]
 
         elif module.params['mode'] == 'replace':
             # Replace mode: replace entire table
             desired_tuples = [entry_to_tuple(e) for e in module.params['protections']]
 
             if current_entries != desired_tuples:
+                # Compute added/removed for changes
+                current_set = set(current_entries)
+                desired_set = set(desired_tuples)
+                added = [e for e in desired_tuples if e not in current_set]
+                removed = [e for e in current_entries if e not in desired_set]
+
                 if not module.check_mode:
                     p4_protect_spec['Protections'] = list_to_protections(desired_tuples)
                     p4.save_protect(p4_protect_spec)
                 result['changed'] = True
+                result['action'] = 'updated'
+                result['changes'] = {
+                    'added': [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in added],
+                    'removed': [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in removed],
+                }
 
                 if module._diff:
                     result['diff'] = {
                         'before': entries_to_diff(current_entries),
                         'after': entries_to_diff(desired_tuples),
                     }
+
+            # return resulting table
+            result['protections'] = [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in desired_tuples if result['changed']] if result['changed'] else [{'access': e[0], 'type': e[1], 'name': e[2], 'host': e[3], 'path': e[4]} for e in current_entries]
 
     except Exception as e:
         module.fail_json(msg=f"Error: {e}", **result)

@@ -96,6 +96,33 @@ changed:
     returned: always
     type: bool
     sample: true
+configurable:
+    description: The configurable after the operation.
+    returned: always
+    type: dict
+    sample:
+        name: auth.id
+        value: master.1
+        serverid: any
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: created
+    choices:
+        - created
+        - updated
+        - deleted
+        - unchanged
+changes:
+    description: List of fields that were changed.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - field: value
+          before: old_val
+          after: new_val
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -128,6 +155,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        configurable={},
+        action='unchanged',
+        changes=[],
     )
 
     module = AnsibleModule(
@@ -160,17 +190,28 @@ def run_module():
                 if not module.check_mode:
                     p4.run('configure', 'set', f"{module.params['serverid']}#{module.params['name']}={module.params['value']}")
                 result['changed'] = True
+                result['action'] = 'created' if p4_current_value is None else 'updated'
+                result['changes'] = [{'field': 'value', 'before': before_value if before_value else None, 'after': module.params['value']}]
 
                 if module._diff:
                     result['diff'] = {
                         'before': f"{module.params['name']} = {before_value}\n",
                         'after': f"{module.params['name']} = {module.params['value']}\n",
                     }
+
+            result['configurable'] = {
+                'name': module.params['name'],
+                'value': module.params['value'],
+                'serverid': module.params['serverid'],
+            }
+
         elif module.params['state'] == 'absent':
             if p4_current_value is not None:
                 if not module.check_mode:
                     p4.run('configure', 'unset', f"{module.params['serverid']}#{module.params['name']}")
                 result['changed'] = True
+                result['action'] = 'deleted'
+                result['changes'] = [{'field': 'value', 'before': before_value, 'after': None}]
 
                 if module._diff:
                     result['diff'] = {

@@ -100,6 +100,8 @@ class TestClientCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['client_spec'] is not None
         mock_p4.save_client.assert_called_once()
 
     def test_create_check_mode(self, mock_module, mock_p4, new_client_spec):
@@ -115,6 +117,7 @@ class TestClientCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         mock_p4.save_client.assert_not_called()
 
 
@@ -131,6 +134,9 @@ class TestClientUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['client_spec'] == existing_client_spec
         mock_p4.save_client.assert_not_called()
 
     def test_with_changes(self, mock_module, mock_p4, existing_client_spec):
@@ -146,6 +152,9 @@ class TestClientUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
+        assert result['changes'][0]['field'] == 'Description'
         mock_p4.save_client.assert_called_once()
 
     def test_with_changes_check_mode(self, mock_module, mock_p4, existing_client_spec):
@@ -162,6 +171,8 @@ class TestClientUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
         mock_p4.save_client.assert_not_called()
 
     def test_noaltsync_option_idempotency(self, mock_module, mock_p4, existing_client_spec):
@@ -178,6 +189,8 @@ class TestClientUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
 
 
 class TestClientDelete:
@@ -194,6 +207,7 @@ class TestClientDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_client.assert_called_once_with('-f', 'test_client')
 
     def test_delete_nonexistent(self, mock_module, mock_p4, new_client_spec):
@@ -209,6 +223,7 @@ class TestClientDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
         mock_p4.delete_client.assert_not_called()
 
     def test_delete_check_mode(self, mock_module, mock_p4, existing_client_spec):
@@ -225,4 +240,5 @@ class TestClientDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_client.assert_not_called()

@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from plugins.module_utils._helix_core_spec import (
     build_after_spec,
+    changed_fields,
     check_spec,
     update_spec,
 )
@@ -140,3 +141,51 @@ class TestBuildAfterSpec:
         assert result == {'Description': 'x', 'Type': 'local'}
         assert 'Address' not in result
         assert 'Users' not in result
+
+
+# ---------------------------------------------------------------------------
+# changed_fields tests
+# ---------------------------------------------------------------------------
+
+class TestChangedFields:
+    def test_no_changes(self, simple_mapping):
+        spec = {'Description': 'my depot', 'Type': 'local'}
+        params = {'description': 'my depot', 'type': 'local', 'address': None, 'users': None}
+        result = changed_fields(spec, params, simple_mapping)
+        assert result == []
+
+    def test_single_field_changed(self, simple_mapping):
+        spec = {'Description': 'old', 'Type': 'local'}
+        params = {'description': 'new', 'type': 'local', 'address': None, 'users': None}
+        result = changed_fields(spec, params, simple_mapping)
+        assert len(result) == 1
+        assert result[0] == {'field': 'Description', 'before': 'old', 'after': 'new'}
+
+    def test_multiple_fields_changed(self, simple_mapping):
+        spec = {'Description': 'old', 'Type': 'local'}
+        params = {'description': 'new', 'type': 'remote', 'address': None, 'users': None}
+        result = changed_fields(spec, params, simple_mapping)
+        assert len(result) == 2
+        fields = [c['field'] for c in result]
+        assert 'Description' in fields
+        assert 'Type' in fields
+
+    def test_new_field_added(self, simple_mapping):
+        spec = {'Description': 'x', 'Type': 'local'}
+        params = {'description': 'x', 'type': 'local', 'address': '1.2.3.4', 'users': None}
+        result = changed_fields(spec, params, simple_mapping)
+        assert len(result) == 1
+        assert result[0] == {'field': 'Address', 'before': None, 'after': '1.2.3.4'}
+
+    def test_rstrip_fields(self, simple_mapping):
+        spec = {'Description': 'my depot   \n', 'Type': 'local'}
+        params = {'description': 'my depot', 'type': 'local', 'address': None, 'users': None}
+        assert len(changed_fields(spec, params, simple_mapping)) == 1
+        assert len(changed_fields(spec, params, simple_mapping, rstrip_fields=['Description'])) == 0
+
+    def test_empty_list_equals_absent(self, simple_mapping):
+        spec = {'Description': 'x', 'Type': 'local'}
+        params = {'description': 'x', 'type': 'local', 'address': None, 'users': []}
+        result = changed_fields(spec, params, simple_mapping)
+        assert result == []
+

@@ -101,6 +101,33 @@ changed:
     returned: always
     type: bool
     sample: true
+user_spec:
+    description: The user specification after the operation.
+    returned: always
+    type: dict
+    sample:
+        User: new_user
+        Email: new_user@perforce.com
+        FullName: New User
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: created
+    choices:
+        - created
+        - updated
+        - deleted
+        - unchanged
+changes:
+    description: List of fields that were changed.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - field: Email
+          before: old@example.com
+          after: new@example.com
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -120,7 +147,7 @@ from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_
     helix_core_connect, helix_core_disconnect, helix_core_connection_argspec, spec_to_string
 )
 from ansible_collections.ripclawffb.helix_core.plugins.module_utils._helix_core_spec import (
-    build_after_spec, check_spec, update_spec
+    build_after_spec, changed_fields, update_spec
 )
 from socket import gethostname
 
@@ -138,6 +165,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        user_spec={},
+        action='unchanged',
+        changes=[],
     )
 
     module = AnsibleModule(
@@ -182,8 +212,10 @@ def run_module():
                 after = spec_to_string(build_after_spec(module.params, mapping), diff_fields)
 
             if 'Access' in p4_user_spec:
-                # check to see if changes are detected in any of the fields
-                if not check_spec(p4_user_spec, module.params, mapping):
+                # detect per-field changes
+                field_changes = changed_fields(p4_user_spec, module.params, mapping)
+
+                if not field_changes:
                     result['changed'] = False
 
                 # update user with new values
@@ -193,6 +225,8 @@ def run_module():
                         p4.save_user(p4_user_spec, "-f")
 
                     result['changed'] = True
+                    result['action'] = 'updated'
+                    result['changes'] = field_changes
 
                     if module._diff:
                         result['diff'] = {'before': before, 'after': after}
@@ -204,9 +238,13 @@ def run_module():
                     p4.save_user(p4_user_spec, "-f")
 
                 result['changed'] = True
+                result['action'] = 'created'
 
                 if module._diff:
                     result['diff'] = {'before': '', 'after': after}
+
+            # always return the spec for present state
+            result['user_spec'] = p4_user_spec
 
         elif module.params['state'] == 'absent':
             # delete user
@@ -215,6 +253,7 @@ def run_module():
                     p4.delete_user('-f', module.params['name'])
 
                 result['changed'] = True
+                result['action'] = 'deleted'
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': ''}

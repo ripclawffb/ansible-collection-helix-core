@@ -86,6 +86,8 @@ class TestUserCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['user_spec'] is not None
         mock_p4.save_user.assert_called_once()
 
     def test_create_check_mode(self, mock_module, mock_p4, new_user_spec):
@@ -101,6 +103,7 @@ class TestUserCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         mock_p4.save_user.assert_not_called()
 
 
@@ -117,6 +120,9 @@ class TestUserUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['user_spec'] == existing_user_spec
 
     def test_with_changes(self, mock_module, mock_p4, existing_user_spec):
         mock_module.params['email'] = 'newemail@example.com'
@@ -131,6 +137,9 @@ class TestUserUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
+        assert result['changes'][0]['field'] == 'Email'
         mock_p4.save_user.assert_called_once()
 
 
@@ -148,6 +157,7 @@ class TestUserDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_user.assert_called_once_with('-f', 'jdoe')
 
     def test_delete_nonexistent(self, mock_module, mock_p4, new_user_spec):
@@ -163,6 +173,7 @@ class TestUserDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
 
     def test_delete_check_mode(self, mock_module, mock_p4, existing_user_spec):
         mock_module.params['state'] = 'absent'
@@ -178,4 +189,5 @@ class TestUserDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_user.assert_not_called()

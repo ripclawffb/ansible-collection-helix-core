@@ -90,6 +90,8 @@ class TestDepotCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['depot_spec'] is not None
         mock_p4.save_depot.assert_called_once()
 
     def test_create_new_depot_check_mode(self, mock_module, mock_p4, existing_depot_spec):
@@ -106,6 +108,7 @@ class TestDepotCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         mock_p4.save_depot.assert_not_called()
 
 
@@ -123,6 +126,9 @@ class TestDepotUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['depot_spec'] == existing_depot_spec
         mock_p4.save_depot.assert_not_called()
 
     def test_update_existing_with_changes(self, mock_module, mock_p4, existing_depot_spec):
@@ -139,6 +145,9 @@ class TestDepotUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
+        assert result['changes'][0]['field'] == 'Description'
         mock_p4.save_depot.assert_called_once()
 
     def test_update_with_changes_check_mode(self, mock_module, mock_p4, existing_depot_spec):
@@ -156,6 +165,7 @@ class TestDepotUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
         mock_p4.save_depot.assert_not_called()
 
 
@@ -174,6 +184,7 @@ class TestDepotDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_depot.assert_called_once_with('-f', 'test_depot')
 
     def test_delete_nonexistent_depot(self, mock_module, mock_p4):
@@ -189,6 +200,7 @@ class TestDepotDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
         mock_p4.delete_depot.assert_not_called()
 
     def test_delete_check_mode(self, mock_module, mock_p4, existing_depot_spec):
@@ -206,6 +218,7 @@ class TestDepotDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_depot.assert_not_called()
 
 

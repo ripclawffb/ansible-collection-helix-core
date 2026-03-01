@@ -98,6 +98,8 @@ class TestGroupCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['group_spec'] is not None
         mock_p4.save_group.assert_called_once()
 
     def test_create_check_mode(self, mock_module, mock_p4, new_group_spec):
@@ -113,6 +115,7 @@ class TestGroupCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         mock_p4.save_group.assert_not_called()
 
 
@@ -129,6 +132,9 @@ class TestGroupUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['group_spec'] == existing_group_spec
 
     def test_with_changes(self, mock_module, mock_p4, existing_group_spec):
         mock_module.params['users'] = ['alice', 'bob', 'charlie']
@@ -143,6 +149,9 @@ class TestGroupUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
+        assert result['changes'][0]['field'] == 'Users'
         mock_p4.save_group.assert_called_once()
 
 
@@ -160,6 +169,7 @@ class TestGroupDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_group.assert_called_once_with('dev_team')
 
     def test_delete_nonexistent(self, mock_module, mock_p4, new_group_spec):
@@ -175,6 +185,7 @@ class TestGroupDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
         mock_p4.delete_group.assert_not_called()
 
     def test_delete_check_mode(self, mock_module, mock_p4, existing_group_spec):
@@ -191,4 +202,5 @@ class TestGroupDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_group.assert_not_called()

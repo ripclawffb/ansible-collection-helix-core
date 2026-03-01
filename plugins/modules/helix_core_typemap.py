@@ -103,6 +103,31 @@ changed:
     returned: always
     type: bool
     sample: true
+typemap:
+    description: The typemap entries after the operation.
+    returned: always
+    type: list
+    elements: dict
+    sample:
+        - type: binary+l
+          path: //depot/....exe
+action:
+    description: The action performed on the resource.
+    returned: always
+    type: str
+    sample: updated
+    choices:
+        - updated
+        - cleared
+        - unchanged
+changes:
+    description: Entries that were added or removed.
+    returned: always
+    type: dict
+    sample:
+        added:
+            - { type: binary+l, path: "//depot/....exe" }
+        removed: []
 diff:
     description: A dictionary containing 'before' and 'after' state of the resource.
     returned: when diff mode is enabled
@@ -154,6 +179,9 @@ def run_module():
 
     result = dict(
         changed=False,
+        typemap=[],
+        action='unchanged',
+        changes={'added': [], 'removed': []},
     )
 
     module = AnsibleModule(
@@ -185,13 +213,27 @@ def run_module():
             if current_entries != desired_entries:
                 before = entries_to_diff(current_entries)
 
+                # Compute added/removed
+                current_set = set(current_entries)
+                desired_set = set(desired_entries)
+                added = [e for e in desired_entries if e not in current_set]
+                removed = [e for e in current_entries if e not in desired_set]
+
                 if not module.check_mode:
                     p4_typemap_spec['TypeMap'] = list_to_typemap(module.params['typemap'])
                     p4.save_typemap(p4_typemap_spec)
                 result['changed'] = True
+                result['action'] = 'updated'
+                result['changes'] = {
+                    'added': [{'type': e[0], 'path': e[1]} for e in added],
+                    'removed': [{'type': e[0], 'path': e[1]} for e in removed],
+                }
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': entries_to_diff(desired_entries)}
+
+            # return resulting table
+            result['typemap'] = [{'type': e[0], 'path': e[1]} for e in (desired_entries if result['changed'] else current_entries)]
 
         elif module.params['state'] == 'absent':
             # Clear typemap if it has entries
@@ -202,6 +244,11 @@ def run_module():
                     p4_typemap_spec['TypeMap'] = []
                     p4.save_typemap(p4_typemap_spec)
                 result['changed'] = True
+                result['action'] = 'cleared'
+                result['changes'] = {
+                    'added': [],
+                    'removed': [{'type': e[0], 'path': e[1]} for e in current_entries],
+                }
 
                 if module._diff:
                     result['diff'] = {'before': before, 'after': ''}

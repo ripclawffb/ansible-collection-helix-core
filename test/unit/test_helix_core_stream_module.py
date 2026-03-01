@@ -96,6 +96,8 @@ class TestStreamCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
+        assert result['stream_spec'] is not None
         mock_p4.save_stream.assert_called_once()
 
     def test_create_check_mode(self, mock_module, mock_p4, new_stream_spec):
@@ -111,6 +113,7 @@ class TestStreamCreate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'created'
         mock_p4.save_stream.assert_not_called()
 
 
@@ -127,6 +130,9 @@ class TestStreamUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
+        assert result['changes'] == []
+        assert result['stream_spec'] == existing_stream_spec
 
     def test_with_changes(self, mock_module, mock_p4, existing_stream_spec):
         mock_module.params['description'] = 'Updated branch'
@@ -141,6 +147,9 @@ class TestStreamUpdate:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'updated'
+        assert len(result['changes']) > 0
+        assert result['changes'][0]['field'] == 'Description'
         mock_p4.save_stream.assert_called_once()
 
 
@@ -158,6 +167,7 @@ class TestStreamDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_stream.assert_called_once_with('-f', '//Ace/main')
 
     def test_delete_nonexistent(self, mock_module, mock_p4, new_stream_spec):
@@ -173,6 +183,7 @@ class TestStreamDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is False
+        assert result['action'] == 'unchanged'
 
     def test_delete_check_mode(self, mock_module, mock_p4, existing_stream_spec):
         mock_module.params['state'] = 'absent'
@@ -188,4 +199,5 @@ class TestStreamDelete:
 
         result = exc_info.value.args[0]
         assert result['changed'] is True
+        assert result['action'] == 'deleted'
         mock_p4.delete_stream.assert_not_called()

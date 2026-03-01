@@ -307,3 +307,21 @@ class TestStreamDiff:
         assert 'Updated branch' in result['diff']['after']
         mock_p4.save_stream.assert_not_called()
 
+
+class TestStreamDeleteErrors:
+    def test_delete_p4_error(self, mock_module, mock_p4, existing_stream_spec):
+        mock_module.params['state'] = 'absent'
+        mock_p4.fetch_stream.return_value = existing_stream_spec
+        mock_p4.delete_stream.side_effect = Exception('Stream has child streams')
+
+        with patch('plugins.modules.helix_core_stream.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_stream.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_stream.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_stream import run_module
+                    with pytest.raises(AnsibleFailJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'Stream has child streams' in result['msg']
+
+

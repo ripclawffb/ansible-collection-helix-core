@@ -332,3 +332,22 @@ class TestDepotDiff:
         assert 'Updated depot' in result['diff']['after']
         mock_p4.save_depot.assert_not_called()
 
+
+class TestDepotDeleteErrors:
+    def test_delete_p4_error(self, mock_module, mock_p4, existing_depot_spec):
+        mock_module.params['state'] = 'absent'
+        mock_p4.fetch_depot.return_value = existing_depot_spec
+        mock_p4.run.return_value = [{'name': 'test_depot'}]
+        mock_p4.delete_depot.side_effect = Exception('Depot has active streams')
+
+        with patch('plugins.modules.helix_core_depot.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_depot.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_depot.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_depot import run_module
+                    with pytest.raises(AnsibleFailJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert 'Depot has active streams' in result['msg']
+
+

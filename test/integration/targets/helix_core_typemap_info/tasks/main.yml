@@ -1,0 +1,40 @@
+# Test code for the Helix typemap_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Get current typemap
+- name: Get typemap info
+  ripclawffb.helix_core.helix_core_typemap_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: typemap_info
+
+- name: Output typemap_info
+  ansible.builtin.debug:
+    var: typemap_info
+
+- name: Verify typemap_info has typemap list
+  ansible.builtin.assert:
+    that:
+      - typemap_info.typemap is defined
+      - typemap_info.typemap | type_debug == 'list'
+      - typemap_info is not changed
+
+# Check mode
+- name: Get typemap info (check mode)
+  ripclawffb.helix_core.helix_core_typemap_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: typemap_info_check
+  check_mode: true
+
+- name: Verify check mode returns same data
+  ansible.builtin.assert:
+    that:
+      - typemap_info_check.typemap is defined

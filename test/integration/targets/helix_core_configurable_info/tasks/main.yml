@@ -1,0 +1,64 @@
+# Test code for the Helix configurable_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# Get all configurables
+- name: Get all configurables
+  ripclawffb.helix_core.helix_core_configurable_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_configs
+
+- name: Output all_configs
+  ansible.builtin.debug:
+    var: all_configs
+
+- name: Verify all_configs returns a list
+  ansible.builtin.assert:
+    that:
+      - all_configs.info is defined
+      - all_configs.info | type_debug == 'list'
+      - all_configs is not changed
+
+# Get a specific configurable by name
+- name: Set a configurable for info query
+  ripclawffb.helix_core.helix_core_configurable:
+    state: present
+    name: dm.keys.hide
+    value: '2'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Get specific configurable
+  ripclawffb.helix_core.helix_core_configurable_info:
+    name: dm.keys.hide
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: config_info
+
+- name: Verify config_info returns matching entries
+  ansible.builtin.assert:
+    that:
+      - config_info.info is defined
+      - config_info.info | type_debug == 'list'
+      - config_info.info | length > 0
+      - config_info is not changed
+
+# Cleanup
+- name: Unset test configurable
+  ripclawffb.helix_core.helix_core_configurable:
+    state: absent
+    name: dm.keys.hide
+    value: '2'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''

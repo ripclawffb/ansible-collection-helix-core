@@ -1,0 +1,64 @@
+# Test code for the Helix server_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# List all servers
+- name: List all servers
+  ripclawffb.helix_core.helix_core_server_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_servers
+
+- name: Output all_servers
+  ansible.builtin.debug:
+    var: all_servers
+
+- name: Verify all_servers returns a list
+  ansible.builtin.assert:
+    that:
+      - all_servers.info is defined
+      - all_servers.info | type_debug == 'list'
+      - all_servers is not changed
+
+# Get specific server (using 'standard' which is created by the server integration tests)
+- name: Create a server spec for info query
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: info_test_server
+    description: 'Info test server.'
+    services: standard
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Get specific server info
+  ripclawffb.helix_core.helix_core_server_info:
+    name: info_test_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: server_info
+
+- name: Verify server_info returns a dict
+  ansible.builtin.assert:
+    that:
+      - server_info.info is defined
+      - server_info.info | type_debug == 'dict'
+      - server_info.info.Services is defined
+      - server_info is not changed
+
+# Cleanup
+- name: Delete test server
+  ripclawffb.helix_core.helix_core_server:
+    state: absent
+    serverid: info_test_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''

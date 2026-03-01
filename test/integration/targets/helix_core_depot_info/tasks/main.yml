@@ -1,0 +1,40 @@
+# Test code for the Helix depot_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# List all depots
+- name: List all depots
+  ripclawffb.helix_core.helix_core_depot_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_depots
+
+- name: Verify all_depots returns a list
+  ansible.builtin.assert:
+    that:
+      - all_depots.info is defined
+      - all_depots.info | type_debug == 'list'
+      - all_depots.info | length > 0
+      - all_depots is not changed
+
+# Get specific depot (the default 'depot' depot always exists)
+- name: Get specific depot info
+  ripclawffb.helix_core.helix_core_depot_info:
+    name: depot
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: depot_info
+
+- name: Verify depot_info returns a dict
+  ansible.builtin.assert:
+    that:
+      - depot_info.info is defined
+      - depot_info.info | type_debug == 'dict'
+      - depot_info.info.Type is defined
+      - depot_info is not changed

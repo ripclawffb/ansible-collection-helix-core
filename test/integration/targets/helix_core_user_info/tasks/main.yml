@@ -1,0 +1,40 @@
+# Test code for the Helix user_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# List all users
+- name: List all users
+  ripclawffb.helix_core.helix_core_user_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_users
+
+- name: Verify all_users returns a list
+  ansible.builtin.assert:
+    that:
+      - all_users.info is defined
+      - all_users.info | type_debug == 'list'
+      - all_users.info | length > 0
+      - all_users is not changed
+
+# Get specific user (bruno always exists)
+- name: Get specific user info
+  ripclawffb.helix_core.helix_core_user_info:
+    name: bruno
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: user_info
+
+- name: Verify user_info returns a dict
+  ansible.builtin.assert:
+    that:
+      - user_info.info is defined
+      - user_info.info | type_debug == 'dict'
+      - user_info.info.Email is defined
+      - user_info is not changed

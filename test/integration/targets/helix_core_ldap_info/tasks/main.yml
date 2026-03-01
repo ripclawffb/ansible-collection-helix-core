@@ -1,0 +1,25 @@
+# Test code for the Helix ldap_info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# List all LDAP configs (may be empty if no LDAP is configured)
+- name: List all LDAP configs
+  ripclawffb.helix_core.helix_core_ldap_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_ldaps
+
+- name: Output all_ldaps
+  ansible.builtin.debug:
+    var: all_ldaps
+
+- name: Verify all_ldaps returns a list
+  ansible.builtin.assert:
+    that:
+      - all_ldaps.info is defined
+      - all_ldaps.info | type_debug == 'list'
+      - all_ldaps is not changed

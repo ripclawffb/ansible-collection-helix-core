@@ -14,7 +14,7 @@ module: helix_core_group_info
 
 short_description: Get group information from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves group specifications from Perforce Helix Core."

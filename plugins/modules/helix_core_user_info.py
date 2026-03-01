@@ -14,7 +14,7 @@ module: helix_core_user_info
 
 short_description: Get user information from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves user specifications from Perforce Helix Core."

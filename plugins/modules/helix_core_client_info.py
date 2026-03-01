@@ -14,7 +14,7 @@ module: helix_core_client_info
 
 short_description: Get client workspace information from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves client workspace specifications from Perforce Helix Core."

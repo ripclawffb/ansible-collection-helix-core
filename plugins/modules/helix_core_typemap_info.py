@@ -14,7 +14,7 @@ module: helix_core_typemap_info
 
 short_description: Get the current typemap from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves the current typemap entries from Perforce Helix Core."

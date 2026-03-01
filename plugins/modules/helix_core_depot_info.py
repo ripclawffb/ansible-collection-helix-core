@@ -14,7 +14,7 @@ module: helix_core_depot_info
 
 short_description: Get depot information from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves depot specifications from Perforce Helix Core."

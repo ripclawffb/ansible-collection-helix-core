@@ -14,7 +14,7 @@ module: helix_core_trigger_info
 
 short_description: Get the current trigger table from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves the current trigger table entries from Perforce Helix Core."

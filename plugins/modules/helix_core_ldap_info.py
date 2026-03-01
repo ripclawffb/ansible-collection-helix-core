@@ -14,7 +14,7 @@ module: helix_core_ldap_info
 
 short_description: Get LDAP configuration information from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves LDAP configuration specifications from Perforce Helix Core."

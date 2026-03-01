@@ -14,7 +14,7 @@ module: helix_core_stream_info
 
 short_description: Get stream information from Perforce Helix Core
 
-version_added: "1.1.0"
+version_added: "1.2.0"
 
 description:
     - "Retrieves stream specifications from Perforce Helix Core."

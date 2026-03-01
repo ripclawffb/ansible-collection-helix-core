@@ -1,0 +1,53 @@
+---
+dependency:
+  name: galaxy
+  enabled: False
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: ubuntu2404-23.1
+    dockerfile: Dockerfile.ubuntu.24.04-23.1.j2
+    image: ubuntu:24.04-23.1
+    command: '-r .'
+  - name: ubuntu2404-23.2
+    dockerfile: Dockerfile.ubuntu.24.04-23.2.j2
+    image: ubuntu:24.04-23.2
+    command: '-r .'
+  - name: ubuntu2404-24.1
+    dockerfile: Dockerfile.ubuntu.24.04-24.1.j2
+    image: ubuntu:24.04-24.1
+    command: '-r .'
+  - name: ubuntu2404-24.2
+    dockerfile: Dockerfile.ubuntu.24.04-24.2.j2
+    image: ubuntu:24.04-24.2
+    command: '-r .'
+  - name: ubuntu2404-25.1
+    dockerfile: Dockerfile.ubuntu.24.04-25.1.j2
+    image: ubuntu:24.04-25.1
+    command: '-r .'
+  - name: ubuntu2404-25.2
+    dockerfile: Dockerfile.ubuntu.24.04-25.2.j2
+    image: ubuntu:24.04-25.2
+    command: '-r .'
+provisioner:
+  name: ansible
+  log: true
+  env:
+    ANSIBLE_COLLECTIONS_PATHS: "/home/runner/work/ansible-collection-helix-core/ansible-collection-helix-core:~/.ansible/collections"
+  inventory:
+    group_vars:
+      all:
+        ansible_python_interpreter: "/usr/bin/python3"
+scenario:
+  name: ubuntu2404
+  test_sequence:
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - side_effect
+    - destroy

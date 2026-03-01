@@ -1,0 +1,67 @@
+---
+dependency:
+  name: galaxy
+  enabled: False
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: rockylinux8-23.1
+    dockerfile: Dockerfile.rockylinux.8-23.1.j2
+    image: rockylinux.8-23.1
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-23.2
+    dockerfile: Dockerfile.rockylinux.8-23.2.j2
+    image: rockylinux.8-23.2
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-24.1
+    dockerfile: Dockerfile.rockylinux.8-24.1.j2
+    image: rockylinux.8-24.1
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-24.2
+    dockerfile: Dockerfile.rockylinux.8-24.2.j2
+    image: rockylinux.8-24.2
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-25.1
+    dockerfile: Dockerfile.rockylinux.8-25.1.j2
+    image: rockylinux.8-25.1
+    command: '-r .'
+    groups:
+      - rocky8
+  - name: rockylinux8-25.2
+    dockerfile: Dockerfile.rockylinux.8-25.2.j2
+    image: rockylinux.8-25.2
+    command: '-r .'
+    groups:
+      - rocky8
+provisioner:
+  name: ansible
+  log: true
+  env:
+    ANSIBLE_COLLECTIONS_PATHS: "/home/runner/work/ansible-collection-helix-core/ansible-collection-helix-core:~/.ansible/collections"
+  inventory:
+    group_vars:
+      all:
+        ansible_python_interpreter: "/usr/bin/python3"
+      rocky8:
+        ansible_python_interpreter: "/usr/bin/python3.9"
+scenario:
+  name: rockylinux8
+  test_sequence:
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - side_effect
+    - destroy

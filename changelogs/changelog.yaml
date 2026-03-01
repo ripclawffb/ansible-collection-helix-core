@@ -46,3 +46,21 @@ releases:
       bugfixes:
         - helix_core_protect - Fixed protections table ordering. The module now preserves entry order instead of using unordered sets, which previously caused unpredictable entry placement.
         - helix_core_protect - Fixed duplicate playbook entries being inserted multiple times into the protections table.
+  1.2.0:
+    release_date: '2026-02-28'
+    changes:
+      release_summary: Added info modules for all resources, Rocky Linux 8 support, and Perforce 25.x compatibility.
+      minor_changes:
+        - helix_core_client_info - New module to fetch client/workspace information.
+        - helix_core_configurable_info - New module to fetch server configurable information.
+        - helix_core_depot_info - New module to fetch depot information.
+        - helix_core_group_info - New module to fetch group information.
+        - helix_core_ldap_info - New module to fetch LDAP configuration information.
+        - helix_core_server_info - New module to fetch server specification information.
+        - helix_core_stream_info - New module to fetch stream information.
+        - helix_core_trigger_info - New module to fetch triggers table information.
+        - helix_core_typemap_info - New module to fetch typemap table information.
+        - helix_core_user_info - New module to fetch user information.
+        - Rocky Linux 8 support - Added Molecule tests and Dockerfiles for Rocky Linux 8 with Perforce r23.1, r23.2, r24.1, r24.2, r25.1, and r25.2.
+        - Perforce 25.x support - Added Molecule tests for Perforce r25.1 and r25.2 across all supported platforms.
+        - README.md - Updated compatibility matrix and included modules table.

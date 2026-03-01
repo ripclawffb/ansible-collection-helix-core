@@ -22,7 +22,7 @@ ripclawffb.helix_core.helix_core_server module -- Manage server spec on Perforce
 .. Collection note
 
 .. note::
-    This module is part of the `ripclawffb.helix_core collection <https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/>`_ (version 1.1.1).
+    This module is part of the `ripclawffb.helix_core collection <https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/>`_ (version 1.2.0).
 
     It is not included in ``ansible-core``.
     To check whether it is installed, run :code:`ansible-galaxy collection list`.
@@ -948,6 +948,61 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-action"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_server_module__return-action:
+
+      .. rst-class:: ansible-option-title
+
+      **action**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-action" title="Permalink to this return value"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The action performed on the resource.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` always
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Can only return:`
+
+      - :ansible-option-choices-entry:`"created"`
+      - :ansible-option-choices-entry:`"updated"`
+      - :ansible-option-choices-entry:`"deleted"`
+      - :ansible-option-choices-entry:`"unchanged"`
+
+
+      .. rst-class:: ansible-option-line
+      .. rst-class:: ansible-option-sample
+
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"created"`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changed"></div>
 
       .. _ansible_collections.ripclawffb.helix_core.helix_core_server_module__return-changed:
@@ -983,6 +1038,51 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-sample
 
       :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-changes"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_server_module__return-changes:
+
+      .. rst-class:: ansible-option-title
+
+      **changes**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-changes" title="Permalink to this return value"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      List of fields that were changed.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` always
+
+      .. rst-class:: ansible-option-line
+      .. rst-class:: ansible-option-sample
+
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`[{"after": "New description", "before": "Old description", "field": "Description"}]`
 
 
       .. raw:: html
@@ -1125,6 +1225,51 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         </div>
 
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-server_spec"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_server_module__return-server_spec:
+
+      .. rst-class:: ansible-option-title
+
+      **server_spec**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-server_spec" title="Permalink to this return value"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The server specification after the operation.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` always
+
+      .. rst-class:: ansible-option-line
+      .. rst-class:: ansible-option-sample
+
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"Description": "Commit server", "ServerID": "commit", "Services": "standard"}`
+
+
+      .. raw:: html
+
+        </div>
 
 
 

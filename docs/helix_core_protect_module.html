@@ -140,7 +140,7 @@
 <h1>ripclawffb.helix_core.helix_core_protect module – Manage the protection table on Perforce Helix Core<a class="headerlink" href="#ripclawffb-helix-core-helix-core-protect-module-manage-the-protection-table-on-perforce-helix-core" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.1.1).</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/ripclawffb/helix_core/">ripclawffb.helix_core collection</a> (version 1.2.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">ripclawffb.helix_core</span></code>.
@@ -425,12 +425,35 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-action"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-return-action"><strong>action</strong></p>
+<a class="ansibleOptionLink" href="#return-action" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The action performed on the resource.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Can only return:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;updated&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;unchanged&quot;</span></code></p></li>
+</ul>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;updated&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-changed"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-return-changed"><strong>changed</strong></p>
 <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Whether any changes were made to the protection table.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
 <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">true</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-changes"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-return-changes"><strong>changes</strong></p>
+<a class="ansibleOptionLink" href="#return-changes" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Entries that were added or removed.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">{&quot;added&quot;:</span> <span class="pre">[{&quot;access&quot;:</span> <span class="pre">&quot;write&quot;,</span> <span class="pre">&quot;host&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;devs&quot;,</span> <span class="pre">&quot;path&quot;:</span> <span class="pre">&quot;//...&quot;,</span> <span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;group&quot;}],</span> <span class="pre">&quot;removed&quot;:</span> <span class="pre">[]}</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -455,6 +478,15 @@ see <a class="reference internal" href="#ansible-collections-ripclawffb-helix-co
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The state of the resource before the action.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-protections"></div><p class="ansible-option-title" id="ansible-collections-ripclawffb-helix-core-helix-core-protect-module-return-protections"><strong>protections</strong></p>
+<a class="ansibleOptionLink" href="#return-protections" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The protection table entries after the operation.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;access&quot;:</span> <span class="pre">&quot;super&quot;,</span> <span class="pre">&quot;host&quot;:</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;admin&quot;,</span> <span class="pre">&quot;path&quot;:</span> <span class="pre">&quot;//...&quot;,</span> <span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;user&quot;}]</span></code></p>
 </div></td>
 </tr>
 </tbody>

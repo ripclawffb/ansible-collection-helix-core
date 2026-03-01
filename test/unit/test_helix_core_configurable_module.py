@@ -219,3 +219,38 @@ class TestConfigurableDiff:
         result = exc_info.value.args[0]
         assert 'diff' in result
         assert result['diff']['after'] == ''
+
+    def test_no_diff_when_disabled(self, mock_module, mock_p4):
+        mock_module._diff = False
+        mock_p4.run.return_value = []
+
+        with patch('plugins.modules.helix_core_configurable.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_configurable.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_configurable.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_configurable import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' not in result
+
+    def test_check_mode_set_with_diff(self, mock_module, mock_p4):
+        mock_module._diff = True
+        mock_module.check_mode = True
+        mock_p4.run.return_value = []
+
+        with patch('plugins.modules.helix_core_configurable.helix_core_connect', return_value=mock_p4):
+            with patch('plugins.modules.helix_core_configurable.helix_core_disconnect'):
+                with patch('plugins.modules.helix_core_configurable.AnsibleModule', return_value=mock_module):
+                    from plugins.modules.helix_core_configurable import run_module
+                    with pytest.raises(AnsibleExitJson) as exc_info:
+                        run_module()
+
+        result = exc_info.value.args[0]
+        assert result['changed'] is True
+        assert 'diff' in result
+        assert 'auth.id' in result['diff']['after']
+        # Should only call 'configure show', not 'configure set'
+        assert mock_p4.run.call_count == 1
+

@@ -53,6 +53,12 @@ This collection is tested via Molecule on the following platforms and Perforce v
 | `helix_core_user` | Manage users |
 | `helix_core_user_info` | Get user info |
 
+## Included Plugins
+
+| Plugin | Type | Description |
+|--------|------|-------------|
+| `helix_core` | Inventory | Discovers Perforce server topology via `p4 servers` |
+
 ## Installation
 
 ### Ansible Galaxy

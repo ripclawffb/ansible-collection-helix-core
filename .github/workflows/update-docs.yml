@@ -6,12 +6,14 @@ on:
     paths:
       - 'plugins/modules/*.py'
       - 'plugins/module_utils/*.py'
+      - 'plugins/inventory/*.py'
   pull_request:
     branches:
       - master
     paths:
       - 'plugins/modules/*.py'
       - 'plugins/module_utils/*.py'
+      - 'plugins/inventory/*.py'
       - '.github/workflows/update-docs.yml'
   workflow_dispatch:
 

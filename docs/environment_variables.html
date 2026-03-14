@@ -95,6 +95,9 @@
 <li class="toctree-l1"><a class="reference internal" href="helix_core_user_module.html">ripclawffb.helix_core.helix_core_user module – Manage users on Perforce Helix Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helix_core_user_info_module.html">ripclawffb.helix_core.helix_core_user_info module – Get user information from Perforce Helix Core</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helix_core_inventory.html">ripclawffb.helix_core.helix_core inventory – Perforce Helix Core dynamic inventory plugin</a></li>
+</ul>
 <!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
 
         </div>
@@ -126,7 +129,50 @@
 <span id="list-of-collection-env-vars"></span><h1>Index of all Collection Environment Variables<a class="headerlink" href="#index-of-all-collection-environment-variables" title="Link to this heading"></a></h1>
 <p>The following index documents all environment variables declared by plugins in collections.
 Environment variables used by the ansible-core configuration are documented in <a class="reference external" href="https://docs.ansible.com/projects/ansible/devel/reference_appendices/config.html#ansible-configuration-settings" title="(in Ansible vdevel)"><span>Ansible Configuration Settings</span></a>.</p>
-<p>No environment variables have been defined.</p>
+<dl class="std envvar">
+<dt class="sig sig-object std" id="envvar-ANSIBLE_INVENTORY_USE_EXTRA_VARS">
+<span class="sig-name descname"><span class="pre">ANSIBLE_INVENTORY_USE_EXTRA_VARS</span></span><a class="headerlink" href="#envvar-ANSIBLE_INVENTORY_USE_EXTRA_VARS" title="Link to this definition"></a></dt>
+<dd><p>Merge extra vars into the available variables for composition (highest precedence).</p>
+<p><em>Used by:</em>
+<a class="reference internal" href="helix_core_inventory.html#ansible-collections-ripclawffb-helix-core-helix-core-inventory"><span class="std std-ref">ripclawffb.helix_core.helix_core inventory plugin</span></a></p>
+</dd></dl>
+
+<dl class="std envvar">
+<dt class="sig sig-object std" id="envvar-P4CHARSET">
+<span class="sig-name descname"><span class="pre">P4CHARSET</span></span><a class="headerlink" href="#envvar-P4CHARSET" title="Link to this definition"></a></dt>
+<dd><p>Character set used for translation of unicode files.</p>
+<p>Can also use <code class="docutils literal notranslate"><span class="pre">P4CHARSET</span></code> environment variable.</p>
+<p><em>Used by:</em>
+<a class="reference internal" href="helix_core_inventory.html#ansible-collections-ripclawffb-helix-core-helix-core-inventory"><span class="std std-ref">ripclawffb.helix_core.helix_core inventory plugin</span></a></p>
+</dd></dl>
+
+<dl class="std envvar">
+<dt class="sig sig-object std" id="envvar-P4PASSWD">
+<span class="sig-name descname"><span class="pre">P4PASSWD</span></span><a class="headerlink" href="#envvar-P4PASSWD" title="Link to this definition"></a></dt>
+<dd><p>The login password for the Perforce user.</p>
+<p>Can also use <code class="docutils literal notranslate"><span class="pre">P4PASSWD</span></code> environment variable.</p>
+<p><em>Used by:</em>
+<a class="reference internal" href="helix_core_inventory.html#ansible-collections-ripclawffb-helix-core-helix-core-inventory"><span class="std std-ref">ripclawffb.helix_core.helix_core inventory plugin</span></a></p>
+</dd></dl>
+
+<dl class="std envvar">
+<dt class="sig sig-object std" id="envvar-P4PORT">
+<span class="sig-name descname"><span class="pre">P4PORT</span></span><a class="headerlink" href="#envvar-P4PORT" title="Link to this definition"></a></dt>
+<dd><p>The hostname/ip and port of the Perforce server (e.g. <code class="docutils literal notranslate"><span class="pre">ssl:perforce:1666</span></code>).</p>
+<p>Can also use <code class="docutils literal notranslate"><span class="pre">P4PORT</span></code> environment variable.</p>
+<p><em>Used by:</em>
+<a class="reference internal" href="helix_core_inventory.html#ansible-collections-ripclawffb-helix-core-helix-core-inventory"><span class="std std-ref">ripclawffb.helix_core.helix_core inventory plugin</span></a></p>
+</dd></dl>
+
+<dl class="std envvar">
+<dt class="sig sig-object std" id="envvar-P4USER">
+<span class="sig-name descname"><span class="pre">P4USER</span></span><a class="headerlink" href="#envvar-P4USER" title="Link to this definition"></a></dt>
+<dd><p>A Perforce user with permission to run <code class="docutils literal notranslate"><span class="pre">p4</span> <span class="pre">servers</span></code>.</p>
+<p>Can also use <code class="docutils literal notranslate"><span class="pre">P4USER</span></code> environment variable.</p>
+<p><em>Used by:</em>
+<a class="reference internal" href="helix_core_inventory.html#ansible-collections-ripclawffb-helix-core-helix-core-inventory"><span class="std std-ref">ripclawffb.helix_core.helix_core inventory plugin</span></a></p>
+</dd></dl>
+
 </section>
 
 

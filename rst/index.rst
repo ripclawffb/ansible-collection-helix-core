@@ -105,3 +105,16 @@ Modules
     helix_core_typemap_info_module
     helix_core_user_module
     helix_core_user_info_module
+
+.. _inventory_plugins_in_ripclawffb.helix_core:
+
+Inventory Plugins
+~~~~~~~~~~~~~~~~~
+
+* :ansplugin:`helix_core inventory <ripclawffb.helix_core.helix_core#inventory>` -- Perforce Helix Core dynamic inventory plugin
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    helix_core_inventory

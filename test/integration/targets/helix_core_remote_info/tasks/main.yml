@@ -1,0 +1,65 @@
+# Test code for the Helix remote info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Create a remote spec for info testing
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: info-test-remote
+    description: 'Created for info test.'
+    address: 'ssl:central-perforce:1666'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Get info for the specific remote
+  ripclawffb.helix_core.helix_core_remote_info:
+    name: info-test-remote
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: specific_remote_info
+
+- name: Output specific_remote_info
+  ansible.builtin.debug:
+    var: specific_remote_info
+
+- name: Verify specific_remote_info
+  ansible.builtin.assert:
+    that:
+      - specific_remote_info is not changed
+      - specific_remote_info.info is defined
+      - specific_remote_info.info | type_debug == 'dict'
+      - specific_remote_info.info.RemoteID == 'info-test-remote'
+
+- name: Get info for all remotes
+  ripclawffb.helix_core.helix_core_remote_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: all_remotes_info
+
+- name: Output all_remotes_info
+  ansible.builtin.debug:
+    var: all_remotes_info
+
+- name: Verify all_remotes_info
+  ansible.builtin.assert:
+    that:
+      - all_remotes_info is not changed
+      - all_remotes_info.info is defined
+      - all_remotes_info.info | type_debug == 'list'
+
+- name: Cleanup remote spec after info testing
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: info-test-remote
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''

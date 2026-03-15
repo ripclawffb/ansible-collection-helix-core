@@ -191,6 +191,20 @@
     that:
       - clear_trigger_idempotent is not changed
 
+# Verify entries truly removed via _info module
+- name: Get trigger table after clear
+  ripclawffb.helix_core.helix_core_trigger_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: trigger_info_after_clear
+
+- name: Verify trigger table is empty on server
+  ansible.builtin.assert:
+    that:
+      - trigger_info_after_clear.triggers | length == 0
+
 # Diff mode tests
 - name: Set trigger with diff mode
   ripclawffb.helix_core.helix_core_trigger:

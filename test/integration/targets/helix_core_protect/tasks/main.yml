@@ -923,6 +923,24 @@
   ansible.builtin.debug:
     var: cleanup
 
+# Verify test entries truly removed via _info module
+- name: Get protection table after cleanup
+  ripclawffb.helix_core.helix_core_protect_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: protect_info_after_cleanup
+
+- name: Verify test entries no longer exist on server
+  ansible.builtin.assert:
+    that:
+      - "(protect_info_after_cleanup.protections | selectattr('name', 'equalto', 'test_writers') | list | length) == 0"
+      - "(protect_info_after_cleanup.protections | selectattr('name', 'equalto', 'test_admin') | list | length) == 0"
+      - "(protect_info_after_cleanup.protections | selectattr('name', 'equalto', 'order_test_a') | list | length) == 0"
+      - "(protect_info_after_cleanup.protections | selectattr('name', 'equalto', 'order_test_b') | list | length) == 0"
+      - "(protect_info_after_cleanup.protections | selectattr('name', 'equalto', 'test_dup') | list | length) == 0"
+
 # Diff mode tests
 - name: Add protection entry with diff mode
   ripclawffb.helix_core.helix_core_protect:

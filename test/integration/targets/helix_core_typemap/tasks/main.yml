@@ -183,6 +183,20 @@
     that:
       - clear_typemap_idempotent is not changed
 
+# Verify entries truly removed via _info module
+- name: Get typemap after clear
+  ripclawffb.helix_core.helix_core_typemap_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: typemap_info_after_clear
+
+- name: Verify typemap is empty on server
+  ansible.builtin.assert:
+    that:
+      - typemap_info_after_clear.typemap | length == 0
+
 # Diff mode tests
 - name: Set typemap with diff mode
   ripclawffb.helix_core.helix_core_typemap:

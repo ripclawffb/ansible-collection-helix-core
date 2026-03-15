@@ -1,0 +1,286 @@
+# Test code for the Helix remote module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Create a new remote spec
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: test-remote
+    description: 'Created by root for testing.'
+    address: 'ssl:central-perforce:1666'
+    depotmap:
+      - '//depot/... //depot/...'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_remote_spec
+
+- name: Output create_remote_spec
+  ansible.builtin.debug:
+    var: create_remote_spec
+
+- name: Verify create_remote_spec is changed
+  ansible.builtin.assert:
+    that:
+      - create_remote_spec is changed
+      - create_remote_spec.remote_spec.RemoteID == 'test-remote'
+
+- name: Create new remote spec (idempotent)
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: test-remote
+    description: 'Created by root for testing.'
+    address: 'ssl:central-perforce:1666'
+    depotmap:
+      - '//depot/... //depot/...'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: create_remote_idempotent
+
+- name: Output create_remote_idempotent
+  ansible.builtin.debug:
+    var: create_remote_idempotent
+
+- name: Verify create_remote_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - create_remote_idempotent is not changed
+
+- name: Update remote spec
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: test-remote
+    description: 'Updated by user.'
+    address: 'ssl:central-perforce:1666'
+    depotmap:
+      - '//depot/... //depot/...'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_remote
+
+- name: Output update_remote
+  ansible.builtin.debug:
+    var: update_remote
+
+- name: Verify update_remote is changed
+  ansible.builtin.assert:
+    that:
+      - update_remote is changed
+
+- name: Update remote spec (idempotent)
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: test-remote
+    description: 'Updated by user.'
+    address: 'ssl:central-perforce:1666'
+    depotmap:
+      - '//depot/... //depot/...'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: update_remote_idempotent
+
+- name: Output update_remote_idempotent
+  ansible.builtin.debug:
+    var: update_remote_idempotent
+
+- name: Verify update_remote_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - update_remote_idempotent is not changed
+
+- name: Delete a remote spec
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: test-remote
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_remote_spec
+
+- name: Output delete_remote_spec
+  ansible.builtin.debug:
+    var: delete_remote_spec
+
+- name: Verify delete_remote_spec is changed
+  ansible.builtin.assert:
+    that:
+      - delete_remote_spec is changed
+
+- name: Delete a remote (idempotent)
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: test-remote
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_remote_idempotent
+
+- name: Output delete_remote_idempotent
+  ansible.builtin.debug:
+    var: delete_remote_idempotent
+
+- name: Verify delete_remote_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - delete_remote_idempotent is not changed
+
+# Check mode tests
+- name: Create remote in check mode
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: check-remote
+    description: 'Check mode test remote.'
+    address: 'ssl:central-perforce:1666'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: check_create_remote
+  check_mode: true
+
+- name: Verify check mode create
+  ansible.builtin.assert:
+    that:
+      - check_create_remote is changed
+
+- name: Verify remote was not actually created
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: check-remote
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: check_create_verify
+
+- name: Verify check_create_verify is not changed (meaning it never existed)
+  ansible.builtin.assert:
+    that:
+      - check_create_verify is not changed
+
+- name: Create remote for check mode update tests
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: check-remote-update
+    description: 'Initial description.'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Update remote in check mode
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: check-remote-update
+    description: 'Updated description.'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: check_update_remote
+  check_mode: true
+
+- name: Verify check mode update
+  ansible.builtin.assert:
+    that:
+      - check_update_remote is changed
+
+- name: Delete remote in check mode
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: check-remote-update
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: check_delete_remote
+  check_mode: true
+
+- name: Verify check mode delete
+  ansible.builtin.assert:
+    that:
+      - check_delete_remote is changed
+
+- name: Cleanup check mode test remote
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: check-remote-update
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+# Diff mode tests
+- name: Create remote with diff mode
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: diff-remote
+    description: 'Diff test remote.'
+    address: 'ssl:central-perforce:1666'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_create_remote
+  diff: true
+
+- name: Verify diff output on remote create
+  ansible.builtin.assert:
+    that:
+      - diff_create_remote is changed
+      - diff_create_remote.diff is defined
+      - diff_create_remote.diff.before is defined
+      - diff_create_remote.diff.after is defined
+      - diff_create_remote.diff.before == ''
+      - "'Diff test remote.' in diff_create_remote.diff.after"
+
+- name: Update remote with diff mode
+  ripclawffb.helix_core.helix_core_remote:
+    state: present
+    remoteid: diff-remote
+    description: 'Diff test remote updated.'
+    address: 'ssl:central-perforce:1666'
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_update_remote
+  diff: true
+
+- name: Verify diff output on remote update
+  ansible.builtin.assert:
+    that:
+      - diff_update_remote is changed
+      - diff_update_remote.diff is defined
+      - "'Diff test remote.' in diff_update_remote.diff.before"
+      - "'Diff test remote updated.' in diff_update_remote.diff.after"
+
+- name: Delete remote with diff mode
+  ripclawffb.helix_core.helix_core_remote:
+    state: absent
+    remoteid: diff-remote
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: diff_delete_remote
+  diff: true
+
+- name: Verify diff output on remote delete
+  ansible.builtin.assert:
+    that:
+      - diff_delete_remote is changed
+      - diff_delete_remote.diff is defined
+      - "'Diff test remote updated.' in diff_delete_remote.diff.before"
+      - diff_delete_remote.diff.after == ''

@@ -40,8 +40,12 @@ This collection is tested via Molecule on the following platforms and Perforce v
 | `helix_core_group_info` | Get group info |
 | `helix_core_ldap` | Manage LDAP configurations |
 | `helix_core_ldap_info` | Get LDAP configuration info |
+| `helix_core_license` | Manage server license |
+| `helix_core_license_info` | Get server license info |
 | `helix_core_protect` | Manage protections table |
 | `helix_core_protect_info` | Get protection table info |
+| `helix_core_remote` | Manage remote specifications |
+| `helix_core_remote_info` | Get remote specification info |
 | `helix_core_server` | Manage server specifications |
 | `helix_core_server_info` | Get server specification info |
 | `helix_core_stream` | Manage streams |

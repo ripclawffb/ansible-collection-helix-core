@@ -144,5 +144,17 @@
     - name: Import helix_core_configurable_info tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_configurable_info/tasks/main.yml
 
+    - name: Import helix_core_license tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_license/tasks/main.yml
+
+    - name: Import helix_core_license_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_license_info/tasks/main.yml
+
+    - name: Import helix_core_remote tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_remote/tasks/main.yml
+
+    - name: Import helix_core_remote_info tasks
+      ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_remote_info/tasks/main.yml
+
     - name: Import helix_core_inventory tasks
       ansible.builtin.import_tasks: ../../test/integration/targets/helix_core_inventory/tasks/main.yml

@@ -1,0 +1,258 @@
+# Test code for the Helix Core inventory plugin
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# ===== Setup: Install ansible-core in a venv =====
+- name: Install python3-venv (Ubuntu)
+  ansible.builtin.apt:
+    name: python3-venv
+    state: present
+    update_cache: yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Create venv and install ansible-core
+  ansible.builtin.pip:
+    name:
+      - ansible-core
+    virtualenv: /tmp/ansible-venv
+    virtualenv_command: "{{ '/usr/bin/python3.9' if ansible_distribution == 'Rocky' and ansible_distribution_major_version == '8' else '/usr/bin/python3' }} -m venv"
+    virtualenv_site_packages: yes
+
+- name: Create archive directory for collection build
+  ansible.builtin.file:
+    path: /tmp/collection_build
+    state: directory
+  delegate_to: localhost
+
+- name: Build collection archive
+  ansible.builtin.command:
+    cmd: ansible-galaxy collection build "{{ playbook_dir }}/../../" --output-path /tmp/collection_build --force
+  delegate_to: localhost
+
+- name: Find built collection archive
+  ansible.builtin.find:
+    paths: /tmp/collection_build
+    patterns: 'ripclawffb-helix_core-*.tar.gz'
+  register: built_collection
+  delegate_to: localhost
+
+- name: Copy collection archive to container
+  ansible.builtin.copy:
+    src: "{{ built_collection.files[0].path }}"
+    dest: /tmp/collection.tar.gz
+
+- name: Install collection in container via ansible-galaxy
+  ansible.builtin.command:
+    cmd: /tmp/ansible-venv/bin/ansible-galaxy collection install /tmp/collection.tar.gz -p /tmp/ansible-venv/collections --force
+
+# ===== Setup: Create server specs for inventory discovery =====
+# Note: services=local maps to server_type=commit-server in the plugin
+- name: Create commit server spec for inventory test
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: inv_commit_server
+    description: 'Inventory test commit server'
+    services: local
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: inv_setup_commit
+
+- name: Create edge server spec for inventory test
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: inv_edge_server
+    description: 'Inventory test edge server'
+    services: edge-server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: inv_setup_edge
+
+- name: Create replica server spec for inventory test
+  ripclawffb.helix_core.helix_core_server:
+    state: present
+    serverid: inv_replica_server
+    description: 'Inventory test replica'
+    services: replica
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: inv_setup_replica
+
+- name: Verify all server specs were created
+  ansible.builtin.assert:
+    that:
+      - inv_setup_commit is changed
+      - inv_setup_edge is changed
+      - inv_setup_replica is changed
+
+# ===== Test 1: All-servers discovery =====
+- name: Write inventory config (all servers)
+  ansible.builtin.copy:
+    dest: /tmp/test_all.helix_core.yml
+    content: |
+      plugin: ripclawffb.helix_core.helix_core
+      server: '1666'
+      user: bruno
+      password: ''
+      charset: auto
+
+- name: Run ansible-inventory (all servers)
+  ansible.builtin.command:
+    cmd: /tmp/ansible-venv/bin/ansible-inventory -i /tmp/test_all.helix_core.yml --list
+  register: inv_all_raw
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: /tmp/ansible-venv/collections
+    ANSIBLE_INVENTORY_ENABLED: "auto,ripclawffb.helix_core.helix_core"
+
+- name: Parse inventory JSON
+  ansible.builtin.set_fact:
+    inv_all: "{{ inv_all_raw.stdout | from_json }}"
+
+- name: Verify all 3 test servers discovered
+  ansible.builtin.assert:
+    that:
+      - "'inv_commit_server' in inv_all._meta.hostvars"
+      - "'inv_edge_server' in inv_all._meta.hostvars"
+      - "'inv_replica_server' in inv_all._meta.hostvars"
+
+# ===== Test 2: Server type grouping =====
+# services=local -> server_type=commit-server -> group=commit_server
+# services=edge-server -> server_type=edge-server -> group=edge_server
+# services=replica -> server_type=replica -> group=replica
+- name: Verify server type groups exist
+  ansible.builtin.assert:
+    that:
+      - "'commit_server' in inv_all"
+      - "'edge_server' in inv_all"
+      - "'replica' in inv_all"
+
+- name: Verify servers in correct groups
+  ansible.builtin.assert:
+    that:
+      - "'inv_commit_server' in inv_all.commit_server.hosts"
+      - "'inv_edge_server' in inv_all.edge_server.hosts"
+      - "'inv_replica_server' in inv_all.replica.hosts"
+
+# ===== Test 3: Host variables =====
+- name: Verify host variables for edge server
+  ansible.builtin.assert:
+    that:
+      - "inv_all._meta.hostvars.inv_edge_server.server_type in ['edge-server', {'__ansible_unsafe': 'edge-server'}]"
+      - "inv_all._meta.hostvars.inv_edge_server.server_id in ['inv_edge_server', {'__ansible_unsafe': 'inv_edge_server'}]"
+      - "inv_all._meta.hostvars.inv_edge_server.services in ['edge-server', {'__ansible_unsafe': 'edge-server'}]"
+
+- name: Verify host variables for commit server
+  ansible.builtin.assert:
+    that:
+      - "inv_all._meta.hostvars.inv_commit_server.server_type in ['commit-server', {'__ansible_unsafe': 'commit-server'}]"
+      - "inv_all._meta.hostvars.inv_commit_server.server_id in ['inv_commit_server', {'__ansible_unsafe': 'inv_commit_server'}]"
+
+# ===== Test 4: server_types filter =====
+- name: Write inventory config (edge-server only)
+  ansible.builtin.copy:
+    dest: /tmp/test_edge_only.helix_core.yml
+    content: |
+      plugin: ripclawffb.helix_core.helix_core
+      server: '1666'
+      user: bruno
+      password: ''
+      charset: auto
+      server_types:
+        - edge-server
+
+- name: Run ansible-inventory (edge-server filter)
+  ansible.builtin.command:
+    cmd: /tmp/ansible-venv/bin/ansible-inventory -i /tmp/test_edge_only.helix_core.yml --list
+  register: inv_edge_only_raw
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: /tmp/ansible-venv/collections
+    ANSIBLE_INVENTORY_ENABLED: "auto,ripclawffb.helix_core.helix_core"
+
+- name: Parse edge-only inventory JSON
+  ansible.builtin.set_fact:
+    inv_edge_only: "{{ inv_edge_only_raw.stdout | from_json }}"
+
+- name: Verify only edge server in filtered inventory
+  ansible.builtin.assert:
+    that:
+      - "'inv_edge_server' in inv_edge_only._meta.hostvars"
+      - "'inv_commit_server' not in inv_edge_only._meta.hostvars"
+      - "'inv_replica_server' not in inv_edge_only._meta.hostvars"
+
+# ===== Test 5: include_commit filter =====
+- name: Write inventory config (include_commit false)
+  ansible.builtin.copy:
+    dest: /tmp/test_no_commit.helix_core.yml
+    content: |
+      plugin: ripclawffb.helix_core.helix_core
+      server: '1666'
+      user: bruno
+      password: ''
+      charset: auto
+      include_commit: false
+
+- name: Run ansible-inventory (include_commit false)
+  ansible.builtin.command:
+    cmd: /tmp/ansible-venv/bin/ansible-inventory -i /tmp/test_no_commit.helix_core.yml --list
+  register: inv_no_commit_raw
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: /tmp/ansible-venv/collections
+    ANSIBLE_INVENTORY_ENABLED: "auto,ripclawffb.helix_core.helix_core"
+
+- name: Parse no-commit inventory JSON
+  ansible.builtin.set_fact:
+    inv_no_commit: "{{ inv_no_commit_raw.stdout | from_json }}"
+
+- name: Verify commit server excluded when include_commit is false
+  ansible.builtin.assert:
+    that:
+      - "'inv_commit_server' not in inv_no_commit._meta.hostvars"
+      - "'inv_edge_server' in inv_no_commit._meta.hostvars"
+      - "'inv_replica_server' in inv_no_commit._meta.hostvars"
+
+# ===== Cleanup =====
+- name: Delete inventory test commit server
+  ripclawffb.helix_core.helix_core_server:
+    state: absent
+    serverid: inv_commit_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Delete inventory test edge server
+  ripclawffb.helix_core.helix_core_server:
+    state: absent
+    serverid: inv_edge_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Delete inventory test replica server
+  ripclawffb.helix_core.helix_core_server:
+    state: absent
+    serverid: inv_replica_server
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+
+- name: Clean up inventory temp files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /tmp/test_all.helix_core.yml
+    - /tmp/test_edge_only.helix_core.yml
+    - /tmp/test_no_commit.helix_core.yml
+    - /tmp/collection_build
+    - /tmp/collection.tar.gz
+    - /tmp/ansible-venv

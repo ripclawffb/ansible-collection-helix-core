@@ -1,0 +1,25 @@
+# Test code for the Helix license info module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: Get license info
+  ripclawffb.helix_core.helix_core_license_info:
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: license_info
+
+- name: Output license_info
+  ansible.builtin.debug:
+    var: license_info
+
+- name: Verify license_info
+  ansible.builtin.assert:
+    that:
+      - license_info is not changed
+      - license_info.info is defined
+      # In the test environment, the license might be 'none' or missing.
+      # We just verify the module doesn't fail.

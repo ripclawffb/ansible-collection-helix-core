@@ -7,7 +7,7 @@
 Ripclawffb.Helix_Core
 =====================
 
-Collection version 1.2.0
+Collection version 1.3.0
 
 .. contents::
    :local:
@@ -66,8 +66,12 @@ Modules
 * :ansplugin:`helix_core_group_info module <ripclawffb.helix_core.helix_core_group_info#module>` -- Get group information from Perforce Helix Core
 * :ansplugin:`helix_core_ldap module <ripclawffb.helix_core.helix_core_ldap#module>` -- Manage LDAP configurations on Perforce Helix Core
 * :ansplugin:`helix_core_ldap_info module <ripclawffb.helix_core.helix_core_ldap_info#module>` -- Get LDAP configuration information from Perforce Helix Core
+* :ansplugin:`helix_core_license module <ripclawffb.helix_core.helix_core_license#module>` -- Deploy or remove a Perforce Helix Core license
+* :ansplugin:`helix_core_license_info module <ripclawffb.helix_core.helix_core_license_info#module>` -- Get server license information from Perforce Helix Core
 * :ansplugin:`helix_core_protect module <ripclawffb.helix_core.helix_core_protect#module>` -- Manage the protection table on Perforce Helix Core
 * :ansplugin:`helix_core_protect_info module <ripclawffb.helix_core.helix_core_protect_info#module>` -- Get the current protection table from Perforce Helix Core
+* :ansplugin:`helix_core_remote module <ripclawffb.helix_core.helix_core_remote#module>` -- Manage remote specs on Perforce Helix Core
+* :ansplugin:`helix_core_remote_info module <ripclawffb.helix_core.helix_core_remote_info#module>` -- Get remote specification information from Perforce Helix Core
 * :ansplugin:`helix_core_server module <ripclawffb.helix_core.helix_core_server#module>` -- Manage server spec on Perforce Helix Core
 * :ansplugin:`helix_core_server_info module <ripclawffb.helix_core.helix_core_server_info#module>` -- Get server specification information from Perforce Helix Core
 * :ansplugin:`helix_core_stream module <ripclawffb.helix_core.helix_core_stream#module>` -- Manage streams on Perforce Helix Core
@@ -93,8 +97,12 @@ Modules
     helix_core_group_info_module
     helix_core_ldap_module
     helix_core_ldap_info_module
+    helix_core_license_module
+    helix_core_license_info_module
     helix_core_protect_module
     helix_core_protect_info_module
+    helix_core_remote_module
+    helix_core_remote_info_module
     helix_core_server_module
     helix_core_server_info_module
     helix_core_stream_module

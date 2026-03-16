@@ -10,14 +10,14 @@
 
 .. Anchors
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_user_module:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module:
 
 .. Anchors: short name for ansible.builtin
 
 .. Title
 
-ripclawffb.helix_core.helix_core_user module -- Manage users on Perforce Helix Core
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_remote module -- Manage remote specs on Perforce Helix Core
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -29,15 +29,15 @@ ripclawffb.helix_core.helix_core_user module -- Manage users on Perforce Helix C
 
     To install it, use: :code:`ansible\-galaxy collection install ripclawffb.helix\_core`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_user_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_remote_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_user`.
+    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_remote`.
 
 .. version_added
 
 .. rst-class:: ansible-version-added
 
-New in ripclawffb.helix\_core 1.0.0
+New in ripclawffb.helix\_core 1.3.0
 
 .. contents::
    :local:
@@ -51,7 +51,8 @@ Synopsis
 
 .. Description
 
-- Create or edit Helix server user specifications and preferences
+- A remote specification describes the shared server that your server cooperates with.
+- Uses the :literal:`p4 remote` command to create, modify, or delete a remote specification.
 - This module supports check mode.
 
 
@@ -60,7 +61,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_user_module_requirements:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module_requirements:
 
 Requirements
 ------------
@@ -92,17 +93,17 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-authmethod"></div>
+        <div class="ansibleOptionAnchor" id="parameter-address"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-authmethod:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-address:
 
       .. rst-class:: ansible-option-title
 
-      **authmethod**
+      **address**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-authmethod" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-address" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
@@ -116,15 +117,41 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      One of the following, perforce or ldap
+      The P4PORT for the shared server.
 
 
-      .. rst-class:: ansible-option-line
+      .. raw:: html
 
-      :ansible-option-choices:`Choices:`
+        </div>
 
-      - :ansible-option-choices-entry-default:`"perforce"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"ldap"`
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-archivelimits"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-archivelimits:
+
+      .. rst-class:: ansible-option-title
+
+      **archivelimits**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-archivelimits" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      One or more entries specifying how many revisions of file archives to store locally when the files are fetched.
 
 
       .. raw:: html
@@ -137,8 +164,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-charset"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4charset"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-charset:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-p4charset:
 
       .. rst-class:: ansible-option-title
 
@@ -178,17 +205,51 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-email"></div>
+        <div class="ansibleOptionAnchor" id="parameter-depotmap"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-email:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-depotmap:
 
       .. rst-class:: ansible-option-title
 
-      **email**
+      **depotmap**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-email" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-depotmap" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      A list of one or more lines describing the mapping from the shared server's files to your personal server's files.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-description"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-description:
+
+      .. rst-class:: ansible-option-title
+
+      **description**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-description" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
@@ -202,12 +263,12 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The user’s email address
+      A description of the remote spec.
 
 
       .. rst-class:: ansible-option-line
 
-      :ansible-option-default-bold:`Default:` :ansible-option-default:`"user@hostname"`
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"Created by user."`
 
       .. raw:: html
 
@@ -216,17 +277,17 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-fullname"></div>
+        <div class="ansibleOptionAnchor" id="parameter-options"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-fullname:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-options:
 
       .. rst-class:: ansible-option-title
 
-      **fullname**
+      **options**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-fullname" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-options" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
@@ -240,12 +301,12 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The user’s full name
+      Flags to change the remote spec behavior.
 
 
       .. rst-class:: ansible-option-line
 
-      :ansible-option-default-bold:`Default:` :ansible-option-default:`"name"`
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"unlocked nocompress copyrcs"`
 
       .. raw:: html
 
@@ -254,21 +315,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-name"></div>
+        <div class="ansibleOptionAnchor" id="parameter-owner"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-name:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-owner:
 
       .. rst-class:: ansible-option-title
 
-      **name**
+      **owner**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-owner" title="Permalink to this option"></a>
 
       .. ansible-option-type-line::
 
-        :ansible-option-type:`string` / :ansible-option-required:`required`
+        :ansible-option-type:`string`
 
       .. raw:: html
 
@@ -278,7 +339,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The name of the user that needs to be managed
+      The name of the user who owns the remote spec. By default, this is the user who creates it.
 
 
       .. raw:: html
@@ -291,8 +352,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-password"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4passwd"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4passwd:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-password:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-p4passwd:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-password:
 
       .. rst-class:: ansible-option-title
 
@@ -328,11 +389,79 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-remoteid"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-remoteid:
+
+      .. rst-class:: ansible-option-title
+
+      **remoteid**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-remoteid" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string` / :ansible-option-required:`required`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The name of the remote spec to manage.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-remoteuser"></div>
+
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-remoteuser:
+
+      .. rst-class:: ansible-option-title
+
+      **remoteuser**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-remoteuser" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specifies the identity (user) P4 Server uses to authenticate against this remote server when pushing and fetching.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-server"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4port"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4port:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-server:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-p4port:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-server:
 
       .. rst-class:: ansible-option-title
 
@@ -370,7 +499,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-state:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -392,7 +521,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      Determines if the user is present or deleted
+      Determines if the remote spec is present or deleted.
 
 
       .. rst-class:: ansible-option-line
@@ -413,8 +542,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4user"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-p4user:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__parameter-user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-p4user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -461,8 +590,8 @@ See Also
 
 .. seealso::
 
-   `Helix Core User <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_user.html>`_
-       Create, edit, or delete Helix server user specifications and preferences
+   `Helix Core Remote <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_remote.html>`_
+       Create or edit a remote spec
    `P4Python Pip Module <https://pypi.org/project/p4python/>`_
        Python module to interact with Helix Core
 
@@ -473,25 +602,18 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    # Create a user
-    - name: Create a new user
-      helix_core_user:
+    # Create a new remote spec
+    - name: Create remote spec
+      ripclawffb.helix_core.helix_core_remote:
         state: present
-        name: new_user
-        email: new_user@perforce.com
+        remoteid: central-repo
+        description: "Central repository shared server"
+        address: "ssl:central-perforce:1666"
+        depotmap:
+          - "//depot/... //depot/..."
         server: '1666'
         user: bruno
-        charset: none
-        password: ''
-
-    # Delete a user
-    - name: Delete a user
-      helix_core_user:
-        state: absent
-        name: new_user
-        server: '1666'
-        user: bruno
-        charset: none
+        charset: auto
         password: ''
 
 
@@ -521,7 +643,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-action"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-action:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-action:
 
       .. rst-class:: ansible-option-title
 
@@ -543,7 +665,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      The action performed on the resource.
+      The action performed.
 
 
       .. rst-class:: ansible-option-line
@@ -576,7 +698,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changed"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-changed:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-changed:
 
       .. rst-class:: ansible-option-title
 
@@ -598,7 +720,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      Whether any changes were made to the user.
+      Whether any changes were made to the remote spec.
 
 
       .. rst-class:: ansible-option-line
@@ -621,7 +743,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changes"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-changes:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-changes:
 
       .. rst-class:: ansible-option-title
 
@@ -653,7 +775,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`[{"after": "new@example.com", "before": "old@example.com", "field": "Email"}]`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`[{"after": "New description", "before": "Old description", "field": "Description"}]`
 
 
       .. raw:: html
@@ -666,7 +788,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-diff"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-diff:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-diff:
 
       .. rst-class:: ansible-option-title
 
@@ -710,7 +832,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-diff/after:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-diff/after:
 
       .. rst-class:: ansible-option-title
 
@@ -758,7 +880,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         \hspace{0.02\textwidth}\begin{minipage}[t]{0.3\textwidth}
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-diff/before:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-diff/before:
 
       .. rst-class:: ansible-option-title
 
@@ -801,17 +923,17 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="return-user_spec"></div>
+        <div class="ansibleOptionAnchor" id="return-remote_spec"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_user_module__return-user_spec:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_remote_module__return-remote_spec:
 
       .. rst-class:: ansible-option-title
 
-      **user_spec**
+      **remote_spec**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#return-user_spec" title="Permalink to this return value"></a>
+        <a class="ansibleOptionLink" href="#return-remote_spec" title="Permalink to this return value"></a>
 
       .. ansible-option-type-line::
 
@@ -825,7 +947,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      The user specification after the operation.
+      The remote specification after the operation.
 
 
       .. rst-class:: ansible-option-line
@@ -835,7 +957,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"Email": "new\_user@perforce.com", "FullName": "New User", "User": "new\_user"}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"Address": "ssl:central\-perforce:1666", "Description": "Central repository shared server", "RemoteID": "central\-repo"}`
 
 
       .. raw:: html

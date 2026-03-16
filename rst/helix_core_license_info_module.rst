@@ -10,14 +10,14 @@
 
 .. Anchors
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module:
 
 .. Anchors: short name for ansible.builtin
 
 .. Title
 
-ripclawffb.helix_core.helix_core_group_info module -- Get group information from Perforce Helix Core
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ripclawffb.helix_core.helix_core_license_info module -- Get server license information from Perforce Helix Core
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -29,15 +29,15 @@ ripclawffb.helix_core.helix_core_group_info module -- Get group information from
 
     To install it, use: :code:`ansible\-galaxy collection install ripclawffb.helix\_core`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_group_info_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.ripclawffb.helix_core.helix_core_license_info_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_group_info`.
+    To use it in a playbook, specify: :code:`ripclawffb.helix_core.helix_core_license_info`.
 
 .. version_added
 
 .. rst-class:: ansible-version-added
 
-New in ripclawffb.helix\_core 1.2.0
+New in ripclawffb.helix\_core 1.3.0
 
 .. contents::
    :local:
@@ -51,9 +51,8 @@ Synopsis
 
 .. Description
 
-- Retrieves group specifications from Perforce Helix Core.
-- When :literal:`name` is provided, returns a single group spec.
-- When :literal:`name` is omitted, returns a list of all groups.
+- Retrieves server licensing information from Perforce Helix Core.
+- Returns the details of the active license and its usage limits.
 - This is a read\-only module that does not make any changes.
 
 
@@ -62,7 +61,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module_requirements:
+.. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module_requirements:
 
 Requirements
 ------------
@@ -97,8 +96,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-charset"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4charset"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-charset:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-p4charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-charset:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-p4charset:
 
       .. rst-class:: ansible-option-title
 
@@ -138,47 +137,11 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-name"></div>
-
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-name:
-
-      .. rst-class:: ansible-option-title
-
-      **name**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a>
-
-      .. ansible-option-type-line::
-
-        :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      The name of the group to retrieve.
-
-      If omitted, all groups are listed.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-password"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4passwd"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-p4passwd:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-password:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-p4passwd:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-password:
 
       .. rst-class:: ansible-option-title
 
@@ -217,8 +180,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-server"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4port"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-p4port:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-server:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-p4port:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-server:
 
       .. rst-class:: ansible-option-title
 
@@ -257,8 +220,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
         <div class="ansibleOptionAnchor" id="parameter-p4user"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-p4user:
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__parameter-user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-p4user:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -305,8 +268,8 @@ See Also
 
 .. seealso::
 
-   `Helix Core Group <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_group.html>`_
-       Manage groups
+   `Helix Core License <https://www.perforce.com/manuals/cmdref/Content/CmdRef/p4_license.html>`_
+       Manage server license
    `P4Python Pip Module <https://pypi.org/project/p4python/>`_
        Python module to interact with Helix Core
 
@@ -317,24 +280,14 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    # Get a specific group
-    - name: Get group info
-      ripclawffb.helix_core.helix_core_group_info:
-        name: my_group
+    # Get license info
+    - name: Get license info
+      ripclawffb.helix_core.helix_core_license_info:
         server: '1666'
         user: bruno
         charset: auto
         password: ''
-      register: group_info
-
-    # List all groups
-    - name: List all groups
-      ripclawffb.helix_core.helix_core_group_info:
-        server: '1666'
-        user: bruno
-        charset: auto
-        password: ''
-      register: all_groups
+      register: license_info
 
 
 
@@ -363,7 +316,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changed"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__return-changed:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__return-changed:
 
       .. rst-class:: ansible-option-title
 
@@ -408,7 +361,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-info"></div>
 
-      .. _ansible_collections.ripclawffb.helix_core.helix_core_group_info_module__return-info:
+      .. _ansible_collections.ripclawffb.helix_core.helix_core_license_info_module__return-info:
 
       .. rst-class:: ansible-option-title
 
@@ -420,7 +373,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
       .. ansible-option-type-line::
 
-        :ansible-option-type:`any`
+        :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -430,9 +383,9 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      When :literal:`name` is provided, a dict with the group spec fields.
+      A dict with the current license details.
 
-      When :literal:`name` is omitted, a list of group summary dicts.
+      Contains usage info if the server supports it and the user has admin or super privileges.
 
 
       .. rst-class:: ansible-option-line

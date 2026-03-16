@@ -1,0 +1,58 @@
+# Test code for the Helix license module
+# -*- coding: utf-8 -*-
+
+# Copyright: (c) 2024, Asif Shaikh (@ripclawffb) <ripclaw_ffb@hotmail.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+# We don't have a valid license key for the Molecule environment.
+# Therefore, we will only test removing the license (idempotent when empty)
+# and deploying an invalid license (expecting fail gracefully or error).
+
+- name: Delete a license spec (idempotent, since test server has no license)
+  ripclawffb.helix_core.helix_core_license:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_license_idempotent
+
+- name: Output delete_license_idempotent
+  ansible.builtin.debug:
+    var: delete_license_idempotent
+
+- name: Verify delete_license_idempotent is not changed
+  ansible.builtin.assert:
+    that:
+      - delete_license_idempotent is not changed
+
+- name: Attempt to deploy an invalid license 
+  ripclawffb.helix_core.helix_core_license:
+    state: present
+    license: "License:\n\tinvalid-license-key\n"
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: deploy_invalid_license
+  ignore_errors: true
+
+- name: Verify deploy_invalid_license failed (because the license is invalid)
+  ansible.builtin.assert:
+    that:
+      - deploy_invalid_license.failed | bool
+
+- name: Delete a license spec (check mode)
+  ripclawffb.helix_core.helix_core_license:
+    state: absent
+    server: '1666'
+    user: bruno
+    charset: auto
+    password: ''
+  register: delete_license_check_mode
+  check_mode: true
+
+- name: Verify delete_license_check_mode is not changed
+  ansible.builtin.assert:
+    that:
+      - delete_license_check_mode is not changed

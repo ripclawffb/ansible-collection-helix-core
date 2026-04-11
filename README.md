@@ -108,6 +108,21 @@ Example playbook:
         server: '1666'
         user: 'p4admin'
         password: 'changeme'
+
+### Inventory Plugin Usage
+
+Example `helix_core.yml` inventory configuration:
+
+```yaml
+plugin: ripclawffb.helix_core.helix_core
+server: '1666'
+user: 'p4admin'
+password: 'changeme'
+compose:
+  ansible_host: 'address'
+groups:
+  edge_servers: "'edge' in type"
+```
 ```
 
 See the [Documentation](https://ripclawffb.github.io/ansible-collection-helix-core/) for detailed usage and examples for every module.

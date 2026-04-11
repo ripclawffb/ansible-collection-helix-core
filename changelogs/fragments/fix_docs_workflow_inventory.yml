@@ -1,2 +1,0 @@
-bugfixes:
-  - update-docs workflow - Added ``plugins/inventory/*.py`` to path triggers so inventory plugin changes trigger documentation regeneration.

@@ -1,3 +1,0 @@
-major_changes:
-  - Added new `helix_core_license` and `helix_core_license_info` modules to manage server licenses.
-  - Added new `helix_core_remote` and `helix_core_remote_info` modules to manage remote specs.

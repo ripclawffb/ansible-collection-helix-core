@@ -2,37 +2,91 @@
 
 **Topics**
 
-- <a href="#v1-2-0">v1\.2\.0</a>
+- <a href="#v1-3-0">v1\.3\.0</a>
     - <a href="#release-summary">Release Summary</a>
+    - <a href="#major-changes">Major Changes</a>
     - <a href="#minor-changes">Minor Changes</a>
-- <a href="#v1-1-1">v1\.1\.1</a>
+    - <a href="#bugfixes">Bugfixes</a>
+    - <a href="#new-plugins">New Plugins</a>
+        - <a href="#inventory">Inventory</a>
+    - <a href="#new-modules">New Modules</a>
+- <a href="#v1-2-0">v1\.2\.0</a>
     - <a href="#release-summary-1">Release Summary</a>
     - <a href="#minor-changes-1">Minor Changes</a>
-    - <a href="#bugfixes">Bugfixes</a>
-- <a href="#v1-1-0">v1\.1\.0</a>
+- <a href="#v1-1-1">v1\.1\.1</a>
     - <a href="#release-summary-2">Release Summary</a>
     - <a href="#minor-changes-2">Minor Changes</a>
     - <a href="#bugfixes-1">Bugfixes</a>
-- <a href="#v1-0-7">v1\.0\.7</a>
+- <a href="#v1-1-0">v1\.1\.0</a>
     - <a href="#release-summary-3">Release Summary</a>
     - <a href="#minor-changes-3">Minor Changes</a>
     - <a href="#bugfixes-2">Bugfixes</a>
-- <a href="#v1-0-6">v1\.0\.6</a>
+- <a href="#v1-0-7">v1\.0\.7</a>
     - <a href="#release-summary-4">Release Summary</a>
     - <a href="#minor-changes-4">Minor Changes</a>
-- <a href="#v1-0-5">v1\.0\.5</a>
+    - <a href="#bugfixes-3">Bugfixes</a>
+- <a href="#v1-0-6">v1\.0\.6</a>
     - <a href="#release-summary-5">Release Summary</a>
     - <a href="#minor-changes-5">Minor Changes</a>
+- <a href="#v1-0-5">v1\.0\.5</a>
+    - <a href="#release-summary-6">Release Summary</a>
+    - <a href="#minor-changes-6">Minor Changes</a>
 
-<a id="v1-2-0"></a>
-## v1\.2\.0
+<a id="v1-3-0"></a>
+## v1\.3\.0
 
 <a id="release-summary"></a>
 ### Release Summary
 
-Added info modules for all resources\, Rocky Linux 8 support\, and Perforce 25\.x compatibility\.
+This release introduces a new dynamic inventory plugin for discovering Perforce
+Helix Core servers and adds four new modules for managing server licenses
+and remote specifications\.
+
+<a id="major-changes"></a>
+### Major Changes
+
+* Added new <em class="title-reference">helix\_core\_license</em> and <em class="title-reference">helix\_core\_license\_info</em> modules to manage server licenses\.
+* Added new <em class="title-reference">helix\_core\_license</em> and <em class="title-reference">helix\_core\_license\_info</em> modules to manage server licenses\.
+* Added new <em class="title-reference">helix\_core\_remote</em> and <em class="title-reference">helix\_core\_remote\_info</em> modules to manage remote specs\.
+* Added new <em class="title-reference">helix\_core\_remote</em> and <em class="title-reference">helix\_core\_remote\_info</em> modules to manage remote specs\.
 
 <a id="minor-changes"></a>
+### Minor Changes
+
+* Added dynamic inventory plugin <code>helix\_core</code> that discovers Perforce server topology via <code>p4 servers</code>\. Hosts are grouped by server type \(commit\, edge\, replica\)\. Supports filtering and Constructable features\.
+* Added dynamic inventory plugin <code>helix\_core</code> that discovers Perforce server topology via <code>p4 servers</code>\. Hosts are grouped by server type \(commit\, edge\, replica\)\. Supports filtering and Constructable features\.
+
+<a id="bugfixes"></a>
+### Bugfixes
+
+* update\-docs workflow \- Added <code>plugins/inventory/\*\.py</code> to path triggers so inventory plugin changes trigger documentation regeneration\.
+* update\-docs workflow \- Added <code>plugins/inventory/\*\.py</code> to path triggers so inventory plugin changes trigger documentation regeneration\.
+
+<a id="new-plugins"></a>
+### New Plugins
+
+<a id="inventory"></a>
+#### Inventory
+
+* ripclawffb\.helix\_core\.helix\_core \- Perforce Helix Core dynamic inventory plugin
+
+<a id="new-modules"></a>
+### New Modules
+
+* ripclawffb\.helix\_core\.helix\_core\_license \- Deploy or remove a Perforce Helix Core license
+* ripclawffb\.helix\_core\.helix\_core\_license\_info \- Get server license information from Perforce Helix Core
+* ripclawffb\.helix\_core\.helix\_core\_remote \- Manage remote specs on Perforce Helix Core
+* ripclawffb\.helix\_core\.helix\_core\_remote\_info \- Get remote specification information from Perforce Helix Core
+
+<a id="v1-2-0"></a>
+## v1\.2\.0
+
+<a id="release-summary-1"></a>
+### Release Summary
+
+Added info modules for all resources\, Rocky Linux 8 support\, and Perforce 25\.x compatibility\.
+
+<a id="minor-changes-1"></a>
 ### Minor Changes
 
 * Perforce 25\.x support \- Added Molecule tests for Perforce r25\.1 and r25\.2 across all supported platforms\.
@@ -52,17 +106,17 @@ Added info modules for all resources\, Rocky Linux 8 support\, and Perforce 25\.
 <a id="v1-1-1"></a>
 ## v1\.1\.1
 
-<a id="release-summary-1"></a>
+<a id="release-summary-2"></a>
 ### Release Summary
 
 Added position parameter to the protect module and fixed ordering issues\.
 
-<a id="minor-changes-1"></a>
+<a id="minor-changes-2"></a>
 ### Minor Changes
 
 * helix\_core\_protect \- Add <code>position</code> parameter to control where new entries are inserted in the protections table \(beginning\, end\, or specific index\) when using <code>mode\=entry</code>\.
 
-<a id="bugfixes"></a>
+<a id="bugfixes-1"></a>
 ### Bugfixes
 
 * helix\_core\_protect \- Fixed duplicate playbook entries being inserted multiple times into the protections table\.
@@ -71,12 +125,12 @@ Added position parameter to the protect module and fixed ordering issues\.
 <a id="v1-1-0"></a>
 ## v1\.1\.0
 
-<a id="release-summary-2"></a>
+<a id="release-summary-3"></a>
 ### Release Summary
 
 Added new modules \(typemap\, triggers\, protect\, protect\_info\, ldap\) and added diff mode support to all modules\.
 
-<a id="minor-changes-2"></a>
+<a id="minor-changes-3"></a>
 ### Minor Changes
 
 * diff mode \- Added diff mode support to all modules \(\#124\)
@@ -86,7 +140,7 @@ Added new modules \(typemap\, triggers\, protect\, protect\_info\, ldap\) and ad
 * helix\_core\_trigger \- Manage Perforce Helix Core triggers table \(\#107\)
 * helix\_core\_typemap \- Manage Perforce Helix Core typemap table \(\#105\)
 
-<a id="bugfixes-1"></a>
+<a id="bugfixes-2"></a>
 ### Bugfixes
 
 * Documentation \- Fixed P4Python installation requirements in docs \(\#133\)
@@ -96,17 +150,17 @@ Added new modules \(typemap\, triggers\, protect\, protect\_info\, ldap\) and ad
 <a id="v1-0-7"></a>
 ## v1\.0\.7
 
-<a id="release-summary-3"></a>
+<a id="release-summary-4"></a>
 ### Release Summary
 
 Added compatibility for Ubuntu 24\.04 and fixed P4Python installation issues\.
 
-<a id="minor-changes-3"></a>
+<a id="minor-changes-4"></a>
 ### Minor Changes
 
 * Ubuntu 24\.04 support \- Added Molecule tests and Dockerfiles for Ubuntu 24\.04 with Perforce r23\.1\, r23\.2\, r24\.1\, and r24\.2\.
 
-<a id="bugfixes-2"></a>
+<a id="bugfixes-3"></a>
 ### Bugfixes
 
 * Documentation generator \- Fixed <em class="title-reference">antsibull\-docs</em> configuration in GitHub Actions to support newer versions and correct path structure\.
@@ -115,12 +169,12 @@ Added compatibility for Ubuntu 24\.04 and fixed P4Python installation issues\.
 <a id="v1-0-6"></a>
 ## v1\.0\.6
 
-<a id="release-summary-4"></a>
+<a id="release-summary-5"></a>
 ### Release Summary
 
 Fix helix\_core\_client idempotency for 23\.1 or newer
 
-<a id="minor-changes-4"></a>
+<a id="minor-changes-5"></a>
 ### Minor Changes
 
 * helix\_core\_client \- Check for noaltsync option when creating clients on Helix Core 23\.1 or newer
@@ -128,12 +182,12 @@ Fix helix\_core\_client idempotency for 23\.1 or newer
 <a id="v1-0-5"></a>
 ## v1\.0\.5
 
-<a id="release-summary-5"></a>
+<a id="release-summary-6"></a>
 ### Release Summary
 
 Updated the collection metadata URLs and added docs
 
-<a id="minor-changes-5"></a>
+<a id="minor-changes-6"></a>
 ### Minor Changes
 
 * docs \- Generated HTML documentation for modules

@@ -1,66 +1,122 @@
 ancestor: null
 releases:
   1.0.5:
-    release_date: '2024-04-20'
     changes:
+      minor_changes:
+      - docs - Generated HTML documentation for modules
+      - urls - Update URLs for the collection
       release_summary: Updated the collection metadata URLs and added docs
-      minor_changes:
-        - docs - Generated HTML documentation for modules
-        - urls - Update URLs for the collection
+    release_date: '2024-04-20'
   1.0.6:
-    release_date: '2024-04-22'
     changes:
+      minor_changes:
+      - helix_core_client - Check for noaltsync option when creating clients on Helix
+        Core 23.1 or newer
       release_summary: Fix helix_core_client idempotency for 23.1 or newer
-      minor_changes:
-        - helix_core_client - Check for noaltsync option when creating clients on Helix Core 23.1 or newer
+    release_date: '2024-04-22'
   1.0.7:
+    changes:
+      bugfixes:
+      - Documentation generator - Fixed `antsibull-docs` configuration in GitHub Actions
+        to support newer versions and correct path structure.
+      - P4Python 3.12 support - Updated Molecule configuration to install `perforce-p4python3-python3.12`
+        on Ubuntu 24.04 (Noble Numbat).
+      minor_changes:
+      - Ubuntu 24.04 support - Added Molecule tests and Dockerfiles for Ubuntu 24.04
+        with Perforce r23.1, r23.2, r24.1, and r24.2.
+      release_summary: Added compatibility for Ubuntu 24.04 and fixed P4Python installation
+        issues.
     release_date: '2026-02-08'
-    changes:
-      release_summary: Added compatibility for Ubuntu 24.04 and fixed P4Python installation issues.
-      minor_changes:
-        - Ubuntu 24.04 support - Added Molecule tests and Dockerfiles for Ubuntu 24.04 with Perforce r23.1, r23.2, r24.1, and r24.2.
-      bugfixes:
-        - Documentation generator - Fixed `antsibull-docs` configuration in GitHub Actions to support newer versions and correct path structure.
-        - P4Python 3.12 support - Updated Molecule configuration to install `perforce-p4python3-python3.12` on Ubuntu 24.04 (Noble Numbat).
   1.1.0:
-    release_date: '2026-02-21'
     changes:
-      release_summary: Added new modules (typemap, triggers, protect, protect_info, ldap) and added diff mode support to all modules.
-      minor_changes:
-        - helix_core_typemap - Manage Perforce Helix Core typemap table (#105)
-        - helix_core_trigger - Manage Perforce Helix Core triggers table (#107)
-        - helix_core_protect - Manage Perforce Helix Core protections table (#109)
-        - helix_core_protect_info - Get protection table info (#111)
-        - helix_core_ldap - Manage LDAP configurations (#114)
-        - diff mode - Added diff mode support to all modules (#124)
       bugfixes:
-        - README.md - Fixed documentation links (#100)
-        - 'helix_core_protect_info - Fixed documentation issues (#112, #122)'
-        - Documentation - Fixed P4Python installation requirements in docs (#133)
+      - Documentation - Fixed P4Python installation requirements in docs (#133)
+      - README.md - Fixed documentation links (#100)
+      - 'helix_core_protect_info - Fixed documentation issues (#112, #122)'
+      minor_changes:
+      - diff mode - Added diff mode support to all modules (#124)
+      - helix_core_ldap - Manage LDAP configurations (#114)
+      - helix_core_protect - Manage Perforce Helix Core protections table (#109)
+      - helix_core_protect_info - Get protection table info (#111)
+      - helix_core_trigger - Manage Perforce Helix Core triggers table (#107)
+      - helix_core_typemap - Manage Perforce Helix Core typemap table (#105)
+      release_summary: Added new modules (typemap, triggers, protect, protect_info,
+        ldap) and added diff mode support to all modules.
+    release_date: '2026-02-21'
   1.1.1:
-    release_date: '2026-02-21'
     changes:
-      release_summary: Added position parameter to the protect module and fixed ordering issues.
-      minor_changes:
-        - helix_core_protect - Add ``position`` parameter to control where new entries are inserted in the protections table (beginning, end, or specific index) when using ``mode=entry``.
       bugfixes:
-        - helix_core_protect - Fixed protections table ordering. The module now preserves entry order instead of using unordered sets, which previously caused unpredictable entry placement.
-        - helix_core_protect - Fixed duplicate playbook entries being inserted multiple times into the protections table.
-  1.2.0:
-    release_date: '2026-02-28'
-    changes:
-      release_summary: Added info modules for all resources, Rocky Linux 8 support, and Perforce 25.x compatibility.
+      - helix_core_protect - Fixed duplicate playbook entries being inserted multiple
+        times into the protections table.
+      - helix_core_protect - Fixed protections table ordering. The module now preserves
+        entry order instead of using unordered sets, which previously caused unpredictable
+        entry placement.
       minor_changes:
-        - helix_core_client_info - New module to fetch client/workspace information.
-        - helix_core_configurable_info - New module to fetch server configurable information.
-        - helix_core_depot_info - New module to fetch depot information.
-        - helix_core_group_info - New module to fetch group information.
-        - helix_core_ldap_info - New module to fetch LDAP configuration information.
-        - helix_core_server_info - New module to fetch server specification information.
-        - helix_core_stream_info - New module to fetch stream information.
-        - helix_core_trigger_info - New module to fetch triggers table information.
-        - helix_core_typemap_info - New module to fetch typemap table information.
-        - helix_core_user_info - New module to fetch user information.
-        - Rocky Linux 8 support - Added Molecule tests and Dockerfiles for Rocky Linux 8 with Perforce r23.1, r23.2, r24.1, r24.2, r25.1, and r25.2.
-        - Perforce 25.x support - Added Molecule tests for Perforce r25.1 and r25.2 across all supported platforms.
-        - README.md - Updated compatibility matrix and included modules table.
+      - helix_core_protect - Add ``position`` parameter to control where new entries
+        are inserted in the protections table (beginning, end, or specific index)
+        when using ``mode=entry``.
+      release_summary: Added position parameter to the protect module and fixed ordering
+        issues.
+    release_date: '2026-02-21'
+  1.2.0:
+    changes:
+      minor_changes:
+      - Perforce 25.x support - Added Molecule tests for Perforce r25.1 and r25.2
+        across all supported platforms.
+      - README.md - Updated compatibility matrix and included modules table.
+      - Rocky Linux 8 support - Added Molecule tests and Dockerfiles for Rocky Linux
+        8 with Perforce r23.1, r23.2, r24.1, r24.2, r25.1, and r25.2.
+      - helix_core_client_info - New module to fetch client/workspace information.
+      - helix_core_configurable_info - New module to fetch server configurable information.
+      - helix_core_depot_info - New module to fetch depot information.
+      - helix_core_group_info - New module to fetch group information.
+      - helix_core_ldap_info - New module to fetch LDAP configuration information.
+      - helix_core_server_info - New module to fetch server specification information.
+      - helix_core_stream_info - New module to fetch stream information.
+      - helix_core_trigger_info - New module to fetch triggers table information.
+      - helix_core_typemap_info - New module to fetch typemap table information.
+      - helix_core_user_info - New module to fetch user information.
+      release_summary: Added info modules for all resources, Rocky Linux 8 support,
+        and Perforce 25.x compatibility.
+    release_date: '2026-02-28'
+  1.3.0:
+    changes:
+      bugfixes:
+      - update-docs workflow - Added ``plugins/inventory/*.py`` to path triggers so
+        inventory plugin changes trigger documentation regeneration.
+      major_changes:
+      - Added new `helix_core_license` and `helix_core_license_info` modules to manage
+        server licenses.
+      - Added new `helix_core_remote` and `helix_core_remote_info` modules to manage
+        remote specs.
+      minor_changes:
+      - Added dynamic inventory plugin ``helix_core`` that discovers Perforce server
+        topology via ``p4 servers``. Hosts are grouped by server type (commit, edge,
+        replica). Supports filtering and Constructable features.
+      release_summary: "This release introduces a new dynamic inventory plugin for
+        discovering Perforce \nHelix Core servers and adds four new modules for managing
+        server licenses \nand remote specifications.\n"
+    fragments:
+    - 1.3.0_helix_core_license_remote.yml
+    - 1.3.0_summary.yml
+    - fix_docs_workflow_inventory.yml
+    - inventory_plugin.yml
+    modules:
+    - description: Deploy or remove a Perforce Helix Core license
+      name: helix_core_license
+      namespace: ''
+    - description: Get server license information from Perforce Helix Core
+      name: helix_core_license_info
+      namespace: ''
+    - description: Manage remote specs on Perforce Helix Core
+      name: helix_core_remote
+      namespace: ''
+    - description: Get remote specification information from Perforce Helix Core
+      name: helix_core_remote_info
+      namespace: ''
+    plugins:
+      inventory:
+      - description: Perforce Helix Core dynamic inventory plugin
+        name: helix_core
+        namespace: null
+    release_date: '2026-04-11'

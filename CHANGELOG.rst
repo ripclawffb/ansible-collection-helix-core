@@ -4,6 +4,48 @@ Ripclawffb.Helix\_Core Release Notes
 
 .. contents:: Topics
 
+v1.3.0
+======
+
+Release Summary
+---------------
+
+This release introduces a new dynamic inventory plugin for discovering Perforce 
+Helix Core servers and adds four new modules for managing server licenses 
+and remote specifications.
+
+Major Changes
+-------------
+
+- Added new `helix_core_license` and `helix_core_license_info` modules to manage server licenses.
+- Added new `helix_core_remote` and `helix_core_remote_info` modules to manage remote specs.
+
+Minor Changes
+-------------
+
+- Added dynamic inventory plugin ``helix_core`` that discovers Perforce server topology via ``p4 servers``. Hosts are grouped by server type (commit, edge, replica). Supports filtering and Constructable features.
+
+Bugfixes
+--------
+
+- update-docs workflow - Added ``plugins/inventory/*.py`` to path triggers so inventory plugin changes trigger documentation regeneration.
+
+New Plugins
+-----------
+
+Inventory
+~~~~~~~~~
+
+- ripclawffb.helix_core.helix_core - Perforce Helix Core dynamic inventory plugin
+
+New Modules
+-----------
+
+- ripclawffb.helix_core.helix_core_license - Deploy or remove a Perforce Helix Core license
+- ripclawffb.helix_core.helix_core_license_info - Get server license information from Perforce Helix Core
+- ripclawffb.helix_core.helix_core_remote - Manage remote specs on Perforce Helix Core
+- ripclawffb.helix_core.helix_core_remote_info - Get remote specification information from Perforce Helix Core
+
 v1.2.0
 ======
 
